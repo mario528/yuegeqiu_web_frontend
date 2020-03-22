@@ -1,0 +1,36 @@
+.flex {
+    display: flex;
+    &-row {
+      flex-direction: row;
+      &-x-center {
+
+      }
+      &-y-center {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+      &-center {
+        justify-content: space-around;
+        align-items: center;
+      }
+      &-x-around {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+      }
+      &-x-between {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+      &-y-around {
+
+      }
+      &-y-between {
+
+      }
+    }
+}
