@@ -1,31 +1,76 @@
 <template>
-  <header class="flex-row-y-center header">
-    <span class="flex-row-y-center">
-      <img class="brand-icon" :src="brandIcon" alt="约个球">
-      <strong class="brand-name fuck-color">约个球</strong>
-    </span>
-    <div class="flex-row-y-center">
-      <nav class="header-nav">
-        <router-link to="/">首页</router-link>
-      </nav>
-      <nav class="header-nav">
-        <router-link to="/home">我的球队</router-link>
-      </nav>
-      <nav class="header-nav">
-        <router-link to="/home">商城</router-link>
-      </nav>
+  <header ref="header" class="flex-row-x-between header">
+    <div class="flex-row-y-center" v-if="!smallScreenMode">
+      <span class="flex-row-y-center">
+        <img class="brand-icon" :src="brandIcon" alt="约个球">
+        <strong class="brand-name">约个球</strong>
+      </span>
+      <div class="flex-row-y-center">
+        <nav class="nav-bar-item" v-for="(item, index) in navList" :key="index">
+          <router-link tag="div" :to="item.navPath">{{item.navTitle}}</router-link>
+        </nav>
+      </div>
     </div>
+    <div class="flex-row-y-center" v-else>
+      <img class="header-slider-icon" 
+           :src="leftSidebarIcon" alt="展开"
+           @click="handleSiderBar">
+      <strong class="brand-name-small">约个球</strong>
+    </div>
+    <div class="user-area">
+      <img :src="commonUserIcon" class="user-icon user-icon-unlogin">
+    </div>
+    <side-bar :nav-list="navList" :dom-height="domHeight"></side-bar>
   </header>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import { State, Action, Getter } from 'vuex-class';
 
-@Component
+import SideBar from './Sidebar.vue'
+
+// import SiderBar from './Sidebar'
+
+@Component({
+  components: {
+    SideBar
+  },
+})
 export default class Header extends Vue {
-  @Prop()
-  private msg!: string;
+
+  @Prop({ default: [] })
+  public navList!: any[];
+
+  @Action('handleSiderBar') public handleSiderBar!: () => void
+  
   public brandIcon: string = require("../assets/brand_icon.png");
+  public commonUserIcon: string = require("../assets/common_user_icon.png");
+  public leftSidebarIcon: string = require("../assets/left_sidebar_icon.png")
+  public clientWindowWidth: number = document.body.clientWidth;
+  public smallScreenMode = true;
+  public domHeight= 75;
+
+  @Watch("clientWindowWidth")
+  onWindowWidthChange(newValue: number, oldValue: number): void {
+    if (newValue <= 800 && !this.smallScreenMode) {
+      this.smallScreenMode = true;
+    } else if (newValue > 800 && this.smallScreenMode) {
+      this.smallScreenMode = false;
+    }
+  }
+  mounted() {
+    const that = this;
+    window.onresize = () => {
+      return ((): void => {
+        that.clientWindowWidth = document.body.clientWidth;
+      })();
+    };
+    this.$nextTick(() => {
+      // tslint:disable-next-line
+      this.domHeight = 75
+    })
+  }
 }
 </script>
 <style scoped lang="scss">
@@ -36,6 +81,13 @@ export default class Header extends Vue {
   padding: 10px 5%;
   background-color: #17abe3;
   position: relative;
+  position: sticky;
+  top: 0;
+  left: 0;
+  &-slider-icon {
+    width: 40px;
+    height: 40px;
+  }
 }
 .brand {
   &-icon {
@@ -51,6 +103,42 @@ export default class Header extends Vue {
     margin-right: 15px;
     font-weight: 500;
     color: white;
+    &-small {
+      font-size: 16px;
+      font-weight: 500;
+      margin-left: 20px;
+      color: white;
+    }
+  }
+}
+.nav-bar {
+  &-item {
+    background-color: #3399cc;
+    padding: 10px 30px;
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 16px;
+    margin-right: 40px;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  &-item:nth-of-type(1) {
+    margin-left: 30px;
+  }
+  &-item:hover {
+    background-color: #003366;
+  }
+}
+.user {
+  &-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    position: relative;
+    &-unlogin:hover {
+      cursor: pointer;
+    }
   }
 }
 </style>
