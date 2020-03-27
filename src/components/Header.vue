@@ -17,10 +17,9 @@
            @click="handleSiderBar">
       <strong class="brand-name-small">约个球</strong>
     </div>
-    <div class="user-area">
+    <div class="flex-row-y-center user-area">
       <img :src="commonUserIcon" class="user-icon user-icon-unlogin">
     </div>
-    <side-bar :nav-list="navList" :dom-height="domHeight"></side-bar>
   </header>
 </template>
 
@@ -28,13 +27,9 @@
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { State, Action, Getter } from 'vuex-class';
 
-import SideBar from './Sidebar.vue'
-
-// import SiderBar from './Sidebar'
 
 @Component({
   components: {
-    SideBar
   },
 })
 export default class Header extends Vue {
@@ -48,8 +43,8 @@ export default class Header extends Vue {
   public commonUserIcon: string = require("../assets/common_user_icon.png");
   public leftSidebarIcon: string = require("../assets/left_sidebar_icon.png")
   public clientWindowWidth: number = document.body.clientWidth;
-  public smallScreenMode = true;
-  public domHeight= 75;
+  public smallScreenMode = document.body.clientWidth <= 800;
+  public domHeight = 75;
 
   @Watch("clientWindowWidth")
   onWindowWidthChange(newValue: number, oldValue: number): void {
@@ -68,6 +63,7 @@ export default class Header extends Vue {
     };
     this.$nextTick(() => {
       // tslint:disable-next-line
+      // this.domHeight = this.$refs.header.offsetHeight
       this.domHeight = 75
     })
   }
@@ -84,6 +80,9 @@ export default class Header extends Vue {
   position: sticky;
   top: 0;
   left: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
   &-slider-icon {
     width: 40px;
     height: 40px;
@@ -136,6 +135,7 @@ export default class Header extends Vue {
     height: 50px;
     border-radius: 50%;
     position: relative;
+    margin-left: 20px;
     &-unlogin:hover {
       cursor: pointer;
     }

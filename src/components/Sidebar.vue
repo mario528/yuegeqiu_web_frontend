@@ -1,95 +1,131 @@
 <template>
-  <div class="container" v-show="showSiderBar" @click="handleSiderBar">
-      <transition name="sider-fade">
-          <div class="sider-bar" v-show="showSiderBar" @click.stop="s">
-              <div class="flex-row-center sider-bar-brand">
-                  <img class="sider-bar-brand-icon" :src="brandIcon" alt="约个球" />
-                  <strong class="sider-bar-brand-text">约个球</strong>
-              </div>
-              <div class="flex-row-y-center sider-bar-item" v-for="(item, index) in navListCopy" :key="index">
-                  <img class="sider-bar-item-icon" :src="item.iconUrl" :alt="item.navTitle" />
-                  <strong class="sider-bar-item-title">{{item.navTitle}}</strong>
-              </div>
-          </div>
-      </transition>
-  </div>
+    <div class="container">
+        <div class="mask" v-show="showSiderBar" @click="handleSiderBar"></div>
+        <transition name="slide-fade">
+            <div
+                class="flex-column-y-between sider-bar"
+                v-show="showSiderBar"
+                @click.stop="catchUserEvent"
+            >
+                <div>
+                    <div class="flex-row-center sider-bar-brand">
+                        <img class="sider-bar-brand-icon" :src="brandIcon" alt="约个球">
+                        <strong class="sider-bar-brand-text">约个球</strong>
+                    </div>
+                    <div
+                        class="flex-row-y-center sider-bar-item"
+                        v-for="(item, index) in navListCopy"
+                        :key="index"
+                    >
+                        <img class="sider-bar-item-icon" :src="item.iconUrl" :alt="item.navTitle">
+                        <strong class="sider-bar-item-title">{{item.navTitle}}</strong>
+                    </div>
+                </div>
+                <div class="flex-column-x-start create-deveoper-info">
+                    <span>开发者: 马加奥</span>
+                    <span>联系方式: <a>mario528@163.com</a></span>
+                </div>
+            </div>
+        </transition>
+    </div>
 </template>
-
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import { State, Action, Getter } from 'vuex-class';
+import { State, Action, Getter } from "vuex-class";
 @Component({})
 export default class SiderBar extends Vue {
   @Prop({ default: [] })
   public navList!: any[];
   @Prop({ default: 0 })
   public domHeight!: number;
-  @Action('handleSiderBar') public handleSiderBar!: () => void
-  @Getter('getSiderBarState') showSiderBar!: boolean;
-  public navListCopy!: any[];
+  @Action("handleSiderBar")
+  public handleSiderBar!: () => void;
+  @Getter("getSiderBarState")
+  showSiderBar!: boolean;
+  public navListCopy: any[] = [];
   public brandIcon: string = require("../assets/brand_icon.png");
   mounted() {
-      this.navListCopy = this.initNavList()
+    this.navListCopy = this.initNavList();
   }
-  private initNavList (): any[] {
-      return this.navList.map((element, index) => {
-          switch (index) {
-              case 0:
-                  element.iconUrl = require('../assets/home_sidebar_icon.png')
-                  break;
-              case 1:
-                  element.iconUrl = require('../assets/team_sidebar_icon.png')
-                  break;
-              case 2:
-                  element.iconUrl = require('../assets/mall_sidebar_icon.png')
-                  break;
-          }
-          return element
-      })
+  private initNavList(): any[] {
+    return this.navList.map((element, index) => {
+      switch (index) {
+        case 0:
+          element.iconUrl = require("../assets/home_sidebar_icon.png");
+          break;
+        case 1:
+          element.iconUrl = require("../assets/team_sidebar_icon.png");
+          break;
+        case 2:
+          element.iconUrl = require("../assets/mall_sidebar_icon.png");
+          break;
+      }
+      return element;
+    });
+  }
+  private catchUserEvent() {
+    //   do nothing
   }
 }
 </script>
 <style lang="scss" scoped>
 @import "../stylus/scss/app.scss";
-.container {
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, .4);
-    z-index: 20;
-    position: absolute;
-    top: 0;
-    left: 0;
+.mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 10;
 }
 .sider-bar {
-    background-color: white;
-    width: 40%;
-    height: 100vh;
-    text-align: center;
-    &-item {
-        width: 80%;
-        margin: 0 auto;
-        padding: 20px 0;
-        border-bottom: 1px solid #eeeeee;
-        &-icon {
-            width: 30px;
-            height: 30px;
-        }
-        &-title {
-            font-size: 15px;
-            font-weight: 500;
-            color: #333333;
-            margin-left: 20px;
-        }
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: white;
+  width: 40vw;
+  height: 100vh;
+  text-align: center;
+  z-index: 11;
+  border-right: 1px solid #aa99aa;
+  &-item {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px 0;
+    border-bottom: 1px solid #eeeeee;
+    &-icon {
+      width: 30px;
+      height: 30px;
     }
-    &-brand {
-        height: 75px;
-        background-color: #17abe3;
-        &-icon {
-            width: 40px;
-            height: 40px;
-        }
-        &-text {
-            color: white;
+    &-title {
+      font-size: 15px;
+      font-weight: 500;
+      color: #333333;
+      margin-left: 20px;
+    }
+  }
+  &-brand {
+    height: 75px;
+    background-color: #17abe3;
+    &-icon {
+      width: 40px;
+      height: 40px;
+    }
+    &-text {
+      color: white;
+    }
+  }
+}
+.create-deveoper-info {
+    span {
+        font-size: 12px;
+        color: #aa99aa;
+        line-height: 20px;
+        margin-bottom: 20px;
+        a {
+            color: #17abe3;
+            text-decoration: underline;
         }
     }
 }

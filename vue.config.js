@@ -7,7 +7,13 @@ module.exports = {
   indexPath: 'index.html',
   filenameHashing: true,
   lintOnSave: true,
-
+  pages: {
+    index: {
+      entry: 'src/main.ts',
+      template: '/public/index.html',
+      title: '约个球'
+    }
+  },
   chainWebpack: config => {
       config.module
         .rule("eslint")
