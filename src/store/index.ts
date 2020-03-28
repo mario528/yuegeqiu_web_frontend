@@ -10,7 +10,7 @@ interface State {
 }
 const state: State = {
     showSiderBar: false,
-    showLoading: false
+    showLoading: true
 }
 Vue.use(Vuex)
 export default new Vuex.Store({
