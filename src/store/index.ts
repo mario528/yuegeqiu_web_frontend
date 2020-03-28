@@ -6,9 +6,11 @@ import mutations from './mutations'
 import actions from './actions'
 interface State {
     showSiderBar: boolean;
+    showLoading: boolean;
 }
 const state: State = {
-    showSiderBar: false
+    showSiderBar: false,
+    showLoading: false
 }
 Vue.use(Vuex)
 export default new Vuex.Store({

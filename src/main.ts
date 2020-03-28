@@ -3,7 +3,11 @@ import App from './App.vue'
 import router from './router'
 import store from './store/index'
 
+import http from './model/Http/http'
+
 Vue.config.productionTip = false
+
+Vue.prototype.$http = http
 
 new Vue({
   router,

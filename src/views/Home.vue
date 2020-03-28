@@ -32,7 +32,7 @@ export default {
           navPath: "/mall"
         }
       ],
-      showBox: false
+      domHeight: 75
     };
   },
   methods: {

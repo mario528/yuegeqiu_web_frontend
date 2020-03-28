@@ -126,7 +126,8 @@ export default class Header extends Vue {
     margin-left: 30px;
   }
   &-item:hover {
-    background-color: #003366;
+    color: #3399cc;
+    background-color: #ffffff;
   }
 }
 .user {
