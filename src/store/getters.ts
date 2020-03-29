@@ -6,6 +6,9 @@ const getters: GetterTree<any, any> = {
   },
   getLoadingState (state): boolean {
     return state.showLoading
+  },
+  getLoginState (state): boolean {
+    return state.isLogin
   }
 }
 

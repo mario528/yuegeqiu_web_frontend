@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view/>
+    <div class="app-content">
+      <router-view/>
+    </div>
     <loading :showLoading="showLoading"></loading>
   </div>
 </template>
@@ -18,10 +20,13 @@ import Loading from "@/components/Loading.vue";
 export default class App extends Vue {
   @Getter("getLoadingState")
   public showLoading!: boolean
+
+  @Action('handleLoadingState') public handleLoadingState!: () => void
 }
 </script>
 
 <style lang="scss">
+@import './stylus/scss/app';
 * {
   margin: 0;
   padding: 0;

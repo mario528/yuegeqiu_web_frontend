@@ -1,5 +1,6 @@
 <template>
   <header ref="header" class="flex-row-x-between header">
+    <!-- Header left side -->
     <div class="flex-row-y-center" v-if="!smallScreenMode">
       <span class="flex-row-y-center">
         <img class="brand-icon" :src="brandIcon" alt="约个球">
@@ -12,39 +13,57 @@
       </div>
     </div>
     <div class="flex-row-y-center" v-else>
-      <img class="header-slider-icon" 
-           :src="leftSidebarIcon" alt="展开"
-           @click="handleSiderBar">
+      <img class="header-slider-icon" :src="leftSidebarIcon" alt="展开" @click="handleSiderBar">
       <strong class="brand-name-small">约个球</strong>
     </div>
+    <!-- Header right side -->
     <div class="flex-row-y-center user-area">
-      <img :src="commonUserIcon" class="user-icon user-icon-unlogin">
+      <div>
+        <div class="flex-row-y-center">
+          <img
+            :src="commonUserIcon"
+            :class="[ smallScreenMode ? 'user-icon-small user-icon-unlogin' : 'user-icon user-icon-unlogin' ]"
+            @mouseover="processSetSpread('mouseover')"
+            @click="processSetSpread('click')"
+            @mouseout="processSetSpread('mouseout')"
+          >
+          <div>
+            <a class="user-text">登陆</a>
+            <a class="user-text">注册</a>
+          </div>
+        </div>
+      </div>
     </div>
   </header>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import { State, Action, Getter } from 'vuex-class';
+import { State, Action, Getter } from "vuex-class";
 
+import Optimize from "../utils/optimize";
 
 @Component({
-  components: {
-  },
+  components: {}
 })
 export default class Header extends Vue {
-
   @Prop({ default: [] })
   public navList!: any[];
 
-  @Action('handleSiderBar') public handleSiderBar!: () => void
-  
+  @Action("handleSiderBar")
+  public handleSiderBar!: () => void;
+
+  @Getter('getLoginState')
+  public isLogin!: boolean
+
   public brandIcon: string = require("../assets/brand_icon.png");
   public commonUserIcon: string = require("../assets/common_user_icon.png");
-  public leftSidebarIcon: string = require("../assets/left_sidebar_icon.png")
+  public leftSidebarIcon: string = require("../assets/left_sidebar_icon.png");
   public clientWindowWidth: number = document.body.clientWidth;
   public smallScreenMode = document.body.clientWidth <= 800;
   public domHeight = 75;
+  public showUserSpread = false;
+  public optimize: any | undefined | null;
 
   @Watch("clientWindowWidth")
   onWindowWidthChange(newValue: number, oldValue: number): void {
@@ -56,6 +75,7 @@ export default class Header extends Vue {
   }
   mounted() {
     const that = this;
+    this.optimize = new Optimize();
     window.onresize = () => {
       return ((): void => {
         that.clientWindowWidth = document.body.clientWidth;
@@ -64,8 +84,21 @@ export default class Header extends Vue {
     this.$nextTick(() => {
       // tslint:disable-next-line
       // this.domHeight = this.$refs.header.offsetHeight
-      this.domHeight = 75
-    })
+      this.domHeight = 75;
+    });
+  }
+  private handleshowUserSpread() {
+    console.log("function call");
+    this.showUserSpread = true;
+  }
+  private handlehideUserSpread() {
+    this.showUserSpread = false;
+  }
+  private processSetSpread(eventType: string) {
+    const fn = ["mouseover", "click"].includes(eventType)
+      ? this.handleshowUserSpread
+      : this.handlehideUserSpread;
+    this.optimize.processFunc(fn, 0.3);
   }
 }
 </script>
@@ -74,7 +107,7 @@ export default class Header extends Vue {
 .header {
   box-sizing: border-box;
   width: 100%;
-  padding: 10px 5%;
+  padding: 5px 5%;
   background-color: #17abe3;
   position: relative;
   position: sticky;
@@ -131,14 +164,38 @@ export default class Header extends Vue {
   }
 }
 .user {
+  &-area {
+    position: relative;
+    justify-content: flex-end;
+  }
   &-icon {
     width: 50px;
     height: 50px;
     border-radius: 50%;
     position: relative;
-    margin-left: 20px;
+    margin-right: 20px;
     &-unlogin:hover {
       cursor: pointer;
+      transform: scale3d(1.1, 1.1, 1.1);
+    }
+    &-small {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: transparent;
+      padding: 5px;
+    }
+  }
+  &-text {
+    color: white;
+    &:nth-of-type(1):after {
+      content: " | ";
+      color: white;
+    }
+    &:hover {
+      cursor: pointer;
+      color: greenyellow;
+      text-decoration: underline;
     }
   }
 }

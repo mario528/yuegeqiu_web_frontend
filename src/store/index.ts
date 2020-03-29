@@ -7,10 +7,12 @@ import actions from './actions'
 interface State {
     showSiderBar: boolean;
     showLoading: boolean;
+    isLogin: boolean;
 }
 const state: State = {
     showSiderBar: false,
-    showLoading: true
+    showLoading: false,
+    isLogin: false
 }
 Vue.use(Vuex)
 export default new Vuex.Store({

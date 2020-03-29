@@ -1,5 +1,8 @@
 class Optimize {
-    constructor () {}
+    public timer: any;
+    public processTime!: number;
+    constructor () {
+    }
     // 防抖
     debounce (fn: any, delay = 200) {
         let timer: any
@@ -14,7 +17,19 @@ class Optimize {
             }
         }
     }
+    // 函数节流
+    processFunc (fn: any, delay = 2) {
+        const currentTimeStemp = +new Date()
+        if (currentTimeStemp - this.processTime < delay * 1000) {
+            fn()
+            this.processTime = currentTimeStemp
+            clearTimeout(this.timer)
+        }else {
+            clearTimeout(this.timer)
+            this.timer = setTimeout(() => {
+                fn()
+            }, delay * 1000);
+        }
+    }
 }
-export {
-    Optimize
-}
+export default Optimize

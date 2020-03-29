@@ -1,6 +1,7 @@
 .flex {
     display: flex;
     &-row {
+      @extend .flex;
       flex-direction: row;
       &-x-center {
 

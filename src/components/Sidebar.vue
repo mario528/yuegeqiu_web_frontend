@@ -16,6 +16,7 @@
                         class="flex-row-y-center sider-bar-item"
                         v-for="(item, index) in navListCopy"
                         :key="index"
+                        @click="handleRouter(item.navPath)"
                     >
                         <img class="sider-bar-item-icon" :src="item.iconUrl" :alt="item.navTitle">
                         <strong class="sider-bar-item-title">{{item.navTitle}}</strong>
@@ -66,6 +67,9 @@ export default class SiderBar extends Vue {
   private catchUserEvent() {
     //   do nothing
   }
+  private handleRouter (to: string) {
+    this.$router.push(to);
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -106,7 +110,7 @@ export default class SiderBar extends Vue {
     }
   }
   &-brand {
-    height: 75px;
+    height: 65px;
     background-color: #17abe3;
     &-icon {
       width: 40px;
