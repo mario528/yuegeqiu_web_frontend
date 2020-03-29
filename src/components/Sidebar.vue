@@ -68,7 +68,8 @@ export default class SiderBar extends Vue {
     //   do nothing
   }
   private handleRouter (to: string) {
-    this.$router.push(to);
+    this.$router.push(to)
+    this.handleSiderBar()
   }
 }
 </script>
@@ -92,7 +93,6 @@ export default class SiderBar extends Vue {
   height: 100vh;
   text-align: center;
   z-index: 11;
-  border-right: 1px solid #aa99aa;
   &-item {
     width: 80%;
     margin: 0 auto;

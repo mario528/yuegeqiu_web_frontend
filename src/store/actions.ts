@@ -6,6 +6,9 @@ const actions: ActionTree<any, any> = {
     },
     async handleLoadingState ({state, commit}) {
         commit(TYPES.SET_LOADING_STATE)
+    },
+    async handleScreenModel ({state, commit}, data: boolean) {
+        commit(TYPES.SET_SCREEN_MODEL, data)
     }
 }
 export default actions

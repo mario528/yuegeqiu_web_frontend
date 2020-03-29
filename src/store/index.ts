@@ -8,11 +8,13 @@ interface State {
     showSiderBar: boolean;
     showLoading: boolean;
     isLogin: boolean;
+    smallScreenModel: boolean;
 }
 const state: State = {
     showSiderBar: false,
     showLoading: false,
-    isLogin: false
+    isLogin: false,
+    smallScreenModel: false
 }
 Vue.use(Vuex)
 export default new Vuex.Store({

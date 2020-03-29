@@ -9,6 +9,9 @@ const getters: GetterTree<any, any> = {
   },
   getLoginState (state): boolean {
     return state.isLogin
+  },
+  getScreenModel (state): boolean {
+    return state.smallScreenModel
   }
 }
 

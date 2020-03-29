@@ -11,3 +11,5 @@ declare module 'vue/types/vue' {
     $urls: any
   }
 }
+
+declare module "element-ui"

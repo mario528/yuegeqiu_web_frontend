@@ -51,7 +51,10 @@ export default class Header extends Vue {
   public navList!: any[];
 
   @Action("handleSiderBar")
-  public handleSiderBar!: () => void;
+  public handleSiderBar!: (state: boolean) => void;
+
+  @Action("handleScreenModel")
+  public handleScreenModel!: (state: boolean) => void;
 
   @Getter('getLoginState')
   public isLogin!: boolean
@@ -72,6 +75,7 @@ export default class Header extends Vue {
     } else if (newValue > 800 && this.smallScreenMode) {
       this.smallScreenMode = false;
     }
+    this.handleScreenModel(this.smallScreenMode)
   }
   mounted() {
     const that = this;
