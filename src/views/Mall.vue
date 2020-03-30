@@ -12,15 +12,9 @@
 // @ is an alias to /src
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
-import navHeader from "@/components/Header.vue";
-import sideBar from '@/components/Sidebar.vue'
-
 import { router } from '../config/index'
 @Component({
-  components: {
-    navHeader,
-    sideBar
-  }
+  components: {}
 })
 export default class Mall extends Vue {
   public navList: any[] = router

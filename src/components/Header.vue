@@ -62,17 +62,17 @@ export default class Header extends Vue {
   public brandIcon: string = require("../assets/brand_icon.png");
   public commonUserIcon: string = require("../assets/common_user_icon.png");
   public leftSidebarIcon: string = require("../assets/left_sidebar_icon.png");
-  public clientWindowWidth: number = document.body.clientWidth;
-  public smallScreenMode = document.body.clientWidth <= 800;
+  public clientWindowWidth = 1440;
+  public smallScreenMode = document.body.clientWidth <= 850;
   public domHeight = 75;
   public showUserSpread = false;
   public optimize: any | undefined | null;
 
   @Watch("clientWindowWidth")
   onWindowWidthChange(newValue: number, oldValue: number): void {
-    if (newValue <= 800 && !this.smallScreenMode) {
+    if (newValue <= 850 && !this.smallScreenMode) {
       this.smallScreenMode = true;
-    } else if (newValue > 800 && this.smallScreenMode) {
+    } else if (newValue > 850 && this.smallScreenMode) {
       this.smallScreenMode = false;
     }
     this.handleScreenModel(this.smallScreenMode)
@@ -80,6 +80,7 @@ export default class Header extends Vue {
   mounted() {
     const that = this;
     this.optimize = new Optimize();
+    this.clientWindowWidth = document.body.clientWidth
     window.onresize = () => {
       return ((): void => {
         that.clientWindowWidth = document.body.clientWidth;
@@ -120,6 +121,7 @@ export default class Header extends Vue {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  box-shadow: 0 15px 10px #e3f2fd;
   &-slider-icon {
     width: 40px;
     height: 40px;
