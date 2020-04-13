@@ -4,31 +4,39 @@ class Optimize {
     constructor () {
     }
     // 防抖
-    debounce (fn: any, delay = 200) {
-        let timer: any
-            ,that: any = this
+    public debounce (fn: any, delay = 2000) {
+        let timer: any;
         return function () {
-            if (timer) {
-                clearTimeout(timer)
-            }else {
+            if (timer) clearTimeout(timer)
+            else {
                 timer = setTimeout(() => {
-                    fn.call(that)
-                }, delay)
+                    fn
+                }, delay);
             }
+
         }
+
     }
     // 函数节流
-    processFunc (fn: any, delay = 2) {
-        const currentTimeStemp = +new Date()
-        if (currentTimeStemp - this.processTime < delay * 1000) {
-            fn()
-            this.processTime = currentTimeStemp
-            clearTimeout(this.timer)
-        }else {
-            clearTimeout(this.timer)
-            this.timer = setTimeout(() => {
+    public throttle (fn: any, delay = 2000) {
+        let timer: any;
+        let startTime: number = +new Date()
+        return function () {
+            const currentTime: number = +new Date();             
+            const remaining = delay - (currentTime - startTime);  
+            clearTimeout(timer)
+            if (remaining > 0) {
+                timer = setTimeout(fn, remaining);
+            }else {
                 fn()
-            }, delay * 1000);
+                startTime = +new Date();
+            }
+            if (!timer) {
+                timer = setTimeout(()=> {
+                    fn()
+                    clearTimeout(timer)
+                },delay)
+            }
         }
     }
 }

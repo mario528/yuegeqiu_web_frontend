@@ -81,11 +81,11 @@ export default class Header extends Vue {
     const that = this;
     this.optimize = new Optimize();
     this.clientWindowWidth = document.body.clientWidth
-    window.onresize = () => {
+    this.optimize.debounce(window.onresize = () => {
       return ((): void => {
         that.clientWindowWidth = document.body.clientWidth;
       })();
-    };
+    })
     this.$nextTick(() => {
       // tslint:disable-next-line
       // this.domHeight = this.$refs.header.offsetHeight
@@ -197,6 +197,7 @@ export default class Header extends Vue {
     &:nth-of-type(1):after {
       content: " | ";
       color: white;
+      text-decoration: transparent;
     }
     &:hover {
       cursor: pointer;
