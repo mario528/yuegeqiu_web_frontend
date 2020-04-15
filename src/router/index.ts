@@ -17,12 +17,23 @@ const routes = [
   {
     path: '/mall',
     name: 'Mall',
-    component: () => import('../views/Mall.vue')
+    component: () => import('../views/Mall/Mall.vue')
+  },
+  {
+    path: '/user/:userId',
+    name: 'userCenter',
+    component: () => import('../views/User/UserCenter.vue')
+  },
+  {
+    path: '*',
+    name: "notFoundPage",
+    component: () => import('../views/NotFound.vue')
   }
 ]
 
+// this will return an new VueRouter instance
 export default new VueRouter({
-  mode: 'history',
+  mode: 'hash',
   base: process.env.BASE_URL,
   routes
 })

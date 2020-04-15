@@ -7,10 +7,13 @@ import UpArrow from './components/UpArrow.vue'
 import Header from './components/Header.vue'
 import SideBar from "@/components/Sidebar.vue";
 import Footer from '@/components/Footer.vue'
+
 import {
   Carousel,
-  CarouselItem
+  CarouselItem,
+
 } from 'element-ui'
+import Loading from './components/libs/loading'
 
 Vue.config.productionTip = false
 Vue.prototype.$http = http
@@ -18,11 +21,25 @@ Vue.prototype.$http = http
 
 Vue.use(Carousel)
 Vue.use(CarouselItem)
+Vue.use(Loading)
 // 自定义组件
 Vue.component('up-arrow', UpArrow)
 Vue.component('nav-header', Header)
 Vue.component('side-bar', SideBar)
 Vue.component('footer-area', Footer)
+
+// add router navigation keeper
+router.beforeEach((to, from, next) => {
+  console.log("路由开始载入")
+  // @ts-ignore
+  Vue.$selfLoading.show()
+  next()
+})
+router.afterEach((to, from) => {
+  console.log("路由载入完成")
+  // @ts-ignore
+  Vue.$selfLoading.hide()
+})
 new Vue({
   router,
   store,

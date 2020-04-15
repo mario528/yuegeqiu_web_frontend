@@ -12,7 +12,7 @@
 // @ is an alias to /src
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
-import { router } from '../config/index'
+import { router } from '../../config/index'
 @Component({
   components: {}
 })
@@ -22,7 +22,7 @@ export default class Mall extends Vue {
 }
 </script>
 <style lang="scss" scoped>
-@import '../stylus/scss/app';
+@import '../../stylus/scss/app';
 .page {
   position: relative;
 }
