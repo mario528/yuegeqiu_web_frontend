@@ -22,7 +22,6 @@ export default class Mall extends Vue {
 }
 </script>
 <style lang="scss" scoped>
-@import '../../stylus/scss/app';
 .page {
   position: relative;
 }

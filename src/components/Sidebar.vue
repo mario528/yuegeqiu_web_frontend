@@ -23,8 +23,9 @@
                     </div>
                 </div>
                 <div class="flex-column-x-start create-deveoper-info">
-                    <span>开发者: 马加奥</span>
-                    <span>联系方式: <a>mario528@163.com</a></span>
+                    <span>开发者: 马加奥(Mario)</span>
+                    <span>Email:</span>
+                    <span> <a>mario528@163.com</a></span>
                 </div>
             </div>
         </transition>
@@ -111,7 +112,7 @@ export default class SiderBar extends Vue {
   }
   &-brand {
     height: 65px;
-    background-color: #17abe3;
+    background-color: $base_color;
     &-icon {
       width: 40px;
       height: 40px;
@@ -126,7 +127,7 @@ export default class SiderBar extends Vue {
         font-size: 12px;
         color: #aa99aa;
         line-height: 20px;
-        margin-bottom: 20px;
+        margin-bottom: 5px;
         a {
             color: #17abe3;
             text-decoration: underline;

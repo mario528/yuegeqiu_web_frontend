@@ -1,5 +1,5 @@
 <template>
-  <div>个人中心</div>
+  <div>个人设置</div>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
@@ -9,10 +9,6 @@ import { Getter, Action, State } from "vuex-class";
 })
 export default class UserCenter extends Vue {
   public userName: any;
-  @Watch("$route")
-  onRouteChange(newValue: any, oldValue: any) {
-    console.log(newValue, oldValue);
-  }
   created() {}
   beforeRouteEnter(to: any, from: any, next: any) {
     console.log(to.params);

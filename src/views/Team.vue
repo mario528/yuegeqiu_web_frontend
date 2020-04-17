@@ -22,7 +22,6 @@ export default class Team extends Vue {
 }
 </script>
 <style lang="scss" scoped>
-@import '../stylus/scss/app';
 .page {
   position: relative;
 }

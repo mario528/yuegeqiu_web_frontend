@@ -20,7 +20,7 @@ export default class Footer extends Vue {
   position: fixed;
   bottom: 0;
   left: 0;
-  background-color: #03A9F4;
+  background-color: $base_color;
 }
 </style>
 

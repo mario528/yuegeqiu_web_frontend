@@ -14,6 +14,22 @@ module.exports = {
       title: '约个球'
     }
   },
+  devServer: {
+    host: 'localhost',
+    port: 3001,
+    https: false,
+    hotOnly: false,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        wx: false,
+        pathRewrite: {
+          '^/api': ''
+        }
+      } 
+    }
+  },
   chainWebpack: config => {
       config.module
         .rule("eslint")
@@ -30,6 +46,7 @@ module.exports = {
       preProcessor: 'scss',
       patterns: [
         path.resolve(__dirname, './src/stylus/scss/app.scss'),
+        path.resolve(__dirname, './src/stylus/scss/colorConfig.scss'),
       ]
     }
   }

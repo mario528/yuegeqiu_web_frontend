@@ -1,3 +1,5 @@
+// register router hooks
+require('./utils/registerHooks')
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
@@ -13,7 +15,7 @@ import {
   CarouselItem,
 
 } from 'element-ui'
-import Loading from './components/libs/loading'
+import Loading from './components/Loading/libs/loading'
 
 Vue.config.productionTip = false
 Vue.prototype.$http = http

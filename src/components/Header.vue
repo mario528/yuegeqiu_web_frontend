@@ -8,7 +8,7 @@
       </span>
       <div class="flex-row-y-center">
         <nav class="nav-bar-item" v-for="(item, index) in navList" :key="index">
-          <router-link tag="div" :to="item.navPath">{{item.navTitle}}</router-link>
+          <router-link exact class="router-link-class" tag="div" :to="item.navPath">{{item.navTitle}}</router-link>
         </nav>
       </div>
     </div>
@@ -29,6 +29,7 @@
           >
           <div>
             <a class="user-text">登陆</a>
+            <a class="user-text-line"> ｜ </a>
             <a class="user-text">注册</a>
           </div>
         </div>
@@ -67,6 +68,7 @@ export default class Header extends Vue {
   public domHeight = 75;
   public showUserSpread = false;
   public optimize: any | undefined | null;
+  public routePath: any;
 
   @Watch("clientWindowWidth")
   onWindowWidthChange(newValue: number, oldValue: number): void {
@@ -79,6 +81,7 @@ export default class Header extends Vue {
   }
   mounted() {
     const that = this;
+    this.routePath = this.$route.path
     this.optimize = new Optimize();
     this.clientWindowWidth = document.body.clientWidth
     this.optimize.debounce(window.onresize = () => {
@@ -108,12 +111,11 @@ export default class Header extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@import "../stylus/scss/app.scss";
 .header {
   box-sizing: border-box;
   width: 100%;
   padding: 5px 5%;
-  background-color: #17abe3;
+  background-color: $base_color;
   position: relative;
   position: sticky;
   top: 0;
@@ -121,7 +123,7 @@ export default class Header extends Vue {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  box-shadow: 0 15px 10px #e3f2fd;
+  // box-shadow: 0 15px 10px #e3f2fd;
   &-slider-icon {
     width: 40px;
     height: 40px;
@@ -151,23 +153,28 @@ export default class Header extends Vue {
 }
 .nav-bar {
   &-item {
-    background-color: #3399cc;
     padding: 10px 30px;
-    color: #ffffff;
+    color: $header_font_color_common;
     font-weight: 500;
     font-size: 16px;
     margin-right: 40px;
     border-radius: 5px;
     text-decoration: none;
     cursor: pointer;
+    &-activity {
+      @extend .nav-bar-item;
+      color: $header_font_color_activity;
+    }
   }
   &-item:nth-of-type(1) {
     margin-left: 30px;
   }
   &-item:hover {
-    color: #3399cc;
-    background-color: #ffffff;
+    color: $header_font_color_activity;
   }
+}
+.router-link-class.router-link-active {
+  color: $header_font_color_activity;
 }
 .user {
   &-area {
@@ -194,15 +201,13 @@ export default class Header extends Vue {
   }
   &-text {
     color: white;
-    &:nth-of-type(1):after {
-      content: " | ";
-      color: white;
-      text-decoration: transparent;
-    }
     &:hover {
       cursor: pointer;
       color: greenyellow;
       text-decoration: underline;
+    }
+    &-line {
+      color: white;
     }
   }
 }

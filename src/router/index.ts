@@ -25,6 +25,15 @@ const routes = [
     component: () => import('../views/User/UserCenter.vue')
   },
   {
+    path: '/user/setting',
+    name: 'userSetting',
+    component: () => import('../views/User/UserSetting.vue'),
+    meta: {
+      // this page need user login
+      requireAuth: true  
+    }
+  },
+  {
     path: '*',
     name: "notFoundPage",
     component: () => import('../views/NotFound.vue')

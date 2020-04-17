@@ -9,8 +9,8 @@
           :class="[ smallScreenModel ? 'flex-row carousel-container-small' : 'flex-row carousel-container' ]"
         >
           <el-carousel class="carousel-box" :interval="5000" arrow="always" height="100%">
-            <el-carousel-item v-for="item in 6" :key="item">
-              <div>{{item}}</div>
+            <el-carousel-item v-for="(item, index) in bannerList" :key="index">
+              <img class="carousel-box-img" :src="item.url" alt="" />
             </el-carousel-item>
           </el-carousel>
         </div>
@@ -31,20 +31,34 @@
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { State, Action, Getter } from "vuex-class";
 import { router } from "../config/index";
+import url from '../utils/url';
 @Component({
   components: {}
 })
 export default class Home extends Vue {
   public navList: any[] = router;
   public domHeight = 75;
+  private bannerList!: any[]
+  data() {
+    return {
+      bannerList: []
+    }
+  }
   @Getter("getScreenModel")
   public smallScreenModel!: boolean;
   mounted() {
   }
+  created() {
+    this.requestBannerData()
+  }
+  private requestBannerData () {
+    this.$http.get(url.HOME_BANNER).then((res: any) => {
+      this.bannerList = res.banner
+    })
+  }
 }
 </script>
 <style lang="scss" scoped>
-@import "../stylus/scss/app";
 .page {
   position: relative;
 }
@@ -56,7 +70,7 @@ export default class Home extends Vue {
   &-small {
     width: 100vw;
     height: 30vh;
-    margin: 2vh 0vw;
+    margin: 0 0 2vh 0;
     border-radius: 10px;
   }
 }
@@ -78,6 +92,10 @@ export default class Home extends Vue {
     width: 100%;
     height: 100%;
     border-radius: 10px;
+  }
+  &-img {
+    width: auto;
+    height: 100%;
   }
 }
 
