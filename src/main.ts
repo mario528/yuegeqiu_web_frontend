@@ -13,7 +13,7 @@ import Footer from '@/components/Footer.vue'
 import {
   Carousel,
   CarouselItem,
-
+  Image
 } from 'element-ui'
 import Loading from './components/Loading/libs/loading'
 
@@ -24,6 +24,7 @@ Vue.prototype.$http = http
 Vue.use(Carousel)
 Vue.use(CarouselItem)
 Vue.use(Loading)
+Vue.use(Image)
 // 自定义组件
 Vue.component('up-arrow', UpArrow)
 Vue.component('nav-header', Header)

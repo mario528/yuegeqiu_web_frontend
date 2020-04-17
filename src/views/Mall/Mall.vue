@@ -1,7 +1,5 @@
 <template>
   <div class="page">
-    <nav-header :navList="navList"></nav-header>
-    <side-bar :nav-list="navList" :dom-height="domHeight"></side-bar>
     <div class="flex-column-x-center container">
       Mall
     </div>
@@ -11,14 +9,10 @@
 <script lang="ts">
 // @ is an alias to /src
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-
-import { router } from '../../config/index'
 @Component({
   components: {}
 })
 export default class Mall extends Vue {
-  public navList: any[] = router
-  public domHeight = 75
 }
 </script>
 <style lang="scss" scoped>

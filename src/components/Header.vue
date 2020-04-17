@@ -117,7 +117,6 @@ export default class Header extends Vue {
   padding: 5px 5%;
   background-color: $base_color;
   position: relative;
-  position: sticky;
   top: 0;
   left: 0;
   display: flex;

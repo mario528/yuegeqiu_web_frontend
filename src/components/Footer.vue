@@ -17,10 +17,9 @@ export default class Footer extends Vue {
 .footer-page {
   width: 100%;
   height: 8vh;
-  position: fixed;
-  bottom: 0;
-  left: 0;
+  padding: 0 5vw;
   background-color: $base_color;
+  color: $base_font_color;
 }
 </style>
 
