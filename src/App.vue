@@ -33,6 +33,6 @@ export default class App extends Vue {
 }
 .app-content {
   margin-top: 2vh;
-  min-height: calc(90vh - 80px);
+  min-height: 80vh;
 }
 </style>

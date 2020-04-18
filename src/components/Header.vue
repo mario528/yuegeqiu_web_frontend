@@ -27,10 +27,10 @@
             @click="processSetSpread('click')"
             @mouseout="processSetSpread('mouseout')"
           >
-          <div>
-            <a class="user-text">登陆</a>
+          <div @click="handleTapLoginOrRegister">
+            <a class="user-text" dataset="login">登陆</a>
             <a class="user-text-line"> ｜ </a>
-            <a class="user-text">注册</a>
+            <a class="user-text" dataset="register">注册</a>
           </div>
         </div>
       </div>
@@ -108,13 +108,18 @@ export default class Header extends Vue {
       : this.handlehideUserSpread;
     this.optimize.processFunc(fn, 0.3);
   }
+  private handleTapLoginOrRegister (event: any) {
+    // @ts-ignore
+    this.$loginDialog.changeDialogState()
+  }
 }
 </script>
 <style scoped lang="scss">
 .header {
   box-sizing: border-box;
+  height: 10vh;
   width: 100%;
-  padding: 5px 5%;
+  padding: 5px 0%;
   background-color: $base_color;
   position: relative;
   top: 0;

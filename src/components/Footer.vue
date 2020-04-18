@@ -15,6 +15,7 @@ export default class Footer extends Vue {
 </script>
 <style lang="scss" scoped>
 .footer-page {
+  box-sizing: border-box;
   width: 100%;
   height: 8vh;
   padding: 0 5vw;

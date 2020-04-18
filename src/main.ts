@@ -9,6 +9,7 @@ import UpArrow from './components/UpArrow.vue'
 import Header from './components/Header.vue'
 import SideBar from "@/components/Sidebar.vue";
 import Footer from '@/components/Footer.vue'
+import LoginOrRegister from '@/components/LoginOrRegister.vue'
 
 import {
   Carousel,
@@ -16,21 +17,20 @@ import {
   Image
 } from 'element-ui'
 import Loading from './components/Loading/libs/loading'
-
 Vue.config.productionTip = false
 Vue.prototype.$http = http
-
-
+// 引用Element-ui plugins
 Vue.use(Carousel)
 Vue.use(CarouselItem)
-Vue.use(Loading)
 Vue.use(Image)
+// 自定义插件
+Vue.use(Loading)
 // 自定义组件
 Vue.component('up-arrow', UpArrow)
 Vue.component('nav-header', Header)
 Vue.component('side-bar', SideBar)
 Vue.component('footer-area', Footer)
-
+Vue.component('login-register', LoginOrRegister)
 // add router navigation keeper
 router.beforeEach((to, from, next) => {
   console.log("路由开始载入")

@@ -1,4 +1,5 @@
 import Vue from 'vue'
+// @ts-ignore
 import Loading from '../Loading.vue'
 
 const LoadingConstructor = Vue.extend(Loading) 
