@@ -31,6 +31,16 @@ Vue.component('nav-header', Header)
 Vue.component('side-bar', SideBar)
 Vue.component('footer-area', Footer)
 Vue.component('login-register', LoginOrRegister)
+// register a event handler
+import { EventHandler } from './utils/index'
+// @ts-ignore
+Vue.$event = new EventHandler()
+Vue.mixin({
+  created () {
+    // @ts-ignore
+    this.$event = Vue.$event
+  }
+})
 // add router navigation keeper
 router.beforeEach((to, from, next) => {
   console.log("路由开始载入")
