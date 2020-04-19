@@ -4,7 +4,7 @@ const routerList = [
         navPath: "/"
       },
       {
-        navTitle: "我的球队",
+        navTitle: "球队",
         navPath: "/team"
       },
       {

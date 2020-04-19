@@ -8,7 +8,12 @@
       </span>
       <div class="flex-row-y-center">
         <nav class="nav-bar-item" v-for="(item, index) in navList" :key="index">
-          <router-link exact class="router-link-class" tag="div" :to="item.navPath">{{item.navTitle}}</router-link>
+          <router-link
+            exact
+            class="router-link-class"
+            tag="div"
+            :to="item.navPath"
+          >{{item.navTitle}}</router-link>
         </nav>
       </div>
     </div>
@@ -28,9 +33,9 @@
             @mouseout="processSetSpread('mouseout')"
           >
           <div @click="handleTapLoginOrRegister">
-            <a class="user-text" dataset="login">登陆</a>
-            <a class="user-text-line"> ｜ </a>
-            <a class="user-text" dataset="register">注册</a>
+            <a class="user-text" data-set="login">登陆</a>
+            <a class="user-text-line">｜</a>
+            <a class="user-text" data-set="register">注册</a>
           </div>
         </div>
       </div>
@@ -57,8 +62,8 @@ export default class Header extends Vue {
   @Action("handleScreenModel")
   public handleScreenModel!: (state: boolean) => void;
 
-  @Getter('getLoginState')
-  public isLogin!: boolean
+  @Getter("getLoginState")
+  public isLogin!: boolean;
 
   public brandIcon: string = require("../assets/brand_icon.png");
   public commonUserIcon: string = require("../assets/common_user_icon.png");
@@ -77,18 +82,20 @@ export default class Header extends Vue {
     } else if (newValue > 850 && this.smallScreenMode) {
       this.smallScreenMode = false;
     }
-    this.handleScreenModel(this.smallScreenMode)
+    this.handleScreenModel(this.smallScreenMode);
   }
   mounted() {
     const that = this;
-    this.routePath = this.$route.path
+    this.routePath = this.$route.path;
     this.optimize = new Optimize();
-    this.clientWindowWidth = document.body.clientWidth
-    this.optimize.debounce(window.onresize = () => {
-      return ((): void => {
-        that.clientWindowWidth = document.body.clientWidth;
-      })();
-    })
+    this.clientWindowWidth = document.body.clientWidth;
+    this.optimize.debounce(
+      (window.onresize = () => {
+        return ((): void => {
+          that.clientWindowWidth = document.body.clientWidth;
+        })();
+      })
+    );
     this.$nextTick(() => {
       // tslint:disable-next-line
       // this.domHeight = this.$refs.header.offsetHeight
@@ -108,9 +115,9 @@ export default class Header extends Vue {
       : this.handlehideUserSpread;
     this.optimize.processFunc(fn, 0.3);
   }
-  private handleTapLoginOrRegister (event: any) {
+  private handleTapLoginOrRegister(event: any) {
     // @ts-ignore
-    this.$loginDialog.changeDialogState()
+    this.$event.emit("changeLoginDialogState");
   }
 }
 </script>

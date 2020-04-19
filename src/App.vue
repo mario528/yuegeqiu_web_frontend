@@ -6,6 +6,7 @@
       <router-view/>
     </div>
     <footer-area></footer-area>
+    <login-register></login-register>
   </div>
 </template>
 <script lang="ts">

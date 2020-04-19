@@ -1,6 +1,6 @@
 <template>
-    <div class="footer-page">
-        Footer
+    <div class="flex-column-center footer-page">
+        开发者: 马加奥
     </div >
 </template>
 <script lang="ts">

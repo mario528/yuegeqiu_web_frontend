@@ -35,18 +35,21 @@ export default class UpArrow extends Vue {
 }
 @media screen and (min-width: 401px) {
   .up-arrow-container {
-    width: 60px;
-    height: 70px;
+    width: 50px;
+    height: 50px;
     position: fixed;
-    right: calc(5vw - 40px);
+    right: calc(5vw - 30px);
     bottom: 20vh;
-    border-radius: 5px;
+    border-radius: 50%;
     background-color: $base_color;
+    &:hover {
+      box-shadow: 0px 0px 2px 2px $base_color;
+    }
   }
   .up-arrow {
     cursor: pointer;
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
   }
 }
 </style>
