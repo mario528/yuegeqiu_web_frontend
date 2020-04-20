@@ -14,11 +14,13 @@ import LoginOrRegister from '@/components/LoginOrRegister.vue'
 import {
   Carousel,
   CarouselItem,
-  Image
+  Image,
+  Notification
 } from 'element-ui'
 import Loading from './components/Loading/libs/loading'
 Vue.config.productionTip = false
 Vue.prototype.$http = http
+Vue.prototype.$notify = Notification
 // register a event handler
 import { EventHandler } from './utils/index'
 // @ts-ignore

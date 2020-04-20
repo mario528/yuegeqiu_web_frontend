@@ -1,3 +1,6 @@
+.width-100 {
+  width: 100%;
+}
 .flex {
     display: flex;
     &-row {
@@ -32,6 +35,15 @@
       }
       &-y-between {
 
+      }
+      &-x-end {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+      }
+      &-x-start {
+        @extend .flex-row-x-end;
+        justify-content: flex-start;
       }
     }
     &-column {
