@@ -15,7 +15,8 @@ import {
   Carousel,
   CarouselItem,
   Image,
-  Notification
+  Notification,
+  
 } from 'element-ui'
 import Loading from './components/Loading/libs/loading'
 Vue.config.productionTip = false

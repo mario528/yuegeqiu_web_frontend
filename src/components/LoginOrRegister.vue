@@ -7,15 +7,27 @@
           <div class="separator">/</div>
           <div :class="[dialogState == 2 ? 'type-item-activity' : 'type-item']" @click="swithType(event,2)">注册</div>
         </div>
-        <div v-if="dialogState == 1" class="flex-column-x-center">
-          <input class="user-input" v-model="loginTelNumber" placeholder="手机号" />
+        <div v-if="dialogState == 1" class="flex-column-x-center content ">
+          <input class="user-input" v-model="loginTelNumber" placeholder="手机号" maxlength="11" />
           <div class="width-100" style="position: relative;">
-            <input class="user-input-psw" @input="handleInputPsw" placeholder="密码" :value="showPswStr" />
-            <img class="eyes-icon" :src="eyesIcon" @click="handleSwitchPswType">
+            <input class="user-input-psw" @input="handleInputPsw($event.target.value, 1)" placeholder="密码" :value="showLoginPswStr" />
+            <img class="eyes-icon" :src="eyesIcon" @click="handleSwitchPswType(1)">
           </div>
           <div class="width-100 flex-row-x-end grey-color">忘记密码</div>
           <button class="login-btn" @click="handleLogin">登陆</button>
         </div>
+        <div v-if="dialogState == 2" class="flex-column-x-center content">
+          <input class="user-input" v-model="registerTelNumber" placeholder="手机号" maxlength="11" />
+          <div class="width-100" style="position: relative;">
+            <input class="user-input-psw" @input="handleInputPsw($event.target.value, 2)" placeholder="密码" :value="showRegisterPswStr" />
+            <img class="eyes-icon" :src="eyesIcon" @click="handleSwitchPswType(2)">
+          </div>
+          <div class="verification-container width-100 flex-row">
+            <input v-model="verificationCode" class="user-input-verification" maxlength="4" placeholder="请输入验证码"/>
+            <div class="verification-btn-available" @click="handleSendMessage">发送验证码</div>
+          </div>
+          <button class="login-btn" @click="handleRegister">注册</button>
+        </div> 
       </div>
     </div>
   </transition>
@@ -26,13 +38,19 @@ import { State, Getter, Action } from "vuex-class";
 import User from '../model/User/User'
 @Component({})
 export default class LoginOrRegister extends Vue {
-  private showDialog = false;
+  private showDialog = true;
   private dialogState = 1;
   private loginTelNumber = '';
   private loginPsw = '';
   private hidePsw = false;
-  private showPswStr = '';
+  private showLoginPswStr = '';
   private eyesIcon: any = this.hidePsw ? require('../assets/eyes_close.png') : require('../assets/eyes_open.png')
+  private registerTelNumber = ''
+  private showRegisterPswStr = ''
+  private registerPsw = ''
+  private countDown = 60
+  private countTimer = null
+  private verificationCode = ''
   created() {
     // @ts-ignore
     this.$event.on("changeLoginDialogState", () => {
@@ -40,42 +58,56 @@ export default class LoginOrRegister extends Vue {
     });
   }
   private handleMaskState() {
-    this.showDialog = !this.showDialog;
+    this.showDialog = !this.showDialog
+    this._initState()
   }
   private swithType (event: any, type: number) {
     if (type == this.dialogState) return
     this.dialogState = type
+    this._initState()
   }
-  private handleInputPsw (event: any) {
+  private handleInputPsw (value: string, type: number) {
     if (this.hidePsw) {
-      const len = event.target.value.length
-      for (let i = 0; i < len - this.showPswStr.length; i++) {
-        this.showPswStr += '*'
+      let len
+      type == 1 ? len = value.length - this.showLoginPswStr.length : len = value.length - this.showRegisterPswStr.length
+      for (let i = 0; i < len; i++) {
+        type == 1 ? this.showLoginPswStr += '*' : this.showRegisterPswStr += '*'
       }
-      this.loginPsw = event.target.value
+      type == 1 ? this.loginPsw += value.substr(value.length - 1, 1) : this.registerPsw += value.substr(value.length - 1, 1)
     }else {
-      this.showPswStr = event.target.value
-      this.loginPsw = event.target.value
+      type == 1 ? this.showLoginPswStr = value : this.showRegisterPswStr = value
+      type == 1 ? this.loginPsw = value : this.registerPsw = value
     }
   }
-  private handleSwitchPswType () {
+  private handleSwitchPswType (type: number) {
     if (this.hidePsw) {
-      this.showPswStr = this.loginPsw
+      type == 1 ? this.showLoginPswStr = this.loginPsw : this.showRegisterPswStr = this.registerPsw
     }else {
       let str = ''
-      for (let i = 0; i < this.showPswStr.length; i++) {
+          ,len = type == 1 ? this.showLoginPswStr.length : this.showRegisterPswStr.length
+      for (let i = 0; i < len; i++) {
           str += '*'
       }
-      this.showPswStr = str
+      type == 1 ? this.showLoginPswStr = str : this.showRegisterPswStr = str
     }
     this.hidePsw = !this.hidePsw
     this.eyesIcon = this.hidePsw ? require('../assets/eyes_close.png') : require('../assets/eyes_open.png')
   }
   private _initState() {
+    this.loginTelNumber = ''
     this.loginPsw = ''
-    this.showPswStr = ''
-    this.dialogState = 1
-    this.showDialog = false
+    this.showLoginPswStr = ''
+    this.registerTelNumber = ''
+    this.showRegisterPswStr = ''
+  }
+  private _checkInfoAvailable (): boolean {
+    if (this.dialogState == 1) {
+      if (!this.loginTelNumber || !this.loginPsw) return false
+      else return true
+    }else {
+      if (!this.registerTelNumber || !this.registerPsw || !this.verificationCode) return false
+      else return true
+    }
   }
   private handleLogin () {
     // @ts-ignore
@@ -91,6 +123,32 @@ export default class LoginOrRegister extends Vue {
         message: '这是一条成功的提示消息',
         type: 'success'
       })   
+    })
+  }
+  private handleRegister () {
+    const userType = new User()
+    const params = {
+      telephone: this.registerTelNumber,
+      password: this.registerPsw
+    }
+    userType.register.call(this, params).then((res: any) => {
+      
+    })
+  }
+  private handleSendMessage () {
+    if (!this.registerTelNumber) {
+      this.$notify.error({
+        title: 'Error',
+        message: '请输入正确的手机号'
+      });
+      return
+    }
+    const userType = new User()
+    const params = {
+      
+    }
+    userType.getVerificationCode.call(this, params).then((res: any) => {
+      
     })
   }
 }
@@ -110,7 +168,7 @@ export default class LoginOrRegister extends Vue {
   box-sizing: border-box;
   min-width: 300px;
   width: 40vw;
-  padding: 2vw 5vw 3vw 5vw;
+  padding: 40px 5vw 3vw 5vw;
   border-radius: 5px;
 }
 .separator {
@@ -126,6 +184,9 @@ export default class LoginOrRegister extends Vue {
     font-weight: 500;
   }
 }
+.content {
+  min-height: 50vh;
+}
 .user-input {
   box-sizing: border-box;
   width: 100%;
@@ -138,6 +199,30 @@ export default class LoginOrRegister extends Vue {
   outline: none;
   &-psw {
     @extend .user-input ;
+  }
+  &-verification {
+    @extend .user-input ;
+    width: 50%;
+  }
+}
+.verification {
+  &-btn {
+    cursor: pointer;
+    width: 30%;
+    height: 50px;
+    margin: 20px 0;
+    text-align: center;
+    line-height: 50px;
+    border: 1px solid #eeeeee;
+    margin-left: 20%;
+    font-size: 14px;
+    font-weight: 500;
+    color: $base_color;
+    &-available {
+      @extend .verification-btn ;
+      background-color: $base_color;
+      color: white;
+    }
   }
 }
 .login-btn {

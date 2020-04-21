@@ -214,8 +214,7 @@ export default class Header extends Vue {
     color: white;
     &:hover {
       cursor: pointer;
-      color: greenyellow;
-      text-decoration: underline;
+      color: $high_light_color;
     }
     &-line {
       color: white;
