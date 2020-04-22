@@ -9,6 +9,12 @@ const actions: ActionTree<any, any> = {
     },
     async handleScreenModel ({state, commit}, data: boolean) {
         commit(TYPES.SET_SCREEN_MODEL, data)
+    },
+    async handleSetAccountToken ({state, commit}, token: string) {
+        commit(TYPES.SET_ACCOUNT_TOKEN, token)
+    },
+    async handleClearAccountToken ({state, commit}) {
+        commit(TYPES.CLEAR_ACCOUNt_TOKEN)
     }
 }
 export default actions

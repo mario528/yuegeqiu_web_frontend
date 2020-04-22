@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import Vue from 'vue'
 let httpInstance: AxiosInstance | any;
 httpInstance = axios.create({
     baseURL: "",    // api 的 base_url
@@ -12,6 +13,9 @@ interface ResponseData {
 }
 // 请求拦截器
 httpInstance.interceptors.request.use((config: AxiosRequestConfig) => {
+    if (localStorage.getItem('Authorization')) {
+        config.headers.Authorization = localStorage.getItem('Authorization')
+    }
     return config
 },(error: any)=> {
     console.error("error", error)
@@ -25,8 +29,16 @@ httpInstance.interceptors.response.use((res: AxiosResponse)=> {
     }else if (data.code == 200) {
         return data.data
     }else {
-        console.error("request error", data.message)
-        return Promise.reject(data.message)
+        // @ts-ignore
+        console.error("request error", data.msg)
+        // @ts-ignore
+        const message = data.msg 
+        Vue.prototype.$notify.error({
+            title: 'Error',
+            message: message
+        })
+        // @ts-ignore
+        return Promise.reject(message)
     }
 }, (error: any) => {
     console.error("error", error)

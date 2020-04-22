@@ -12,6 +12,9 @@ const getters: GetterTree<any, any> = {
   },
   getScreenModel (state): boolean {
     return state.smallScreenModel
+  },
+  getAccountToken (state): any {
+    return state.token
   }
 }
 

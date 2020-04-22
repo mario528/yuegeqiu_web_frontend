@@ -51,6 +51,9 @@ export default class LoginOrRegister extends Vue {
   private countDown = 60
   private countTimer = null
   private verificationCode = ''
+
+  @Action('handleSetAccountToken')
+  private handleSetAccountToken!: (token: string) => void
   created() {
     // @ts-ignore
     this.$event.on("changeLoginDialogState", () => {
@@ -99,6 +102,7 @@ export default class LoginOrRegister extends Vue {
     this.showLoginPswStr = ''
     this.registerTelNumber = ''
     this.showRegisterPswStr = ''
+    this.verificationCode = ''
   }
   private _checkInfoAvailable (): boolean {
     if (this.dialogState == 1) {
@@ -129,9 +133,21 @@ export default class LoginOrRegister extends Vue {
     const userType = new User()
     const params = {
       telephone: this.registerTelNumber,
-      password: this.registerPsw
+      password: this.registerPsw,
+      verification_code: this.verificationCode
     }
     userType.register.call(this, params).then((res: any) => {
+      const token = res.token
+      localStorage.setItem("Authorization", token)
+      this.handleSetAccountToken(token)
+      this.$notify({
+        title: '成功',
+        message: '账户注册成功',
+        type: 'success'
+      })   
+      this._initState()
+      this.showDialog = false
+    }).catch((err: any) => {
       
     })
   }
@@ -145,7 +161,7 @@ export default class LoginOrRegister extends Vue {
     }
     const userType = new User()
     const params = {
-      
+      telephone: this.registerTelNumber
     }
     userType.getVerificationCode.call(this, params).then((res: any) => {
       
@@ -169,7 +185,7 @@ export default class LoginOrRegister extends Vue {
   min-width: 300px;
   width: 40vw;
   padding: 40px 5vw 3vw 5vw;
-  border-radius: 5px;
+  border-radius: 10px;
 }
 .separator {
   color: $base_color;

@@ -22,6 +22,8 @@ class User {
             // @ts-ignore
             this.$http.post(Url.LOGIN, params).then((res: any) => {
                 reslove(res)
+            }).catch((err: any) => {
+                reject(err)
             })
         })
     }
@@ -30,6 +32,8 @@ class User {
             // @ts-ignore
             this.$http.post(Url.REGISTER, params).then((res: any) => {
                 reslove(res)
+            }).catch((err: any) => {
+                reject(err)
             })
         })
     }
@@ -40,6 +44,8 @@ class User {
                 params
             }).then((res: any) => {
                 reslove(res)
+            }).catch((err: any) => {
+                reject(err)
             })
         })
     }

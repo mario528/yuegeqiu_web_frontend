@@ -9,6 +9,12 @@ const mutations: MutationTree<any> = {
     },
     [TYPES.SET_SCREEN_MODEL] (state, item: boolean): void {
         state.smallScreenModel = item
+    },
+    [TYPES.SET_ACCOUNT_TOKEN] (state, token: string): void {
+        state.token = token
+    },
+    [TYPES.CLEAR_ACCOUNt_TOKEN] (state): void {
+        state.token = undefined
     }
 }
 export default mutations
