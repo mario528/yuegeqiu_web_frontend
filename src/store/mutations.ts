@@ -15,6 +15,9 @@ const mutations: MutationTree<any> = {
     },
     [TYPES.CLEAR_ACCOUNt_TOKEN] (state): void {
         state.token = undefined
+    },
+    [TYPES.SET_LOGIN_STATE] (state, status: boolean): void {
+        state.isLogin = status
     }
 }
 export default mutations

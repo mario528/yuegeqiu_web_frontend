@@ -15,6 +15,9 @@ const actions: ActionTree<any, any> = {
     },
     async handleClearAccountToken ({state, commit}) {
         commit(TYPES.CLEAR_ACCOUNt_TOKEN)
+    },
+    async handleSetLoginState ({state, commit}, data: boolean) {
+        commit(TYPES.SET_LOGIN_STATE, data)
     }
 }
 export default actions

@@ -49,7 +49,34 @@ router.beforeEach((to, from, next) => {
   console.log("路由开始载入")
   // @ts-ignore
   Vue.$selfLoading.show()
-  next()
+  if (to.meta.requireAuth && !localStorage.getItem('Authorization')) {
+    Vue.prototype.$notify.error({
+      title: 'Error',
+      message: '请登录'
+    })
+  }
+  if (localStorage.getItem('Authorization') && to.meta.requireAuth) {
+    // @ts-ignore
+    Vue.prototype.$http.get('/api/v1/token/state', {
+      params: {
+        token: localStorage.getItem('Authorization')
+      }
+    }).then((res: any) => {
+      next()
+    }).catch((err: any) => {
+      setTimeout(() => {
+        if (err.response.status == 401) {
+          Vue.prototype.$notify.error({
+              title: 'Error',
+              message: '登陆状态失效'
+          })
+        }
+      }, 300);
+      next()
+    })
+  }else {
+    next()
+  }
 })
 router.afterEach((to, from) => {
   console.log("路由载入完成")

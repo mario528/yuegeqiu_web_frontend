@@ -34,6 +34,15 @@ const routes = [
     }
   },
   {
+    path: '/user/completeInfo',
+    name: 'completeInfo',
+    component: () => import('../views/User/UserRegisterInfo.vue'),
+    meta: {
+      // this page need user login
+      requireAuth: true
+    }
+  },
+  {
     path: '*',
     name: "notFoundPage",
     component: () => import('../views/NotFound.vue')

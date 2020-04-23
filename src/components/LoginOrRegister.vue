@@ -38,7 +38,7 @@ import { State, Getter, Action } from "vuex-class";
 import User from '../model/User/User'
 @Component({})
 export default class LoginOrRegister extends Vue {
-  private showDialog = true;
+  private showDialog = false;
   private dialogState = 1;
   private loginTelNumber = '';
   private loginPsw = '';
@@ -54,6 +54,10 @@ export default class LoginOrRegister extends Vue {
 
   @Action('handleSetAccountToken')
   private handleSetAccountToken!: (token: string) => void
+
+  @Action('handleSetLoginState')
+  private handleSetLoginState!: (state: boolean) => void
+
   created() {
     // @ts-ignore
     this.$event.on("changeLoginDialogState", () => {
@@ -122,11 +126,16 @@ export default class LoginOrRegister extends Vue {
     }
     userType.login.call(this, params).then((res: any) => {
       // @ts-ignore
+      const { token } = res
+      localStorage.setItem("Authorization", token)
       this.$notify({
         title: '成功',
-        message: '这是一条成功的提示消息',
+        message: '登陆成功',
         type: 'success'
-      })   
+      })
+      this.handleSetLoginState(true)
+      this._initState()
+      this.showDialog = false
     })
   }
   private handleRegister () {
@@ -147,6 +156,9 @@ export default class LoginOrRegister extends Vue {
       })   
       this._initState()
       this.showDialog = false
+      setTimeout(() => {
+        this.$router.push('/user/completeInfo')
+      }, 1000);
     }).catch((err: any) => {
       
     })

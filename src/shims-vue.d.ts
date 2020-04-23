@@ -8,7 +8,8 @@ declare module 'vue/types/vue' {
     $http: any,
     $router: VueRouter,
     $route: Route,
-    $urls: any
+    $urls: any,
+    $selfLoading: any
   }
 }
 

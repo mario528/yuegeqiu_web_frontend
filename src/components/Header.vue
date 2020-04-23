@@ -23,7 +23,7 @@
     </div>
     <!-- Header right side -->
     <div class="flex-row-y-center user-area">
-      <div>
+      <div v-if="!isLogin">
         <div class="flex-row-y-center">
           <img
             :src="commonUserIcon"
@@ -38,6 +38,9 @@
             <a class="user-text" data-set="register">注册</a>
           </div>
         </div>
+      </div>
+      <div v-if="isLogin">
+        
       </div>
     </div>
   </header>
@@ -74,6 +77,7 @@ export default class Header extends Vue {
   public showUserSpread = false;
   public optimize: any | undefined | null;
   public routePath: any;
+  public userInfo!: {}
 
   @Watch("clientWindowWidth")
   onWindowWidthChange(newValue: number, oldValue: number): void {
@@ -84,6 +88,14 @@ export default class Header extends Vue {
     }
     this.handleScreenModel(this.smallScreenMode);
   }
+
+  @Watch("isLogin")
+  onLoginStateChange (newValue: boolean, oldValue: boolean) {
+    if (newValue && (newValue != oldValue)) {
+      this.getUserInfo()
+    }
+  }
+
   mounted() {
     const that = this;
     this.routePath = this.$route.path;
@@ -118,6 +130,9 @@ export default class Header extends Vue {
   private handleTapLoginOrRegister(event: any) {
     // @ts-ignore
     this.$event.emit("changeLoginDialogState");
+  }
+  private getUserInfo () {
+
   }
 }
 </script>

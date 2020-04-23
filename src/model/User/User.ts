@@ -12,6 +12,12 @@ interface RegisterInterface {
 interface VerificationInterface {
     telephone: string;
 }
+interface CheckToken {
+    token: string;
+}
+interface GetUserInfo {
+    user_id: string;
+}
 
 class User {
     constructor() {
@@ -37,12 +43,34 @@ class User {
             })
         })
     }
+    checkToken (params: CheckToken) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.get(Url.CHECK_TOKEN_AVAILABLE, {
+                params
+            }).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
     getVerificationCode (params: VerificationInterface) {
         return new Promise((reslove, reject) => {
             // @ts-ignore
             this.$http.get(Url.VERIFICATION_CODE, {
                 params
             }).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
+    getUserInfo (params: GetUserInfo) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.post(Url.GET_USER_INFO, params).then((res: any) => {
                 reslove(res)
             }).catch((err: any) => {
                 reject(err)
