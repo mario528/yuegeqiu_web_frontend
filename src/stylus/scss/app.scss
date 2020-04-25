@@ -19,6 +19,16 @@
         justify-content: space-around;
         align-items: center;
       }
+      &-between {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+      &-around {
+        @extend .flex-row-between ;
+        justify-content: space-around;
+      }
       &-x-around {
         display: flex;
         flex-direction: row;

@@ -34,7 +34,7 @@ const routes = [
     }
   },
   {
-    path: '/user/completeInfo',
+    path: '/user/info/complete',
     name: 'completeInfo',
     component: () => import('../views/User/UserRegisterInfo.vue'),
     meta: {

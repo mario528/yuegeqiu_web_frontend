@@ -9,6 +9,12 @@ const url = {
 
     VERIFICATION_CODE: '/api/v1/verification_message',
 
-    GET_USER_INFO: '/api/v1/user/info'
+    GET_USER_INFO: '/api/v1/user/info',
+
+    GET_PROVINCES: '/api/v1/get/provinces',
+
+    GET_CITIES: '/api/v1/get/cities',
+
+    GET_DISTRICTS: '/api/v1/get/districts'
 }
 export default url

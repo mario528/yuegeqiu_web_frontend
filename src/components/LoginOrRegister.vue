@@ -36,6 +36,7 @@
 import { Vue, Component, Watch } from "vue-property-decorator";
 import { State, Getter, Action } from "vuex-class";
 import User from '../model/User/User'
+import { RegExp } from '../utils/index'
 @Component({})
 export default class LoginOrRegister extends Vue {
   private showDialog = false;
@@ -59,7 +60,6 @@ export default class LoginOrRegister extends Vue {
   private handleSetLoginState!: (state: boolean) => void
 
   created() {
-    // @ts-ignore
     this.$event.on("changeLoginDialogState", () => {
       this.showDialog = !this.showDialog;
     });
@@ -74,6 +74,7 @@ export default class LoginOrRegister extends Vue {
     this._initState()
   }
   private handleInputPsw (value: string, type: number) {
+    value = value.replace(/\s+/g, '')
     if (this.hidePsw) {
       let len
       type == 1 ? len = value.length - this.showLoginPswStr.length : len = value.length - this.showRegisterPswStr.length
@@ -117,15 +118,39 @@ export default class LoginOrRegister extends Vue {
       else return true
     }
   }
+  _regTelephone (telephone: string): boolean {
+    if (!RegExp.testTelePhone(this.registerTelNumber)) {
+      this.$notify.error({
+        title: 'Error',
+        message: '请输入正确格式的手机号'
+      })
+    }
+    return RegExp.testTelePhone(this.registerTelNumber)
+  }
   private handleLogin () {
-    // @ts-ignore
+    if (!this.loginTelNumber || !this.loginPsw) {
+      if (!this.loginTelNumber) {
+        this.$notify.error({
+          title: '错误',
+          message: '手机号不能为空'
+        })
+        return
+      }else if (!this.loginPsw){
+        this.$notify.error({
+          title: '错误',
+          message: '密码不能为空'
+        })
+        return
+      }
+      return
+    }
+    if (!this._regTelephone(this.loginTelNumber)) return
     const userType = new User()
     const params = {
       telephone: this.loginTelNumber,
       password: this.loginPsw
     }
     userType.login.call(this, params).then((res: any) => {
-      // @ts-ignore
       const { token } = res
       localStorage.setItem("Authorization", token)
       this.$notify({
@@ -139,6 +164,35 @@ export default class LoginOrRegister extends Vue {
     })
   }
   private handleRegister () {
+    if (!this.registerTelNumber || !this.registerPsw || this.verificationCode) {
+      if (!this.registerTelNumber) {
+        this.$notify.error({
+          title: '错误',
+          message: '手机号不能为空'
+        })
+        return
+      }else if (!this.registerPsw){
+        this.$notify.error({
+          title: '错误',
+          message: '密码不能为空'
+        })
+        return
+      }else if (!this.verificationCode) {
+        this.$notify.error({
+          title: '错误',
+          message: '验证码不能为空'
+        })
+        return
+      }
+    }
+    if (!RegExp.testTelePhone(this.registerTelNumber)) {
+      this.$notify.error({
+        title: 'Error',
+        message: '请输入正确格式的手机号'
+      })
+      return
+    }
+    if (!this._regTelephone(this.registerTelNumber)) return
     const userType = new User()
     const params = {
       telephone: this.registerTelNumber,
@@ -157,7 +211,7 @@ export default class LoginOrRegister extends Vue {
       this._initState()
       this.showDialog = false
       setTimeout(() => {
-        this.$router.push('/user/completeInfo')
+        this.$router.push('/user/info/complete')
       }, 1000);
     }).catch((err: any) => {
       
@@ -166,7 +220,7 @@ export default class LoginOrRegister extends Vue {
   private handleSendMessage () {
     if (!this.registerTelNumber) {
       this.$notify.error({
-        title: 'Error',
+        title: '错误',
         message: '请输入正确的手机号'
       });
       return

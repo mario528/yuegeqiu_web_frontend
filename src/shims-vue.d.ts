@@ -9,7 +9,8 @@ declare module 'vue/types/vue' {
     $router: VueRouter,
     $route: Route,
     $urls: any,
-    $selfLoading: any
+    $selfLoading: any,
+    $event: any
   }
 }
 

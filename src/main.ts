@@ -16,7 +16,13 @@ import {
   CarouselItem,
   Image,
   Notification,
-  
+  Steps,
+  Step,
+  Radio,
+  RadioGroup,
+  Select,
+  Option,
+  OptionGroup
 } from 'element-ui'
 import Loading from './components/Loading/libs/loading'
 Vue.config.productionTip = false
@@ -32,10 +38,22 @@ Vue.mixin({
     this.$event = Vue.$event
   }
 })
+
+import dynamicDirectives from './directive/dynamicDirective'
+// register custom vue-directive
+dynamicDirectives(['inputFilterSpace','inputFocus'])
+
 // 引用Element-ui plugins
 Vue.use(Carousel)
 Vue.use(CarouselItem)
 Vue.use(Image)
+Vue.use(Steps)
+Vue.use(Step)
+Vue.use(Radio)
+Vue.use(RadioGroup)
+Vue.use(Select)
+Vue.use(Option)
+Vue.use(OptionGroup)
 // 自定义插件
 Vue.use(Loading)
 // 自定义组件
@@ -50,9 +68,12 @@ router.beforeEach((to, from, next) => {
   // @ts-ignore
   Vue.$selfLoading.show()
   if (to.meta.requireAuth && !localStorage.getItem('Authorization')) {
-    Vue.prototype.$notify.error({
-      title: 'Error',
-      message: '请登录'
+    Vue.nextTick(() => {
+      Vue.prototype.$notify.error({
+        title: 'Error',
+        message: '请登录'
+      })
+      router.push('/')
     })
   }
   if (localStorage.getItem('Authorization') && to.meta.requireAuth) {
