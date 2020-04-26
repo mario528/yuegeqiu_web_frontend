@@ -18,7 +18,17 @@ interface CheckToken {
 interface GetUserInfo {
     user_id: string;
 }
-
+interface Location {
+    province?: string;
+    city?: string;
+    district?: string;
+}
+interface CompleteUserInfo {
+    user_id: string;
+    nick_name?: string;
+    sex?: number;
+    location?: Location;
+}
 class User {
     constructor() {
 
@@ -71,6 +81,16 @@ class User {
         return new Promise((reslove, reject) => {
             // @ts-ignore
             this.$http.post(Url.GET_USER_INFO, params).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
+    completeUserInfo (params: CompleteUserInfo) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.post(Url.COMPLETE_USER_INFO, params).then((res: any) => {
                 reslove(res)
             }).catch((err: any) => {
                 reject(err)

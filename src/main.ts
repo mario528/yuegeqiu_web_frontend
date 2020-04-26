@@ -22,7 +22,8 @@ import {
   RadioGroup,
   Select,
   Option,
-  OptionGroup
+  OptionGroup,
+  Upload
 } from 'element-ui'
 import Loading from './components/Loading/libs/loading'
 Vue.config.productionTip = false
@@ -54,6 +55,7 @@ Vue.use(RadioGroup)
 Vue.use(Select)
 Vue.use(Option)
 Vue.use(OptionGroup)
+Vue.use(Upload)
 // 自定义插件
 Vue.use(Loading)
 // 自定义组件

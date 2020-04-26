@@ -151,8 +151,9 @@ export default class LoginOrRegister extends Vue {
       password: this.loginPsw
     }
     userType.login.call(this, params).then((res: any) => {
-      const { token } = res
+      const { token, userId } = res
       localStorage.setItem("Authorization", token)
+      localStorage.setItem("USER_ID", userId)
       this.$notify({
         title: '成功',
         message: '登陆成功',
@@ -202,6 +203,7 @@ export default class LoginOrRegister extends Vue {
     userType.register.call(this, params).then((res: any) => {
       const token = res.token
       localStorage.setItem("Authorization", token)
+      localStorage.setItem("USER_ID", res.user_id)
       this.handleSetAccountToken(token)
       this.$notify({
         title: '成功',
@@ -211,7 +213,13 @@ export default class LoginOrRegister extends Vue {
       this._initState()
       this.showDialog = false
       setTimeout(() => {
-        this.$router.push('/user/info/complete')
+        this.$router.push({
+          path: '/user/info/complete',
+          name: 'completeInfo',
+          params: {
+            userId: res.user_id
+          }
+        })
       }, 1000);
     }).catch((err: any) => {
       

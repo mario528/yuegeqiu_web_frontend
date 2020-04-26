@@ -30,10 +30,9 @@
             <div class="register-info-item" v-show="pageIndex == 1">
 
             </div>
-            <div class="register-info-item" v-show="pageIndex == 2"></div>
             <div class="flex-row-around button-area">
                 <button class="button-area-btn" v-if="pageIndex != 0" @click="gotoPrePage">上一页</button>
-                <button :class="[nextBtnAvaiable ? 'button-area-btn' : 'button-area-btn-disable']" @click="next">{{pageIndex == 2 ? '提交' : '下一步' }}</button>
+                <button class="button-area-btn" @click="next">{{pageIndex == 2 ? '提交' : '下一步' }}</button>
             </div>  
         </div>
     </div>    
@@ -43,6 +42,8 @@ import MaProgress from '@/components/Progress.vue'
 import LocationSelect from '@/components/LocationSelect.vue'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { Getter } from 'vuex-class' 
+import { Utils } from '../../utils/index'
+import User from '../../model/User/User'
 @Component({
     components: {
         'ma-progress': MaProgress,
@@ -54,17 +55,25 @@ export default class UserRegisterInfo extends Vue {
     private progressState = 0
     private sexRadio = -1
     private nickName = ''
-    private nextBtnAvaiable = false
     private stepsList = ['个人信息','头像']
-    private locationInfo = {}
-
+    private locationInfo = {
+        province: "",
+        city: "",
+        district: ""
+    }
+    private userId !: string
     @Watch('pageIndex')
     watchPageIndex (newValue: number, oldValue: number) {
         this.progressState = (newValue / this.stepsList.length) * 100
     }
-
     @Getter('getScreenModel')
     private smallScreenModel!: boolean
+    
+    mounted() {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // @ts-ignore
+        this.userId = this.$route.params.userId || localStorage.getItem('USER_ID')
+    }
 
     private handleRequest () {
 
@@ -74,13 +83,28 @@ export default class UserRegisterInfo extends Vue {
     }
     private next () {
         if (this.pageIndex < this.stepsList.length - 1) {
-            this.pageIndex = this.pageIndex + 1
+            if (this.nickName == "" || this.sexRadio == -1 || !Utils.isObjectValueAvaiable(this.locationInfo)) {
+                return
+            }
+            this.requestCompleteUserInfo()
         }else {
             this.handleRequest()
         }
     }
     private selectComplete (data: any) {
         this.locationInfo = data
+    }
+    private requestCompleteUserInfo () {
+        const userType = new User()
+        const params = {
+            user_id: this.userId,
+            nick_name: this.nickName,
+            sex: this.sexRadio,
+            location: this.locationInfo
+        }
+        userType.completeUserInfo.call(this, params).then((res: any) => {
+            this.pageIndex = this.pageIndex + 1
+        })
     }
 }
 </script>
@@ -93,13 +117,14 @@ export default class UserRegisterInfo extends Vue {
 .title {
     box-sizing: border-box;
     width: 100%;
-    padding: 6px 3%;
+    padding: 10px 3%;
     color: $high_light_color;
     font-weight: 600;
     font-size: 20px;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
-    background: linear-gradient(to left, transparent calc(98%), $base_color 20px);
+    border-bottom: 1px solid $header_font_color_common;
+    box-shadow: 0px 3px 5px $header_font_color_common;
     &-text {
         margin: auto 0;
     } 

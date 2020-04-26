@@ -15,6 +15,8 @@ const url = {
 
     GET_CITIES: '/api/v1/get/cities',
 
-    GET_DISTRICTS: '/api/v1/get/districts'
+    GET_DISTRICTS: '/api/v1/get/districts',
+
+    COMPLETE_USER_INFO: '/api/v1/user/info/complete'
 }
 export default url
