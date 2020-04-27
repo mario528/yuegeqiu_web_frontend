@@ -3,6 +3,8 @@ const url = {
 
     LOGIN: '/api/v1/login',
 
+    LOGOUT: '/api/v1/logout',
+
     REGISTER: '/api/v1/register',
 
     CHECK_TOKEN_AVAILABLE: '/api/v1/token/state',

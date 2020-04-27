@@ -40,7 +40,19 @@
         </div>
       </div>
       <div v-if="isLogin">
-        
+        <el-dropdown trigger="click" size="medium" @command="handleSelectDropDownItem">
+          <div class="flex-row-y-center">
+            <img class="user-img" :src="userInfo.head_url" /> 
+            <div class="user-name">{{userInfo.nick_name || userInfo.telephone}}</div>
+            <img :src="downArrow" class="user-arrow">
+          </div>
+          <el-dropdown-menu slot="dropdown" class="dropdown-menu">
+            <div class="dropdown-menu-item">{{userInfo.nick_name || userInfo.telephone}}</div>
+            <el-dropdown-item command="message" icon="el-icon-chat-dot-round" class="dropdown-menu-item">消息</el-dropdown-item>
+            <el-dropdown-item command="userCenter" icon="el-icon-user" class="dropdown-menu-item">个人中心</el-dropdown-item>
+            <el-dropdown-item command="logout" icon="el-icon-switch-button" class="dropdown-menu-item">退出</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </div>
     </div>
   </header>
@@ -49,9 +61,10 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { State, Action, Getter } from "vuex-class";
-
+import userModel from '../model/User/User'
 import Optimize from "../utils/optimize";
-
+import { productionConf } from '../config/index'
+import { Toast } from '../utils/index'
 @Component({
   components: {}
 })
@@ -65,19 +78,33 @@ export default class Header extends Vue {
   @Action("handleScreenModel")
   public handleScreenModel!: (state: boolean) => void;
 
-  @Getter("getLoginState")
-  public isLogin!: boolean;
+  @Action("handleSetAccountToken")
+  public handleSetAccountToken!: (token: string | undefined) => void;
+
+  @Action("handleSetUserId")
+  public handleSetUserId!: (userId: string | undefined) => void;
+
+  @Getter('getAccountToken')
+  public token: string | undefined
+
+  @Getter('getUserId')
+  public userId: string | undefined
+
+  // @Getter("getLoginState")
+  // public isLogin!: boolean;
 
   public brandIcon: string = require("../assets/brand_icon.png");
-  public commonUserIcon: string = require("../assets/common_user_icon.png");
-  public leftSidebarIcon: string = require("../assets/left_sidebar_icon.png");
+  public commonUserIcon: string = require("../assets/common_user_icon.png")
+  public leftSidebarIcon: string = require("../assets/left_sidebar_icon.png")
+  public downArrow: string = require('../assets/user_arrow.png')
   public clientWindowWidth = 1440;
   public smallScreenMode = document.body.clientWidth <= 850;
   public domHeight = 75;
   public showUserSpread = false;
   public optimize: any | undefined | null;
   public routePath: any;
-  public userInfo!: {}
+  public userInfo = {}
+  public isLogin = false
 
   @Watch("clientWindowWidth")
   onWindowWidthChange(newValue: number, oldValue: number): void {
@@ -97,6 +124,7 @@ export default class Header extends Vue {
   }
 
   mounted() {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const that = this;
     this.routePath = this.$route.path;
     this.optimize = new Optimize();
@@ -113,6 +141,13 @@ export default class Header extends Vue {
       // this.domHeight = this.$refs.header.offsetHeight
       this.domHeight = 75;
     });
+    if ((this.userId || localStorage.getItem('User_ID')) && (this.token || localStorage.getItem('Authorization'))) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
+      this.isLogin = true
+      // this.getUserInfo()
+    }
+    this.$event.on('reflashUserInfo', this.getUserInfo)
   }
   private handleshowUserSpread() {
     console.log("function call");
@@ -128,11 +163,51 @@ export default class Header extends Vue {
     this.optimize.processFunc(fn, 0.3);
   }
   private handleTapLoginOrRegister(event: any) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
     this.$event.emit("changeLoginDialogState");
   }
   private getUserInfo () {
-
+      const userType = new userModel()
+      const params = {
+        user_id: this.userId || localStorage.getItem('User_ID'),
+        token: this.token || localStorage.getItem('Authorization')
+      }
+      userType.getUserInfo.call(this, params).then((res: any)=> {
+        this.isLogin = true
+        if (!res.user_info.head_url) {
+          // eslint-disable-next-line @typescript-eslint/camelcase
+          res.user_info.head_url = productionConf.basicIconUrl
+        }
+        this.userInfo = res.user_info
+      }).catch((err: any) => {
+        this.isLogin = false
+      })
+  }
+  private logout () {
+    const userType = new userModel()
+    userType.logout.call(this).then((res: any)=> {
+      this.isLogin = false
+      localStorage.removeItem('Authorization')
+      localStorage.removeItem('User_ID')
+      this.handleSetAccountToken(undefined)
+      this.handleSetUserId(undefined)
+      Toast.showToastSuccess.call(this,'账户退出成功','成功')
+      this.$event.emit("reflashUserInfo")
+    })
+  }
+  private handleSelectDropDownItem(type: string) {
+   switch (type) {
+     case 'message':
+       
+       break;
+     case 'userCenter':
+       
+       break;
+     case 'logout':
+       this.logout()
+       break;
+   }
   }
 }
 </script>
@@ -233,6 +308,41 @@ export default class Header extends Vue {
     }
     &-line {
       color: white;
+    }
+  }
+  &-img {
+    width: 3vw;
+    height: 3vw;
+    min-width: 40px;
+    min-height: 40px;
+    border-radius: 50%; 
+  }
+  &-name {
+    margin-left: 10px;
+    color: $base_font_color;
+    font-size: 14px;
+    font-weight: 500;
+    margin-right: 10px;
+  }
+  &-arrow {
+    width: 2vw;
+    height: 2vw;
+    min-width: 15px;
+    min-height: 15px;
+  }
+}
+.dropdown-menu {
+  width: 10vw;
+  min-width: 150px;
+  &-item {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 5px 5%;
+    border-bottom: 1px solid #eeeeee;
+    font-size: 14px;
+    font-weight: 500;
+    &:last-of-type {
+      border-bottom: none;
     }
   }
 }

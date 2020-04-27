@@ -15,6 +15,9 @@ const getters: GetterTree<any, any> = {
   },
   getAccountToken (state): any {
     return state.token
+  },
+  getUserId (state): string | undefined {
+    return state.userId
   }
 }
 

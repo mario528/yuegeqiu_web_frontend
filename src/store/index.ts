@@ -10,13 +10,15 @@ interface State {
     isLogin: boolean;
     smallScreenModel: boolean;
     token: string | undefined;
+    userId: string | undefined;
 }
 const state: State = {
     showSiderBar: false,
     showLoading: false,
     isLogin: false,
     smallScreenModel: false,
-    token: undefined
+    token: undefined,
+    userId: undefined
 }
 Vue.use(Vuex)
 export default new Vuex.Store({

@@ -27,18 +27,21 @@
                     <location-selecter @selectComplete="selectComplete"></location-selecter>
                 </div>
             </div>
-            <div class="register-info-item" v-show="pageIndex == 1">
-
+            <div class="flex-column-center register-info-item" v-show="pageIndex == 1">
+                <div class="upload-container">
+                    <upload-user-icon :size="2" :formData="{user_id: this.userId}" @upLoadSuccessfull="upLoadSuccessfull"></upload-user-icon>
+                </div>
             </div>
             <div class="flex-row-around button-area">
                 <button class="button-area-btn" v-if="pageIndex != 0" @click="gotoPrePage">上一页</button>
-                <button class="button-area-btn" @click="next">{{pageIndex == 2 ? '提交' : '下一步' }}</button>
+                <button class="button-area-btn" @click="next">{{pageIndex == 1 ? '提交' : '下一步'}}</button>
             </div>  
         </div>
     </div>    
 </template>
 <script lang="ts">
 import MaProgress from '@/components/Progress.vue'
+import UploadUserIcon from '@/components/UploadUserIcon.vue'
 import LocationSelect from '@/components/LocationSelect.vue'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { Getter } from 'vuex-class' 
@@ -47,7 +50,8 @@ import User from '../../model/User/User'
 @Component({
     components: {
         'ma-progress': MaProgress,
-        'location-selecter': LocationSelect 
+        'location-selecter': LocationSelect,
+        'upload-user-icon': UploadUserIcon 
     }
 })
 export default class UserRegisterInfo extends Vue {
@@ -61,7 +65,7 @@ export default class UserRegisterInfo extends Vue {
         city: "",
         district: ""
     }
-    private userId !: string
+    private userId = ""
     @Watch('pageIndex')
     watchPageIndex (newValue: number, oldValue: number) {
         this.progressState = (newValue / this.stepsList.length) * 100
@@ -105,6 +109,9 @@ export default class UserRegisterInfo extends Vue {
         userType.completeUserInfo.call(this, params).then((res: any) => {
             this.pageIndex = this.pageIndex + 1
         })
+    }
+    private upLoadSuccessfull () {
+        
     }
 }
 </script>
@@ -188,6 +195,10 @@ export default class UserRegisterInfo extends Vue {
             color: #ffffff;
         }
     }
+}
+.upload-container {
+    width: 20vw;
+    height: 20vw;
 }
 .radio-group ::v-deep .is-checked .el-radio__label {
     color: $base_color;

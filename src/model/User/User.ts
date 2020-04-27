@@ -16,7 +16,8 @@ interface CheckToken {
     token: string;
 }
 interface GetUserInfo {
-    user_id: string;
+    user_id: string | undefined | null;
+    token?: string | undefined | null;
 }
 interface Location {
     province?: string;
@@ -37,6 +38,16 @@ class User {
         return new Promise((reslove, reject) => {
             // @ts-ignore
             this.$http.post(Url.LOGIN, params).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
+    logout () {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.get(Url.LOGOUT, {}).then((res: any) => {
                 reslove(res)
             }).catch((err: any) => {
                 reject(err)

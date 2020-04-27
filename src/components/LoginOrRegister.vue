@@ -3,9 +3,9 @@
     <div class="flex-column-center dialog-mask" @click.self="handleMaskState" v-if="showDialog">
       <div class="dialog-main">
         <div class="flex-row">
-          <div :class="[dialogState == 1 ? 'type-item-activity' : 'type-item']" @click="swithType(event,1)">登陆</div>
+          <div :class="[dialogState == 1 ? 'type-item-activity' : 'type-item']" @click="swithType(1)">登陆</div>
           <div class="separator">/</div>
-          <div :class="[dialogState == 2 ? 'type-item-activity' : 'type-item']" @click="swithType(event,2)">注册</div>
+          <div :class="[dialogState == 2 ? 'type-item-activity' : 'type-item']" @click="swithType(2)">注册</div>
         </div>
         <div v-if="dialogState == 1" class="flex-column-x-center content ">
           <input class="user-input" v-model="loginTelNumber" placeholder="手机号" maxlength="11" />
@@ -59,6 +59,9 @@ export default class LoginOrRegister extends Vue {
   @Action('handleSetLoginState')
   private handleSetLoginState!: (state: boolean) => void
 
+  @Action('handleSetUserId')
+  private handleSetUserId!: (userId: string) => void
+
   created() {
     this.$event.on("changeLoginDialogState", () => {
       this.showDialog = !this.showDialog;
@@ -68,7 +71,7 @@ export default class LoginOrRegister extends Vue {
     this.showDialog = !this.showDialog
     this._initState()
   }
-  private swithType (event: any, type: number) {
+  private swithType (type: number) {
     if (type == this.dialogState) return
     this.dialogState = type
     this._initState()
@@ -118,14 +121,14 @@ export default class LoginOrRegister extends Vue {
       else return true
     }
   }
-  _regTelephone (telephone: string): boolean {
-    if (!RegExp.testTelePhone(this.registerTelNumber)) {
+  private _regTelephone (telephone: string): boolean {
+    if (!RegExp.testTelePhone(telephone)) {
       this.$notify.error({
         title: 'Error',
         message: '请输入正确格式的手机号'
       })
     }
-    return RegExp.testTelePhone(this.registerTelNumber)
+    return RegExp.testTelePhone(telephone)
   }
   private handleLogin () {
     if (!this.loginTelNumber || !this.loginPsw) {
@@ -151,15 +154,18 @@ export default class LoginOrRegister extends Vue {
       password: this.loginPsw
     }
     userType.login.call(this, params).then((res: any) => {
-      const { token, userId } = res
+      const { token, user_id } = res
       localStorage.setItem("Authorization", token)
-      localStorage.setItem("USER_ID", userId)
+      localStorage.setItem("User_ID", user_id)
       this.$notify({
         title: '成功',
         message: '登陆成功',
         type: 'success'
       })
       this.handleSetLoginState(true)
+      this.handleSetUserId(user_id)
+      this.handleSetAccountToken(token)
+      this.$event.emit('reflashUserInfo')
       this._initState()
       this.showDialog = false
     })
@@ -203,8 +209,7 @@ export default class LoginOrRegister extends Vue {
     userType.register.call(this, params).then((res: any) => {
       const token = res.token
       localStorage.setItem("Authorization", token)
-      localStorage.setItem("USER_ID", res.user_id)
-      this.handleSetAccountToken(token)
+      localStorage.setItem("User_ID", res.user_id)
       this.$notify({
         title: '成功',
         message: '账户注册成功',
@@ -212,6 +217,10 @@ export default class LoginOrRegister extends Vue {
       })   
       this._initState()
       this.showDialog = false
+      this.handleSetLoginState(true)
+      this.handleSetAccountToken(token)
+      this.handleSetUserId(res.user_id)
+      this.$event.emit('reflashUserInfo')
       setTimeout(() => {
         this.$router.push({
           path: '/user/info/complete',

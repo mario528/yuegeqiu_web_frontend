@@ -10,7 +10,7 @@ const actions: ActionTree<any, any> = {
     async handleScreenModel ({state, commit}, data: boolean) {
         commit(TYPES.SET_SCREEN_MODEL, data)
     },
-    async handleSetAccountToken ({state, commit}, token: string) {
+    async handleSetAccountToken ({state, commit}, token: string | undefined) {
         commit(TYPES.SET_ACCOUNT_TOKEN, token)
     },
     async handleClearAccountToken ({state, commit}) {
@@ -18,6 +18,9 @@ const actions: ActionTree<any, any> = {
     },
     async handleSetLoginState ({state, commit}, data: boolean) {
         commit(TYPES.SET_LOGIN_STATE, data)
+    },
+    async handleSetUserId ({state, commit}, userId: string | undefined) {
+        commit(TYPES.SET_USER_ID, userId)
     }
 }
 export default actions

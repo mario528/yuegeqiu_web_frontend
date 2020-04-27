@@ -18,6 +18,9 @@ const mutations: MutationTree<any> = {
     },
     [TYPES.SET_LOGIN_STATE] (state, status: boolean): void {
         state.isLogin = status
+    },
+    [TYPES.SET_USER_ID] (state, userId: string): void {
+        state.userId = userId
     }
 }
 export default mutations

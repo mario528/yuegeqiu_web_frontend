@@ -23,12 +23,17 @@ import {
   Select,
   Option,
   OptionGroup,
-  Upload
+  Upload,
+  MessageBox,
+  Dropdown,
+  DropdownMenu,
+  DropdownItem,
 } from 'element-ui'
 import Loading from './components/Loading/libs/loading'
 Vue.config.productionTip = false
 Vue.prototype.$http = http
 Vue.prototype.$notify = Notification
+Vue.prototype.$msgbox = MessageBox
 // register a event handler
 import { EventHandler } from './utils/index'
 // @ts-ignore
@@ -56,6 +61,9 @@ Vue.use(Select)
 Vue.use(Option)
 Vue.use(OptionGroup)
 Vue.use(Upload)
+Vue.use(Dropdown)
+Vue.use(DropdownMenu)
+Vue.use(DropdownItem)
 // 自定义插件
 Vue.use(Loading)
 // 自定义组件
