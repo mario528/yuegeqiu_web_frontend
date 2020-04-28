@@ -24,23 +24,24 @@ const routes = [
   },
   {
     path: '/user/center',
+    redirect: '/user/center/team',
     name: 'userCenter',
     children: [
-      {
-        path: '',
-        name: 'UserCenterTeam',
-        component: () => import('@/views/User/UserCenter/UserCenterTeam.vue')
-      },
-      {
-        path: 'dynamic',
-        name: 'UserCenterDynamic',
-        component: () => import('@/views/User/UserCenter/UserCenterDynamic.vue')
-      },
       {
         path: 'history',
         name: 'UserCenterBoughtHistory',
         component: () => import('@/views/User/UserCenter/UserCenterHistory.vue')
-      }
+      },
+      {
+        path: 'message',
+        name: 'UserCenterDynamic',
+        component: () => import('@/views/User/UserCenter/UserCenterDynamic.vue')
+      },
+      {
+        path: 'team',
+        name: 'UserCenterTeam',
+        component: () => import('@/views/User/UserCenter/UserCenterTeam.vue')
+      },
     ],
     meta: {
       title: '个人中心',

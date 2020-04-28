@@ -1,27 +1,36 @@
 <template>
   <div class="container">
     <div class="flex-row user-info">
-      <a
-        v-if="!userInfo.nick_name || !userInfo.nick_name || !userInfo.city"
-        class="flex-row-center user-info-detail-tip"
-      >完善信息</a>
-      <img
-        class="user-info-icon"
-        :src="userInfo.head_url"
-        :alt="userInfo.nick_name || userInfo.telephone"
-      >
+      <a v-if="!userInfo.nick_name || !userInfo.nick_name || !userInfo.city" class="flex-row-center user-info-detail-tip">完善信息</a>
+      <img class="user-info-icon" :src="userInfo.head_url" :alt="userInfo.nick_name || userInfo.telephone">
       <div class="flex-row-y-center user-info-detail">
         <div class="user-info-detail-name">{{userInfo.nick_name || userInfo.telephone}}</div>
         <img :src="sexIcon" class="user-info-detail-sex-icon" v-if="userInfo.sex">
       </div>
     </div>
     <div class="flex-row user-section-list">
-      <div class="user-section-list-item" v-for="(item, index) in sectionList" :key="index">
-        <router-link exact class="user-section-list-item-link" :to="item.path">{{item.navTitle}}</router-link>
+      <div class="flex-row-center follow-area" v-if="!screenModel">
+          <div class="flex-column-center follow-area-item">
+          <span class="follow-area-title">我的粉丝</span>
+          <div class="follow-area-num">20</div>
+        </div>
+        <div class="flex-column-center follow-area-item">
+          <span class="follow-area-title">我的关注</span>
+          <div class="follow-area-num">10</div>
+        </div>
+      </div>
+      <div class="user-section-list-item">
+        <router-link class="user-section-list-item-link" exact :to="{path: '/user/center/team'}">我的球队</router-link>
+      </div>
+      <div class="user-section-list-item">
+        <router-link class="user-section-list-item-link" :to="{path: '/user/center/message'}">我的动态</router-link>
+      </div>
+      <div class="user-section-list-item">
+        <router-link class="user-section-list-item-link" :to="{path: '/user/center/history'}">购物记录</router-link>
       </div>
     </div>
     <div class="user-section-container">
-      <router-view></router-view>
+      <router-view :key="randomKey"></router-view>
     </div>
   </div>
 </template>
@@ -38,21 +47,13 @@ export default class UserCenter extends Vue {
   public token: string | undefined;
   public userInfo = {};
   public sexIcon!: string;
-  public sectionList = [
-    {
-      navTitle: '我的球队',
-      path: '/'
-    },{
-      navTitle: '我的动态',
-      path: '/user/center/dynamic'
-    },{
-      navTitle: '购物记录',
-      path: '/user/center/history'
-    }
-  ]
+  private randomKey!: number
+  @Getter('getScreenModel')
+  private screenModel!: boolean
   @Watch("$route")
   onRouteChange(newValue: any, oldValue: any) {
-    console.log(newValue, oldValue);
+      // if (newValue.name == oldValue.name) return
+      this.randomKey = Math.random()
   }
   beforeCreate() {
     this.userId =
@@ -64,11 +65,6 @@ export default class UserCenter extends Vue {
   created() {
     this.getUserCenterInfo();
   }
-  beforeRouteEnter(to: any, from: any, next: any) {
-    next();
-  }
-  beforeRouterUpdate(to: any, from: any, next: any) {}
-  beforeRouteLeave(to: any, from: any, next: any) {}
   private getUserCenterInfo() {
     const userType = new UserModel();
     const params = {
@@ -141,6 +137,33 @@ export default class UserCenter extends Vue {
       font-size: 26px;
       color: #333333;
       font-weight: 500;
+    }
+  }
+}
+.follow-area {
+  padding: 40px 0;
+  border-bottom: 1px solid #eeeeee;
+  &-item {
+    position: relative;
+    &:nth-of-type(1):after {
+      content: ' ';
+      width: 2px;
+      height: 40px;
+      position: absolute;
+      right: -30%;
+      background-color: #eeeeee;
+    }
+  }
+  &-num {
+    margin-top: 15px;
+    font-size: 20px;
+    font-weight: 500;
+    color: #333333;
+    &:hover {
+      color: $base_color;
+      cursor: pointer;
+      text-decoration: underline;
+      font-weight: 600;
     }
   }
 }
