@@ -35,8 +35,8 @@
 <script lang="ts">
 import { Vue, Component, Watch } from "vue-property-decorator";
 import { State, Getter, Action } from "vuex-class";
-import User from '../model/User/User'
-import { RegExp } from '../utils/index'
+import User from '@/model/User/User'
+import { RegExp } from '@/utils/index'
 @Component({})
 export default class LoginOrRegister extends Vue {
   private showDialog = false;

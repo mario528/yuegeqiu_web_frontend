@@ -31,7 +31,7 @@
 // @ is an alias to /src
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { State, Action, Getter } from "vuex-class";
-import url from '../utils/url';
+import url from '@/utils/url';
 @Component({
   components: {}
 })

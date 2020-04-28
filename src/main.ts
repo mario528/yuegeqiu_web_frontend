@@ -77,6 +77,8 @@ router.beforeEach((to, from, next) => {
   console.log("路由开始载入")
   // @ts-ignore
   Vue.$selfLoading.show()
+  if (to.meta.title) document.title = to.meta.title
+  else document.title = '约个球'
   if (to.meta.requireAuth && !localStorage.getItem('Authorization')) {
     Vue.nextTick(() => {
       Vue.prototype.$notify.error({

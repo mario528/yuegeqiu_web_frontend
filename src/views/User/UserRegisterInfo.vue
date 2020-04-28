@@ -45,8 +45,8 @@ import UploadUserIcon from '@/components/UploadUserIcon.vue'
 import LocationSelect from '@/components/LocationSelect.vue'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { Getter } from 'vuex-class' 
-import { Utils } from '../../utils/index'
-import User from '../../model/User/User'
+import { Utils } from '@/utils/index'
+import User from '@/model/User/User'
 @Component({
     components: {
         'ma-progress': MaProgress,

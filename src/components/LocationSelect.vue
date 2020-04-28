@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-04-25 17:37:10
  * @LastEditors: majiaao
- * @LastEditTime: 2020-04-26 12:26:57
+ * @LastEditTime: 2020-04-28 22:42:09
  * @Description: file content
  -->
 <template>
@@ -44,7 +44,7 @@
 </template>
 <script lang="ts">
 import { Vue, Prop, Component, Watch } from 'vue-property-decorator'
-import City from '../model/City/City'
+import City from '@/model/City/City'
 @Component
 export default class LocationSelect extends Vue {
     private disableOptions = [true, true]

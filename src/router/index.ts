@@ -7,28 +7,54 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component:  () => import('../views/Home.vue')
+    component:  () => import('@/views/Home.vue')
   },
   {
     path: '/team',
     name: 'Team',
-    component: () => import('../views/Team.vue')
+    component: () => import('@/views/Team.vue')
   },
   {
     path: '/mall',
     name: 'Mall',
-    component: () => import('../views/Mall/Mall.vue')
+    meta: {
+      title: '商城'
+    },
+    component: () => import('@/views/Mall/Mall.vue')
   },
   {
-    path: '/user/:userId',
+    path: '/user/center',
     name: 'userCenter',
-    component: () => import('../views/User/UserCenter.vue')
+    children: [
+      {
+        path: '',
+        name: 'UserCenterTeam',
+        component: () => import('@/views/User/UserCenter/UserCenterTeam.vue')
+      },
+      {
+        path: 'dynamic',
+        name: 'UserCenterDynamic',
+        component: () => import('@/views/User/UserCenter/UserCenterDynamic.vue')
+      },
+      {
+        path: 'history',
+        name: 'UserCenterBoughtHistory',
+        component: () => import('@/views/User/UserCenter/UserCenterHistory.vue')
+      }
+    ],
+    meta: {
+      title: '个人中心',
+      // this page need user login
+      requireAuth: true
+    },
+    component: () => import('@/views/User/UserCenter/UserCenter.vue')
   },
   {
     path: '/user/setting',
     name: 'userSetting',
-    component: () => import('../views/User/UserSetting.vue'),
+    component: () => import('@/views/User/UserSetting.vue'),
     meta: {
+      title: '帐号管理',
       // this page need user login
       requireAuth: true  
     }
@@ -38,6 +64,7 @@ const routes = [
     name: 'completeInfo',
     component: () => import('../views/User/UserRegisterInfo.vue'),
     meta: {
+      title: '完善信息',
       // this page need user login
       requireAuth: true
     }

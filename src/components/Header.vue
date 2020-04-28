@@ -48,8 +48,8 @@
           </div>
           <el-dropdown-menu slot="dropdown" class="dropdown-menu">
             <div class="dropdown-menu-item">{{userInfo.nick_name || userInfo.telephone}}</div>
-            <el-dropdown-item command="message" icon="el-icon-chat-dot-round" class="dropdown-menu-item">消息</el-dropdown-item>
             <el-dropdown-item command="userCenter" icon="el-icon-user" class="dropdown-menu-item">个人中心</el-dropdown-item>
+            <el-dropdown-item command="message" icon="el-icon-chat-dot-round" class="dropdown-menu-item">消息</el-dropdown-item>
             <el-dropdown-item command="logout" icon="el-icon-switch-button" class="dropdown-menu-item">退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -61,10 +61,10 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { State, Action, Getter } from "vuex-class";
-import userModel from '../model/User/User'
-import Optimize from "../utils/optimize";
-import { productionConf } from '../config/index'
-import { Toast } from '../utils/index'
+import userModel from '@/model/User/User'
+import Optimize from "@/utils/optimize";
+import { productionConf } from '@/config/index'
+import { Toast } from '@/utils/index'
 @Component({
   components: {}
 })
@@ -197,17 +197,24 @@ export default class Header extends Vue {
     })
   }
   private handleSelectDropDownItem(type: string) {
-   switch (type) {
-     case 'message':
-       
-       break;
-     case 'userCenter':
-       
-       break;
-     case 'logout':
-       this.logout()
-       break;
-   }
+    switch (type) {
+      case 'message':
+        
+        break;
+      case 'userCenter':
+        this.$router.push({
+          path: '/user/center',
+          name: 'userCenter',
+          params: {
+            userId: this.userId || localStorage.getItem('User_ID') as string,
+            token: this.token || localStorage.getItem('Authorization') as string,
+          }
+        })
+        break;
+      case 'logout':
+        this.logout()
+        break;
+    }
   }
 }
 </script>
@@ -334,6 +341,7 @@ export default class Header extends Vue {
 .dropdown-menu {
   width: 10vw;
   min-width: 150px;
+  cursor: pointer;
   &-item {
     width: 100%;
     box-sizing: border-box;

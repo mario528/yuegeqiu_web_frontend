@@ -30,6 +30,10 @@ interface CompleteUserInfo {
     sex?: number;
     location?: Location;
 }
+interface UserCenter {
+    user_id: string | undefined;
+    token: string | undefined;
+}
 class User {
     constructor() {
 
@@ -102,6 +106,16 @@ class User {
         return new Promise((reslove, reject) => {
             // @ts-ignore
             this.$http.post(Url.COMPLETE_USER_INFO, params).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
+    getUserCenterData (params: UserCenter) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.post(Url.USER_CENTER, params).then((res: any) => {
                 reslove(res)
             }).catch((err: any) => {
                 reject(err)
