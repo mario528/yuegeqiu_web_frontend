@@ -8,6 +8,7 @@ interface RegisterInterface {
     telephone: string;
     password: string;
     verification_code: string;
+    channe?: string;
 }
 interface VerificationInterface {
     telephone: string;

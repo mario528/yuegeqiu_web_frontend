@@ -12,6 +12,9 @@ const routes = [
   {
     path: '/team',
     name: 'Team',
+    meta: {
+      title: '球队'
+    },
     component: () => import('@/views/Team.vue')
   },
   {

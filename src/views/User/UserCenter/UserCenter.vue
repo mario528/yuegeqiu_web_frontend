@@ -219,10 +219,13 @@ export default class UserCenter extends Vue {
     }
   }
   .user-section-container {
+    box-sizing: border-box;
     width: 75vw;
     float: left;
     min-height: 500px;
-    background-color: aqua;
+    padding-left: 20px;
+    padding-top: 20px;
+    border: 1px dashed red;
   }
 }
 </style>
