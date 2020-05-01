@@ -119,6 +119,10 @@ class User {
             this.$http.post(Url.USER_CENTER, params).then((res: any) => {
                 reslove(res)
             }).catch((err: any) => {
+                if (err.response.status) {
+                    // @ts-ignore
+                    this.$router.push('/404');
+                }
                 reject(err)
             })
         })

@@ -82,7 +82,8 @@ export default class UserCenter extends Vue {
               : require("../../../assets/men_icon.png");
         }
       })
-      .catch((error: any) => {});
+      .catch((error: any) => {
+      });
   }
 }
 </script>
@@ -91,7 +92,7 @@ export default class UserCenter extends Vue {
   box-sizing: border-box;
 }
 .container {
-  width: 100vw;
+  width: 100%;
   height: 100%;
 }
 .user-info {
@@ -192,7 +193,8 @@ export default class UserCenter extends Vue {
   .user-section-container {
     width: 90vw;
     margin: 0 5%;
-    background-color: aqua;
+      background-color: #F6F6F6;
+
   }
 }
 @media screen and (min-width: 401px) {
@@ -220,12 +222,12 @@ export default class UserCenter extends Vue {
   }
   .user-section-container {
     box-sizing: border-box;
+    border-top: 1px solid #eeeeee;
     width: 75vw;
     float: left;
     min-height: 500px;
-    padding-left: 20px;
-    padding-top: 20px;
-    border: 1px dashed red;
+    padding: 20px;
+    background-color: #F6F6F6;
   }
 }
 </style>

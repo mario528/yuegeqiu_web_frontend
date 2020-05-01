@@ -41,6 +41,12 @@ httpInstance.interceptors.response.use((res: AxiosResponse)=> {
         return Promise.reject(message)
     }
 }, (error: any) => {
+    if (error.response.status == 404) {
+        Vue.prototype.$notify.error({
+            title: 'Error',
+            message: 'Request url 404'
+        })
+    }
     console.error("error", error)
     return Promise.reject(error)
 })

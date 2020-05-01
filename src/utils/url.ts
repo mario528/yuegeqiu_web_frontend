@@ -21,6 +21,8 @@ const url = {
 
     COMPLETE_USER_INFO: '/api/v1/user/info/complete',
 
-    USER_CENTER: '/api/v1/user/center'
+    USER_CENTER: '/api/v1/user/center',
+
+    USER_TEAM_INFO: '/api/v1/user/team/info'
 }
 export default url

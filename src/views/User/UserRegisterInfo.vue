@@ -45,7 +45,7 @@ import UploadUserIcon from '@/components/UploadUserIcon.vue'
 import LocationSelect from '@/components/LocationSelect.vue'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { Getter } from 'vuex-class' 
-import { Utils } from '@/utils/index'
+import { Utils, Toast } from '@/utils/index'
 import User from '@/model/User/User'
 @Component({
     components: {
@@ -66,6 +66,7 @@ export default class UserRegisterInfo extends Vue {
         district: ""
     }
     private userId = ""
+    private isUpLoadIcon = false
     @Watch('pageIndex')
     watchPageIndex (newValue: number, oldValue: number) {
         this.progressState = (newValue / this.stepsList.length) * 100
@@ -79,9 +80,6 @@ export default class UserRegisterInfo extends Vue {
         this.userId = this.$route.params.userId || localStorage.getItem('USER_ID')
     }
 
-    private handleRequest () {
-
-    }
     private gotoPrePage() {
         this.pageIndex = this.pageIndex - 1
     }
@@ -92,7 +90,14 @@ export default class UserRegisterInfo extends Vue {
             }
             this.requestCompleteUserInfo()
         }else {
-            this.handleRequest()
+            if (this.isUpLoadIcon) {
+                Toast.showToastError.call(this,'请上传头像','错误')
+            }else {
+                Toast.showToastSuccess.call(this,'成功')
+                setTimeout(() => {
+                    this.$router.push('/user/center');
+                }, 500);
+            }
         }
     }
     private selectComplete (data: any) {
@@ -111,7 +116,7 @@ export default class UserRegisterInfo extends Vue {
         })
     }
     private upLoadSuccessfull () {
-        
+        this.isUpLoadIcon = true
     }
 }
 </script>
