@@ -77,7 +77,7 @@ export default class UserRegisterInfo extends Vue {
     mounted() {
         // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
         // @ts-ignore
-        this.userId = this.$route.params.userId || localStorage.getItem('USER_ID')
+        this.userId = this.$route.params.userId || localStorage.getItem('User_ID')
     }
 
     private gotoPrePage() {
@@ -147,7 +147,6 @@ export default class UserRegisterInfo extends Vue {
 }
 .register-info-container {
     min-width: 300px;
-    padding-top: 10vh;
 }
 .register-info-item {
     box-sizing: border-box;
@@ -181,6 +180,7 @@ export default class UserRegisterInfo extends Vue {
 }
 .button-area {
     width: 40%;
+    min-width: 250px;
     padding: 10vh 5%;
     text-align: center;
     &-btn {
@@ -204,6 +204,8 @@ export default class UserRegisterInfo extends Vue {
 .upload-container {
     width: 20vw;
     height: 20vw;
+    min-width: 200px;
+    min-height: 200px;
 }
 .radio-group ::v-deep .is-checked .el-radio__label {
     color: $base_color;
@@ -211,6 +213,25 @@ export default class UserRegisterInfo extends Vue {
 .radio-group ::v-deep .is-checked .el-radio__inner {
     border-color: $base_color;
     background-color: $base_color;
+}
+@media screen and (max-width: 400px){
+    .register-info-container {
+        padding-top: 20px;
+    }
+    .register-info-item-line-text {
+        font-size: 14px;
+    }
+    .upload-container {
+        margin-top: 20px;
+    }
+}
+@media screen and (min-width: 401px){
+    .register-info-container {
+        padding-top: 10vh;
+    }
+    .upload-container {
+        margin-top: 20px;
+    }
 }
 </style>
 

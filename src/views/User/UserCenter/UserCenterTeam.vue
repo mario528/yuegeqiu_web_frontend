@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-04-28 21:06:30
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-02 02:04:10
+ * @LastEditTime: 2020-05-04 01:39:53
  * @Description: file content
  -->
 <template>
@@ -42,7 +42,7 @@ export default class UserCenterTeam extends Vue {
   handleRouter(type: string) {
     switch (type) {
       case "create_team":
-        this.$router.push('/team')
+        this.$router.push('/team/create')
         break;
       case "join_team":
         break;
@@ -55,7 +55,7 @@ export default class UserCenterTeam extends Vue {
   padding: 20px;
 }
 .empty-area {
-  color: $high_light_color;
+  color: $base_color;
   text-align: center;
   font-weight: 500;
   &-icon {
@@ -80,6 +80,7 @@ export default class UserCenterTeam extends Vue {
       overflow: hidden;
       display: block;
       white-space: nowrap;
+      cursor: pointer;
     }
   }
 }

@@ -53,8 +53,10 @@ class User {
         return new Promise((reslove, reject) => {
             // @ts-ignore
             this.$http.get(Url.LOGOUT, {}).then((res: any) => {
+                // @ts-ignore
+                this.$router.push('/')
                 reslove(res)
-            }).catch((err: any) => {
+            }).catch((err: any) => {            
                 reject(err)
             })
         })

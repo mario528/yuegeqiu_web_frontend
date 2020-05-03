@@ -15,7 +15,7 @@ const routes = [
     meta: {
       title: '球队'
     },
-    component: () => import('@/views/Team.vue')
+    component: () => import('@/views/Team/Team.vue')
   },
   {
     path: '/mall',
@@ -70,6 +70,15 @@ const routes = [
     meta: {
       title: '完善信息',
       // this page need user login
+      requireAuth: true
+    }
+  },
+  {
+    path: '/team/create',
+    name: 'createTeam',
+    component: () => import('../views/Team/TeamCreate.vue'),
+    meta: {
+      title: '创建球队',
       requireAuth: true
     }
   },
