@@ -21,6 +21,9 @@ const mutations: MutationTree<any> = {
     },
     [TYPES.SET_USER_ID] (state, userId: string): void {
         state.userId = userId
+    },
+    [TYPES.SET_LOGIN_OR_REGISTER_STATE] (state, dialogState: number): void {
+        state.loginOrRegisterState = dialogState
     }
 }
 export default mutations

@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-04-25 17:37:10
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-04 01:56:53
+ * @LastEditTime: 2020-05-04 15:40:41
  * @Description: file content
  -->
 <template>
@@ -137,12 +137,12 @@ export default class LocationSelect extends Vue {
     min-width: 100px;
     margin-right: 5%;
 }
-@media screen and (max-width: 400px){
+@media screen and (max-width: 450px){
     .select {
         margin-top: 10px;   
     }
 }
-@media screen and (min-width: 401px){
+@media screen and (min-width: 451px){
     
 }
 </style>

@@ -17,7 +17,7 @@ export default class UpArrow extends Vue {
 }
 </script>
 <style lang="scss" scoped>
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 450px) {
   .up-arrow-container {
     width: 35px;
     height: 45px;
@@ -33,7 +33,7 @@ export default class UpArrow extends Vue {
     height: 25px;
   }
 }
-@media screen and (min-width: 401px) {
+@media screen and (min-width: 451px) {
   .up-arrow-container {
     width: 50px;
     height: 50px;

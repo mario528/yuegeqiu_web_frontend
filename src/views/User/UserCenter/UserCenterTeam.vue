@@ -2,13 +2,19 @@
  * @Author: majiaao
  * @Date: 2020-04-28 21:06:30
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-04 01:39:53
+ * @LastEditTime: 2020-05-05 15:06:19
  * @Description: file content
  -->
 <template>
     <div class="flex-column-center container">
         <div class="width-100 flex-x-start user-center-title">我的球队</div>
-        <div v-if="teamList.length == 0" class="empty-area">
+        <div class="team-area" v-if="teamList.length != 0">
+          <div class="team-area-item" v-for="(item, index) in teamList" :key="index">
+            <img class="team-area-icon" :src="item.team_icon" alt="">
+            <div class="team-area-name">球队:{{item.team_name}}</div>
+          </div>
+        </div>
+        <div v-else class="empty-area">
             <div class="flex-row-y-center empty-area-tips-line">
                 <div class="empty-area-tips-btn" @click="handleRouter('create_team')">创建球队</div>
                 <img class="empty-area-icon" :src="require('@/assets/empty_box.png')">
@@ -84,7 +90,35 @@ export default class UserCenterTeam extends Vue {
     }
   }
 }
-@media screen and (max-width: 400px) {
+.team-area {
+  width: 100%;
+  float: left;
+  margin-top: 5vh;
+  &-item {
+    float: left;
+    margin-right: 5vw;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #a9a9a9;
+    border-radius: 15px;
+  }
+  &-icon {
+    width: 8vw;
+    height: 8vw;
+    min-width: 100px;
+    min-height: 100px;
+    background-color: white;
+    border-radius: 50%;
+    border: 1px solid #a9a9a9;
+  }
+  &-name {
+    margin: 10px auto;
+    font-weight: 500;
+    font-size: 16px;
+    text-align: center;
+  }
+}
+@media screen and (max-width: 450px) {
   .empty-area {
     padding: 30px 0;
     &-tips {
@@ -94,7 +128,7 @@ export default class UserCenterTeam extends Vue {
     }
   }
 }
-@media screen and (min-width: 401px) {
+@media screen and (min-width: 451px) {
   .empty-area {
     padding: 15vh 0;
     &-tips {

@@ -32,10 +32,10 @@
             @click="processSetSpread('click')"
             @mouseout="processSetSpread('mouseout')"
           >
-          <div @click="handleTapLoginOrRegister">
-            <a class="user-text" data-set="login">登陆</a>
+          <div @click="handleTapLoginOrRegister($event.target)">
+            <a class="user-text" data-value="login">登陆</a>
             <a class="user-text-line">｜</a>
-            <a class="user-text" data-set="register">注册</a>
+            <a class="user-text" data-value="register">注册</a>
           </div>
         </div>
       </div>
@@ -83,6 +83,9 @@ export default class Header extends Vue {
 
   @Action("handleSetUserId")
   public handleSetUserId!: (userId: string | undefined) => void;
+
+  @Action("handleLoginOrRegisterState")
+  public handleLoginOrRegisterState!: (state: number) => void
 
   @Getter('getAccountToken')
   public token: string | undefined
@@ -163,6 +166,8 @@ export default class Header extends Vue {
     this.optimize.processFunc(fn, 0.3);
   }
   private handleTapLoginOrRegister(event: any) {
+    const idx = event.dataset.value == 'login' ? 1 : 2
+    this.handleLoginOrRegisterState(idx)
     // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
     this.$event.emit("changeLoginDialogState");

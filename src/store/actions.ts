@@ -21,6 +21,9 @@ const actions: ActionTree<any, any> = {
     },
     async handleSetUserId ({state, commit}, userId: string | undefined) {
         commit(TYPES.SET_USER_ID, userId)
+    },
+    async handleLoginOrRegisterState ({state, commit}, dialogState: number) {
+        commit(TYPES.SET_LOGIN_OR_REGISTER_STATE, dialogState)
     }
 }
 export default actions

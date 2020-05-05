@@ -214,7 +214,7 @@ export default class UserRegisterInfo extends Vue {
     border-color: $base_color;
     background-color: $base_color;
 }
-@media screen and (max-width: 400px){
+@media screen and (max-width: 450px){
     .register-info-container {
         padding-top: 20px;
     }
@@ -225,7 +225,7 @@ export default class UserRegisterInfo extends Vue {
         margin-top: 20px;
     }
 }
-@media screen and (min-width: 401px){
+@media screen and (min-width: 451px){
     .register-info-container {
         padding-top: 10vh;
     }

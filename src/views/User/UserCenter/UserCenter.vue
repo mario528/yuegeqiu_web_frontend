@@ -168,7 +168,7 @@ export default class UserCenter extends Vue {
     }
   }
 }
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 450px) {
   .user-section-list {
     width: 90vw;
     margin: 10px 5%;
@@ -197,7 +197,7 @@ export default class UserCenter extends Vue {
 
   }
 }
-@media screen and (min-width: 401px) {
+@media screen and (min-width: 451px) {
   .user-section-list {
     box-sizing: 5px;
     width: 15vw;

@@ -40,7 +40,6 @@ import { RegExp } from '@/utils/index'
 @Component({})
 export default class LoginOrRegister extends Vue {
   private showDialog = false;
-  private dialogState = 1;
   private loginTelNumber = '';
   private loginPsw = '';
   private hidePsw = false;
@@ -53,6 +52,9 @@ export default class LoginOrRegister extends Vue {
   private countTimer = null
   private verificationCode = ''
 
+  @Getter('getLoginOrRegisterState')
+  private dialogState !: number;
+
   @Action('handleSetAccountToken')
   private handleSetAccountToken!: (token: string) => void
 
@@ -62,6 +64,14 @@ export default class LoginOrRegister extends Vue {
   @Action('handleSetUserId')
   private handleSetUserId!: (userId: string) => void
 
+  @Action('handleLoginOrRegisterState')
+  private swithType (type: number) {
+    if (type == this.dialogState) return
+    debugger
+    this.dialogState = type
+    this._initState()
+  }
+
   created() {
     this.$event.on("changeLoginDialogState", () => {
       this.showDialog = !this.showDialog;
@@ -69,11 +79,6 @@ export default class LoginOrRegister extends Vue {
   }
   private handleMaskState() {
     this.showDialog = !this.showDialog
-    this._initState()
-  }
-  private swithType (type: number) {
-    if (type == this.dialogState) return
-    this.dialogState = type
     this._initState()
   }
   private handleInputPsw (value: string, type: number) {

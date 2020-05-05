@@ -11,6 +11,7 @@ interface State {
     smallScreenModel: boolean;
     token: string | undefined;
     userId: string | undefined;
+    loginOrRegisterState: number;
 }
 const state: State = {
     showSiderBar: false,
@@ -18,7 +19,8 @@ const state: State = {
     isLogin: false,
     smallScreenModel: false,
     token: undefined,
-    userId: undefined
+    userId: undefined,
+    loginOrRegisterState: Number(0)
 }
 Vue.use(Vuex)
 export default new Vuex.Store({
