@@ -94,6 +94,7 @@ export default class UserRegisterInfo extends Vue {
                 Toast.showToastError.call(this,'请上传头像','错误')
             }else {
                 Toast.showToastSuccess.call(this,'成功')
+                this.$event.emit('reflashUserInfo')
                 setTimeout(() => {
                     this.$router.push('/user/center');
                 }, 500);

@@ -28,6 +28,7 @@ import {
   Dropdown,
   DropdownMenu,
   DropdownItem,
+  ColorPicker
 } from 'element-ui'
 import Loading from './components/Loading/libs/loading'
 Vue.config.productionTip = false
@@ -64,6 +65,7 @@ Vue.use(Upload)
 Vue.use(Dropdown)
 Vue.use(DropdownMenu)
 Vue.use(DropdownItem)
+Vue.use(ColorPicker)
 // 自定义插件
 Vue.use(Loading)
 // 自定义组件

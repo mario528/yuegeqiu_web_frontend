@@ -83,6 +83,14 @@ const routes = [
     }
   },
   {
+    path: '/team/detail',
+    name: 'teamDetail',
+    component: () => import('../views/Team/TeamDetail.vue'),
+    meta: {
+      title: '球队详情'
+    }
+  },
+  {
     path: '*',
     name: "notFoundPage",
     component: () => import('../views/NotFound.vue')
