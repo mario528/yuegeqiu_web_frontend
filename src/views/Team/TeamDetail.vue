@@ -2,13 +2,19 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-06 23:49:48
+ * @LastEditTime: 2020-05-07 02:12:57
  * @Description: file content
  -->
 <template>
    <div class="container">
       <div class="container-box">
-         <div class="container-main"></div>
+         <div class="container-main">
+            <div class="main-content">
+               <!-- 球队通告 -->
+               <div class="width-100 team-inform-title">球队通告</div>
+               <div class="team-inform"></div>
+            </div>
+         </div>
          <div class="container-left">
             <div class="team-icon">
                <img id="team-icon" :src="teamInfo.team_icon">
@@ -40,16 +46,16 @@
                </div>
                <div
                   class="flex-row-y-center team-info-line"
-                  v-if="teamInfo.city != teamInfo.province && showMoreInfo"
+                  v-show="teamInfo.city != teamInfo.province && showMoreInfo"
                >
                   <div class="team-info-line-title">省市</div>
                   <div class="team-info-line-content">{{teamInfo.province}}</div>
                </div>
-               <div class="flex-row-y-center team-info-line" v-if="showMoreInfo">
+               <div class="flex-row-y-center team-info-line" v-show="showMoreInfo">
                   <div class="team-info-line-title">城市</div>
                   <div class="team-info-line-content">{{teamInfo.city}}</div>
                </div>
-               <div class="flex-row-y-center team-info-line" v-if="showMoreInfo">
+               <div class="flex-row-y-center team-info-line" v-show="showMoreInfo">
                   <div class="team-info-line-title">区域</div>
                   <div class="team-info-line-content">{{teamInfo.district}}</div>
                </div>
@@ -72,7 +78,10 @@
                </div>
                <div class="flex-row-y-center team-user-list-item" v-for="(item, index) in teamMember" :key="index" @click="handleUserCenter(item.id)">
                   <div class="flex-row-y-center team-user-list-item-left">
-                     <img :src="item.head_url" class="user-icon">
+                     <div class="user-icon-area">
+                        <img :src="item.head_url" class="user-icon">
+                        <img :src="require('../../assets/caption.png')" class="caption-icon" />   
+                     </div>   
                      <div class="user-name">{{item.nick_name}}</div>
                   </div>
                   <div class="user-position-type">前锋</div>
@@ -127,6 +136,9 @@ export default class TeamDetail extends Vue {
   padding: 0;
   box-sizing: border-box;
 }
+.container {
+   margin-bottom: 2vh;
+}
 @media screen and (max-width: 450px) {
 }
 @media screen and (min-width: 451px) {
@@ -147,16 +159,20 @@ export default class TeamDetail extends Vue {
     width: 100%;
     min-width: 400px;
     height: 100%;
-    background-color: white;
     padding: 0 10vw;
+    background-color: $shallow_grey_color;
+    text-align: center;
   }
   .container-left {
     box-sizing: border-box;
     width: 15vw;
     min-width: 100px;
     height: 100%;
-    background-color: $base_color;
+    background-color: $side-color;
     margin-left: -100%;
+    border-right: 1px solid $high_light_color;
+    color: white;
+    font-weight: 600;
   }
   .container-right {
     box-sizing: border-box;
@@ -164,13 +180,15 @@ export default class TeamDetail extends Vue {
     min-width: 100px;
     height: 100%;
     margin-left: -15vw;
-    background-color: blue;
+    background-color: $side-color;
+    border-left: 1px solid $high_light_color;
+    color: white;
   }
   .team-icon {
     width: 100%;
     text-align: center;
     padding: 10px 0;
-    border-bottom: 3px solid $base_black_color;
+    border-bottom: 3px solid $high_light_color;
   }
   #team-icon {
     width: 10vw;
@@ -179,12 +197,13 @@ export default class TeamDetail extends Vue {
     min-height: 80px;
     border-radius: 50%;
     padding: 20px;
-    border: 3px solid $base_color;
+    border: 3px solid $high_light_color;
+    background-color: $high_light_color;
   }
   .team-info {
     &-line {
       padding: 20px 5px;
-      border-bottom: 1px solid $base_black_color;
+      border-bottom: 3px solid $high_light_color;
       font-size: 14px;
       &-title {
         min-width: 30%;
@@ -211,7 +230,7 @@ export default class TeamDetail extends Vue {
   }
   .team-user-title {
      width: 100%;
-     padding: 10px 0;
+     padding: 10px 20px;
      border-bottom: 1px solid $border_color;
   }
   .team-user-list-title {
@@ -229,16 +248,23 @@ export default class TeamDetail extends Vue {
   .team-user-list-item {
      width: 100%;
      &-left {
-        width: 60%;
-        margin-right: 5%;
-        border-right: 1px solid $border_color;
+        width: 65%;
      }
+  }
+  .user-icon-area {
+     position: relative;
   }
   .user-icon {
      width: 35px;
      height: 35px;
      border-radius: 50%;
      display: inline-block;
+     margin-left: 20px;
+  }
+  .caption-icon {
+     width: 10px;
+     height: 10px;
+     position: absolute;
   }
   .user-position-type {
      width: 35%;
@@ -246,6 +272,21 @@ export default class TeamDetail extends Vue {
   }
   .user-name {
      margin-left: 15px;
+  }
+  .main-content {
+     width: 80%;
+     margin: 0 auto;
+  }
+  .team-inform-title {
+     text-align: start;
+     margin: 20px 0;
+     font-weight: 500;
+     font-size: 18px;
+  }
+  .team-inform {
+     width: 100%;
+     height: 100px;
+     background-color: white;
   }
 }
 </style>

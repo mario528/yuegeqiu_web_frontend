@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-06 02:20:42
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-06 18:00:40
+ * @LastEditTime: 2020-05-07 01:08:34
  * @Description: file content
  -->
 <template>
@@ -48,6 +48,7 @@ export default class TeamShirt extends Vue {
         }
     }
     private drawShirt (ctx: HTMLCanvasElement | any) {
+        ctx.strokeStyle = this.baseColor
         ctx.fillStyle = this.baseColor
         ctx.lineWidth = 1
         ctx.moveTo(15,10)
