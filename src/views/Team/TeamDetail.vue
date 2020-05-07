@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-08 01:26:20
+ * @LastEditTime: 2020-05-08 01:42:09
  * @Description: file content
  -->
 <template>
@@ -19,7 +19,7 @@
                </div>
                <!-- 球队通告 -->
                <div class="width-100">
-                  <team-inform></team-inform>
+                  <team-inform :showInfromValue="teamInfo.team_inform"></team-inform>
                </div>
                <!-- 球队日历 -->
                <div class="width-100 team-calendar-container">

@@ -2,15 +2,15 @@
  * @Author: majiaao
  * @Date: 2020-05-07 13:52:27
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-08 01:25:19
+ * @LastEditTime: 2020-05-08 01:44:25
  * @Description: file content
  -->
 <template>
     <div class="team-inform">
         <div class="team-inform-title">球队通告</div>
-        <div class="team-inform-content" v-show="!isEdit">暂无通告</div>
+        <div class="team-inform-content" v-show="!isEdit">{{showInfromValue ? showInfromValue : '暂无通告'}}</div>
         <div class="team-inform-edit-container">
-            <textarea class="team-inform-edit" v-show="isEdit" v-model="emitValue" ref="focusTextarea"/>
+            <textarea class="team-inform-edit" :placeholder="showInfromValue ? showInfromValue : ''" v-show="isEdit" v-model="emitValue" ref="focusTextarea"/>
             <div :class="[emitLen == maxLen ? 'number-count-down number-count-down-warn' : 'number-count-down']" v-if="isEdit">{{emitLen}}/{{maxLen}}</div>
         </div>
         <div class="width-100 button-area">
@@ -32,7 +32,7 @@ export default class TeamCenterInform extends Vue {
     private maxLen = 200
     private emitLen = 0
     private emitValue = ''
-    @Prop({ default: 0 })
+    @Prop({ default: '' }) showInfromValue !: string
     @Watch('emitValue')
     computedEmitValueLen () {
         if (this.emitValue.length >= this.maxLen) this.emitValue = this.emitValue.substring(0, this.maxLen)

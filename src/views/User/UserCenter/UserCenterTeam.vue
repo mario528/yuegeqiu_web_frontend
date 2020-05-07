@@ -2,14 +2,14 @@
  * @Author: majiaao
  * @Date: 2020-04-28 21:06:30
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-05 22:57:38
+ * @LastEditTime: 2020-05-08 01:41:01
  * @Description: file content
  -->
 <template>
     <div class="flex-column-center container">
         <div class="width-100 flex-x-start user-center-title">我的球队</div>
         <div class="team-area" v-if="teamList.length != 0">
-          <div class="team-area-item" :style="{'background-color': item.home_court_color}" v-for="(item, index) in teamList" :key="index" @click="handleTeamDetail(item.id)">
+          <div class="flex-column-x-center team-area-item" :style="{'background-color': item.home_court_color}" v-for="(item, index) in teamList" :key="index" @click="handleTeamDetail(item.id)">
             <img class="team-area-icon" :src="item.team_icon" alt="">
             <div class="team-area-name">球队:{{item.team_name}}</div>
           </div>
@@ -119,6 +119,7 @@ export default class UserCenterTeam extends Vue {
     background-color: white;
     border-radius: 50%;
     border: 1px solid #a9a9a9;
+    margin: 0 auto;
   }
   &-name {
     margin: 10px auto;
