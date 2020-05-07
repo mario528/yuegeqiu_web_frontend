@@ -2,12 +2,12 @@
  * @Author: majiaao
  * @Date: 2020-05-07 13:52:27
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-07 16:12:12
+ * @LastEditTime: 2020-05-08 01:25:19
  * @Description: file content
  -->
 <template>
     <div class="team-inform">
-        <div class="team-inform-title">球队通知</div>
+        <div class="team-inform-title">球队通告</div>
         <div class="team-inform-content" v-show="!isEdit">暂无通告</div>
         <div class="team-inform-edit-container">
             <textarea class="team-inform-edit" v-show="isEdit" v-model="emitValue" ref="focusTextarea"/>
@@ -63,6 +63,7 @@ export default class TeamCenterInform extends Vue {
         width: 100%;
         margin: 20px 0;
         text-align: start;
+        font-weight: 500;
     }
     &-content {
         width: 100%;

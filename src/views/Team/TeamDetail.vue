@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-07 16:33:38
+ * @LastEditTime: 2020-05-08 01:26:20
  * @Description: file content
  -->
 <template>
@@ -10,12 +10,20 @@
       <div class="container-box">
          <div class="container-main">
             <div class="main-content">
-               <div class="team-troduction">
-                  <div></div>
+               <!-- 球队信息 -->
+               <div class="width-100 team-troduction">
+                  <div class="team-troduction-name">
+                     {{teamInfo.team_name}}
+                  </div>
+                  <div class="team-troduction-description">{{teamInfo.description}}</div>
                </div>
                <!-- 球队通告 -->
                <div class="width-100">
                   <team-inform></team-inform>
+               </div>
+               <!-- 球队日历 -->
+               <div class="width-100 team-calendar-container">
+                  <team-caleder :dateArray="caleder"></team-caleder>
                </div>
             </div>
          </div>
@@ -24,10 +32,6 @@
                <img id="team-icon" :src="teamInfo.team_icon">
             </div>
             <div class="team-info">
-               <div class="flex-row-y-center team-info-line">
-                  <div class="team-info-line-title">球队名:</div>
-                  <div class="team-info-line-content">{{teamInfo.team_name}}</div>
-               </div>
                <div class="flex-row-y-center team-info-line">
                   <div class="team-info-line-title">主场球衣</div>
                   <team-shirt
@@ -55,7 +59,7 @@
                   <div class="team-info-line-title">省市</div>
                   <div class="team-info-line-content">{{teamInfo.province}}</div>
                </div>
-               <div class="flex-row-y-center team-info-line" v-show="showMoreInfo">
+               <div class="flex-row-y-center team-info-line">
                   <div class="team-info-line-title">城市</div>
                   <div class="team-info-line-content">{{teamInfo.city}}</div>
                </div>
@@ -102,10 +106,12 @@ import { State, Getter } from "vuex-class";
 import TeamType from "@/model/Team/Team";
 import TeamShirt from "@/components/TeamShirt.vue";
 import TeamCenterInform from "@/components/TeamPageInform.vue"
+import TeamCaleder from "@/components/TeamCaleder.vue"
 @Component({
   components: {
     "team-shirt": TeamShirt,
-    "team-inform": TeamCenterInform
+    "team-inform": TeamCenterInform,
+    "team-caleder": TeamCaleder
   }
 })
 export default class TeamDetail extends Vue {
@@ -116,6 +122,7 @@ export default class TeamDetail extends Vue {
   public teamInfo: object = {};
   public teamMember: object = {};
   public showMoreInfo = false;
+  public caleder !: string[]
 
   mounted() {
     this.teamId = +this.$route.query.td;
@@ -128,9 +135,10 @@ export default class TeamDetail extends Vue {
       user_id: this.userId || (localStorage.getItem("User_ID") as string)
     };
     teamType.getTeamDetail.call(this, params).then((res: any) => {
-      const { team_info, team_member } = res;
+      const { team_info, team_member, caleder } = res;
       this.teamInfo = team_info;
       this.teamMember = team_member;
+      this.caleder = [caleder['start_at'], caleder['end_at']]
       document.title = team_info.team_name;
     });
   }
@@ -144,13 +152,14 @@ export default class TeamDetail extends Vue {
 }
 .container {
    margin-bottom: 2vh;
+   border-bottom: 1px solid #eeeeee;
 }
 @media screen and (max-width: 450px) {
 }
 @media screen and (min-width: 451px) {
   .container-box {
     width: 90%;
-    height: 800px;
+    min-height: 800px;
     margin: 0 auto;
     //  BFC
     overflow: hidden;
@@ -164,7 +173,7 @@ export default class TeamDetail extends Vue {
     box-sizing: border-box;
     width: 100%;
     min-width: 400px;
-    height: 100%;
+    min-height: 800px;
     padding: 0 10vw;
     background-color: $shallow_grey_color;
     text-align: center;
@@ -174,6 +183,7 @@ export default class TeamDetail extends Vue {
     width: 15vw;
     min-width: 100px;
     height: 100%;
+    min-height: 800px;
     background-color: $side-color;
     margin-left: -100%;
     border-right: 1px solid $high_light_color;
@@ -185,6 +195,7 @@ export default class TeamDetail extends Vue {
     width: 15vw;
     min-width: 100px;
     height: 100%;
+    min-height: 800px;
     margin-left: -15vw;
     background-color: $side-color;
     border-left: 1px solid $high_light_color;
@@ -282,6 +293,25 @@ export default class TeamDetail extends Vue {
   .main-content {
      width: 80%;
      margin: 0 auto;
+  }
+  .team-troduction {
+     text-align: start;
+     margin: 10px 0; 
+     padding: 15px 0;
+     border-bottom: 1px solid $grey_color;
+     &-name {
+        font-size: 26px;
+        font-weight: 600;
+     }
+     &-description {
+        font-size: 14px;
+        margin-top: 5px;
+     }
+  }
+  .team-calendar {
+     &-container {
+        margin: 20px 0;
+     }
   }
 }
 </style>
