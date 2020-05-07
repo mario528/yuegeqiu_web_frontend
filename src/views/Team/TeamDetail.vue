@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-07 02:12:57
+ * @LastEditTime: 2020-05-07 16:33:38
  * @Description: file content
  -->
 <template>
@@ -10,9 +10,13 @@
       <div class="container-box">
          <div class="container-main">
             <div class="main-content">
+               <div class="team-troduction">
+                  <div></div>
+               </div>
                <!-- 球队通告 -->
-               <div class="width-100 team-inform-title">球队通告</div>
-               <div class="team-inform"></div>
+               <div class="width-100">
+                  <team-inform></team-inform>
+               </div>
             </div>
          </div>
          <div class="container-left">
@@ -96,10 +100,12 @@
 import { Vue, Component } from "vue-property-decorator";
 import { State, Getter } from "vuex-class";
 import TeamType from "@/model/Team/Team";
-import TeamShirt from "../../components/TeamShirt.vue";
+import TeamShirt from "@/components/TeamShirt.vue";
+import TeamCenterInform from "@/components/TeamPageInform.vue"
 @Component({
   components: {
-    "team-shirt": TeamShirt
+    "team-shirt": TeamShirt,
+    "team-inform": TeamCenterInform
   }
 })
 export default class TeamDetail extends Vue {
@@ -276,17 +282,6 @@ export default class TeamDetail extends Vue {
   .main-content {
      width: 80%;
      margin: 0 auto;
-  }
-  .team-inform-title {
-     text-align: start;
-     margin: 20px 0;
-     font-weight: 500;
-     font-size: 18px;
-  }
-  .team-inform {
-     width: 100%;
-     height: 100px;
-     background-color: white;
   }
 }
 </style>
