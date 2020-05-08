@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-07 13:52:27
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-08 01:44:25
+ * @LastEditTime: 2020-05-08 15:57:45
  * @Description: file content
  -->
 <template>
@@ -22,6 +22,8 @@
 </template>
 <script lang="ts">
 import { Vue, Component, Watch, Prop } from 'vue-property-decorator'
+import { Getter } from 'vuex-class'
+import Team from '@/model/Team/Team'
 enum Role {
     
 }
@@ -32,7 +34,10 @@ export default class TeamCenterInform extends Vue {
     private maxLen = 200
     private emitLen = 0
     private emitValue = ''
+    @Getter('getUserId')
+    private userId !: string
     @Prop({ default: '' }) showInfromValue !: string
+    @Prop({ default: -1 }) teamId !: string
     @Watch('emitValue')
     computedEmitValueLen () {
         if (this.emitValue.length >= this.maxLen) this.emitValue = this.emitValue.substring(0, this.maxLen)
@@ -50,8 +55,16 @@ export default class TeamCenterInform extends Vue {
         this.isEdit = false
     }
     private saveEditData () {
-        this.$emit('editEnd', this.emitValue)
-        this.closeEdit()
+        const params = {
+            team_id: this.teamId,
+            user_id: localStorage.getItem('User_ID') || this.userId,
+            inform_detail: this.emitValue
+        }
+        new Team().updateTeamInfo.call(this, params).then((res: any) => {
+            this.$emit('editEnd', this.emitValue)
+            this.showInfromValue = this.emitValue
+            this.closeEdit()
+        })
     }
 
 }
@@ -72,7 +85,7 @@ export default class TeamCenterInform extends Vue {
         box-sizing: border-box;
         padding: 10px;
         text-align: start;
-        color: $header_font_color_common;
+        color: #333333;
         border-radius: 5px;
         line-height: 18px;
     }

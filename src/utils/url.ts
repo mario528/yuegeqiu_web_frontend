@@ -27,6 +27,8 @@ const url = {
 
     CREATE_TEAM: '/api/v1/team/create',
 
-    GET_TEAM_DETAIL: '/api/v1/team/detail'
+    GET_TEAM_DETAIL: '/api/v1/team/detail',
+
+    UPDATE_TEAM_INFORM: '/api/v1/team/update/inform'
 }
 export default url

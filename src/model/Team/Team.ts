@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-04-30 22:08:23
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-05 22:30:43
+ * @LastEditTime: 2020-05-08 15:42:12
  * @Description: file content
  */
 import { Url } from '../../utils/index'
@@ -26,6 +26,11 @@ interface GetUserTeamInfo {
 interface GetTeamDetail {
     team_id: string | number;
     user_id: string | number;
+}
+interface UpdateTeamInfo {
+    team_id: string | number;
+    user_id: string | number;
+    inform_detail: string;
 }
 class Team {
     constructor() {}
@@ -55,6 +60,16 @@ class Team {
         return new Promise((reslove, reject) => {
             // @ts-ignore
             this.$http.post(Url.GET_TEAM_DETAIL, params).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
+    updateTeamInfo (params: UpdateTeamInfo) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.post(Url.UPDATE_TEAM_INFORM, params).then((res: any) => {
                 reslove(res)
             }).catch((err: any) => {
                 reject(err)

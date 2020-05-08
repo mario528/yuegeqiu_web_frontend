@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-08 01:42:09
+ * @LastEditTime: 2020-05-09 02:03:34
  * @Description: file content
  -->
 <template>
@@ -19,11 +19,11 @@
                </div>
                <!-- 球队通告 -->
                <div class="width-100">
-                  <team-inform :showInfromValue="teamInfo.team_inform"></team-inform>
+                  <team-inform :showInfromValue="teamInfo.team_inform" :teamId="teamId"></team-inform>
                </div>
                <!-- 球队日历 -->
                <div class="width-100 team-calendar-container">
-                  <team-caleder :dateArray="caleder"></team-caleder>
+                  <team-calendar :dateArray="calendar" :calenderList="calendarList"></team-calendar>
                </div>
             </div>
          </div>
@@ -106,12 +106,12 @@ import { State, Getter } from "vuex-class";
 import TeamType from "@/model/Team/Team";
 import TeamShirt from "@/components/TeamShirt.vue";
 import TeamCenterInform from "@/components/TeamPageInform.vue"
-import TeamCaleder from "@/components/TeamCaleder.vue"
+import TeamCalendar from "@/components/TeamCalendar.vue"
 @Component({
   components: {
     "team-shirt": TeamShirt,
     "team-inform": TeamCenterInform,
-    "team-caleder": TeamCaleder
+    "team-calendar": TeamCalendar
   }
 })
 export default class TeamDetail extends Vue {
@@ -122,7 +122,8 @@ export default class TeamDetail extends Vue {
   public teamInfo: object = {};
   public teamMember: object = {};
   public showMoreInfo = false;
-  public caleder !: string[]
+  public calendar !: string[]
+  public calendarList !: []
 
   mounted() {
     this.teamId = +this.$route.query.td;
@@ -135,10 +136,11 @@ export default class TeamDetail extends Vue {
       user_id: this.userId || (localStorage.getItem("User_ID") as string)
     };
     teamType.getTeamDetail.call(this, params).then((res: any) => {
-      const { team_info, team_member, caleder } = res;
+      const { team_info, team_member, calendar } = res;
       this.teamInfo = team_info;
       this.teamMember = team_member;
-      this.caleder = [caleder['start_at'], caleder['end_at']]
+      this.calendar = [calendar['start_at'], calendar['end_at']]
+      this.calendarList = calendar.calendar_list
       document.title = team_info.team_name;
     });
   }

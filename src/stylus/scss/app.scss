@@ -82,3 +82,15 @@
       }
     }
 }
+.thin-border {
+  position: relative;
+  &::before {
+    content: " ";
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    border: 1px solid #ffffff;
+    transform: scale(.5);
+    box-sizing: border-box;
+  }
+}

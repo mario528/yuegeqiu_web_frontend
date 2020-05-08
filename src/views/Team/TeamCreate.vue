@@ -94,8 +94,7 @@ export default class TeamCreate extends Vue {
             home_court_color: this.homeColor,
             away_court_color: this.awayColor
         }
-        const teamModel = new Team()
-        teamModel.crateTeam.call(this, params).then((res: any) => {
+        new Team().crateTeam.call(this, params).then((res: any) => {
             const teamId = res.team_id
             this.$router.push({
                 path: '/team/detail',
