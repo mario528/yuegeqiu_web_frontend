@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-09 02:03:34
+ * @LastEditTime: 2020-05-09 14:51:02
  * @Description: file content
  -->
 <template>
@@ -23,7 +23,7 @@
                </div>
                <!-- 球队日历 -->
                <div class="width-100 team-calendar-container">
-                  <team-calendar :dateArray="calendar" :calenderList="calendarList"></team-calendar>
+                  <team-calendar :dateArray="calendar" :calendarList="calendarList"></team-calendar>
                </div>
             </div>
          </div>

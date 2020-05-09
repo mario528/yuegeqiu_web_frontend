@@ -67,7 +67,6 @@ export default class LoginOrRegister extends Vue {
   @Action('handleLoginOrRegisterState')
   private swithType (type: number) {
     if (type == this.dialogState) return
-    debugger
     this.dialogState = type
     this._initState()
   }
