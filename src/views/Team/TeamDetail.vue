@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-09 14:51:02
+ * @LastEditTime: 2020-05-11 00:20:38
  * @Description: file content
  -->
 <template>
@@ -140,7 +140,10 @@ export default class TeamDetail extends Vue {
       this.teamInfo = team_info;
       this.teamMember = team_member;
       this.calendar = [calendar['start_at'], calendar['end_at']]
-      this.calendarList = calendar.calendar_list
+      this.calendarList = calendar.calendar_list.map((item: any) => {
+         item.showDialogContent = false
+         return item
+      })
       document.title = team_info.team_name;
     });
   }
