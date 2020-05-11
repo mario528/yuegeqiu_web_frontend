@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-11 00:20:38
+ * @LastEditTime: 2020-05-11 14:14:18
  * @Description: file content
  -->
 <template>
@@ -23,7 +23,7 @@
                </div>
                <!-- 球队日历 -->
                <div class="width-100 team-calendar-container">
-                  <team-calendar :dateArray="calendar" :calendarList="calendarList"></team-calendar>
+                  <team-calendar :dateArray="calendar" :calendarList="calendarList" :teamId="teamId"></team-calendar>
                </div>
             </div>
          </div>
@@ -142,6 +142,7 @@ export default class TeamDetail extends Vue {
       this.calendar = [calendar['start_at'], calendar['end_at']]
       this.calendarList = calendar.calendar_list.map((item: any) => {
          item.showDialogContent = false
+         item.loading = true
          return item
       })
       document.title = team_info.team_name;

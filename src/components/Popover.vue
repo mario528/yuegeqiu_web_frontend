@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-09 23:51:52
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-11 01:32:01
+ * @LastEditTime: 2020-05-11 13:23:34
  * @Description: file content
  -->
 <template>
@@ -10,6 +10,8 @@
         <div class="popover-arrow" v-if="showPopover"></div>
         <transition name="fade">
             <div class="popover-container" v-if="showPopover">
+                <slot name="loading" v-if="showPopover">
+                </slot>
                 <div class="popover-line">
                     <slot name="content"></slot>
                 </div>
@@ -27,7 +29,6 @@ export default class Popover extends Vue {
   @Prop({ default: false })
   showPopover!: boolean;
   private _changeVisibel() {
-    debugger;
     if (this.showPopover) {
       this.showPopover = false;
     } else {

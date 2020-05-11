@@ -3,14 +3,14 @@
     <nav-header :navList="navList"></nav-header>
     <side-bar :nav-list="navList" :dom-height="domHeight"></side-bar>
     <div class="app-content">
-      <router-view/>
+      <router-view v-if="isRouterAlive"/>
     </div>
     <footer-area></footer-area>
     <login-register></login-register>
   </div>
 </template>
 <script lang="ts">
-import { Vue } from "vue-property-decorator";
+import { Vue, Provide } from "vue-property-decorator";
 import Component from "vue-class-component";
 import { State, Action, Getter } from "vuex-class";
 import { router } from "./config/index";
@@ -23,6 +23,14 @@ export default class App extends Vue {
   public domHeight = 75;
   @Getter("getScreenModel")
   public smallScreenModel!: boolean;
+  public isRouterAlive = true
+  @Provide('reload')
+  public reload () {
+    this.isRouterAlive = false
+    this.$nextTick(() => {
+      this.isRouterAlive = true
+    })
+  }
 }
 </script>
 

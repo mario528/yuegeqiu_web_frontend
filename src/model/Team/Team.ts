@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-04-30 22:08:23
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-08 15:42:12
+ * @LastEditTime: 2020-05-11 20:09:20
  * @Description: file content
  */
 import { Url } from '../../utils/index'
@@ -31,6 +31,19 @@ interface UpdateTeamInfo {
     team_id: string | number;
     user_id: string | number;
     inform_detail: string;
+}
+interface GetActivityRole {
+    user_id: string;
+    team_id: string | number;
+    activity_id: string;
+}
+interface CreateTeamActivity {
+    team_id: string;
+    user_id: string;
+    activity_title: string;
+    activity_date: string;
+    activity_time: string;
+    activity_detail?: string;
 }
 class Team {
     constructor() {}
@@ -70,6 +83,26 @@ class Team {
         return new Promise((reslove, reject) => {
             // @ts-ignore
             this.$http.post(Url.UPDATE_TEAM_INFORM, params).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
+    createTeamActivity (params: CreateTeamActivity) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.post(Url.CREATE_TEAM_ACTIVITY, params).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
+    getActivityRole (params: GetActivityRole) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.post(Url.GET_ACTIVITY_ROLE, params).then((res: any) => {
                 reslove(res)
             }).catch((err: any) => {
                 reject(err)

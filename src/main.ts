@@ -29,9 +29,11 @@ import {
   DropdownMenu,
   DropdownItem,
   ColorPicker,
-  Calendar
+  Calendar,
+  TimeSelect
 } from 'element-ui'
 import Loading from './components/Loading/libs/loading'
+import Dialog from './components/Dialog/libs/dialog'
 Vue.config.productionTip = false
 Vue.prototype.$http = http
 Vue.prototype.$notify = Notification
@@ -68,8 +70,10 @@ Vue.use(DropdownMenu)
 Vue.use(DropdownItem)
 Vue.use(ColorPicker)
 Vue.use(Calendar)
+Vue.use(TimeSelect)
 // 自定义插件
 Vue.use(Loading)
+Vue.use(Dialog)
 // 自定义组件
 Vue.component('up-arrow', UpArrow)
 Vue.component('nav-header', Header)

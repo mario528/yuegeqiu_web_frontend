@@ -2,11 +2,51 @@
  * @Author: majiaao
  * @Date: 2020-05-07 21:25:40
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-11 01:39:11
+ * @LastEditTime: 2020-05-12 01:19:04
  * @Description: file content
  -->
  <template>
     <div class="width-100">
+        <mario-dialog :showDialog="showDialog">
+            <div slot="dialog-content">
+                <div class="dialog-content-title">发起活动</div>
+                <div class="dialog-content-line">
+                    <div class="dialog-content-line-left">活动</div>
+                    <div class="dialog-content-line-right">
+                        <input placeholder="活动"  v-model="dialogInfo.title" class="dialog-content-line-right-input" />
+                    </div>
+                </div>
+                <div class="dialog-content-line">
+                    <div class="dialog-content-line-left">活动日期</div>
+                    <div class="dialog-content-line-right">{{dialogInfo.showDate}}</div>
+                </div>
+                <div class="dialog-content-line">
+                    <div class="dialog-content-line-left">具体时间</div>
+                    <div class="dialog-content-line-right">
+                        <el-time-select
+                            class="dialog-content-line-right-time"
+                            placeholder="起始时间"
+                            v-model="dialogInfo.datetime.startTime"
+                            @change="changeDateTime"
+                            :picker-options="{
+                            start: '08:00',
+                            step: '00:30',
+                            end: '24:00'
+                            }">
+                        </el-time-select>
+                    </div>
+                </div>
+                <div class="dialog-content-line">
+                    <div class="dialog-content-line-left">详情</div>
+                    <div class="dialog-content-line-right">
+                        <textarea placeholder="活动" v-model="dialogInfo.detail" class="dialog-content-line-right-textarea" />
+                    </div>
+                </div>
+            </div>
+            <div slot="dialog-footer">
+                <span class="dialog-footer-btn" @click="handlePublishAvtivity">发布</span>
+            </div>
+        </mario-dialog>
         <div class="caleder-title">近期活动</div>
         <div class="calendar-week-title">
             <div class="calendar-week-title-item" v-for="(item, index) in weekList" :key="index">
@@ -15,14 +55,17 @@
         </div>
         <div class="width-100 calendar-area">
             <div class="calendar-area-item-weekend"></div>
-            <div class="relativity" v-for="(item, index) in calendarList" :key="index" @mouseover="showCalendarDialog(index, item.activity_id)" @mouseleave="hideCalendarDialog(index, item.activity_id)">
+            <div class="relativity" v-for="(item, index) in calendarList" :key="index" @mouseover="showCalendarDialog(index)" @mouseleave="hideCalendarDialog(index)">
                 <div :class="[activityIndex == index ? 'calendar-area-item-hover' : item.is_weekend ? 'calendar-area-item-weekend' : 'calendar-area-item']">
                     <span :class="[item.is_pass ? 'calendar-area-item-strong-disable' : item.is_today ? 'calendar-area-item-strong-today' : 'calendar-area-item-strong']">{{item.date.substring(8)[0] == '0' ? item.date.substring(9) : item.date.substring(8)}}</span>
                     <img class="calendar-area-item-icon" :src="activityIcon" v-if="item.activity_id">
                 </div>
-                <mario-popover :showPopover="item.showDialogContent" @mouseover="showCalendarDialog(index, item.activity_id)" @mouseleave="hideCalendarDialog(index, item.activity_id)">
+                <mario-popover :showPopover="item.showDialogContent" @mouseover="showCalendarDialog(index)" @mouseleave="hideCalendarDialog(index)">
+                    <div class="flex-column-center loading" slot="loading" v-if="item.loading">
+                        <i class="el-icon-loading"></i>
+                    </div>
                     <div slot="content" class="popover-box">
-                        <div class="popover-title">详情</div>
+                        <div class="popover-title">活动详情</div>
                         <div class="flex-row-y-center popover-line">
                             <img :src="require('@/assets/activity_content_icon.png')" class="popover-icon">
                             <div class="popover-content">{{item.activity || '-'}}</div>
@@ -33,8 +76,9 @@
                         </div>
                     </div>
                     <div slot="footer" class="popover-footer">
-                        <span class="popover-join-btn" v-if="item.activity_id">参与</span>
-                        <span class="popover-join-btn" v-if="!item.activity_id">发起活动</span>
+                        <span class="popover-join-btn" v-if="item.activity_id && joinState == -1">参与</span>
+                        <span class="popover-join-btn" v-if="!item.activity_id" @click="handleCreateActivity">发起活动</span>
+                        <span class="popover-join-btn" v-if="item.activity_id && joinState != -1">取消参与</span>
                     </div>
                 </mario-popover>
             </div>
@@ -42,39 +86,102 @@
     </div>
 </template>
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from "vue-property-decorator";
+import { Vue, Component, Prop, Watch, Inject } from "vue-property-decorator";
+import { Getter } from 'vuex-class'
 import { TimeFormate } from "@/utils/index";
+import Team from '../model/Team/Team'
 import Popover from '@/components/Popover.vue'
+import Dialog from '@/components/Dialog/DialogComponent.vue'
 @Component({
     components: {
-        'mario-popover': Popover
+        'mario-popover': Popover,
+        'mario-dialog': Dialog
     }
 })
 export default class TeamCaleder extends Vue {
   @Prop({ default: () => [] }) dateArray!: string[];
   @Prop({default: () => []}) calendarList!: any[]
+  @Prop() teamId!: string
+  @Getter('getUserId') private userId !: string
+  @Inject('reload') private reload!: () => void
   private weekList = ['日','一','二','三','四','五','六']
   private activityIcon = require('../assets/activity_icon.png')
   private activityIndex = -1
-  private flag = true
-  private showCalendarDialog (index: number, activityId: string | null) {
+  private showDialog = false
+  private joinState = -1
+  private dialogInfo = {
+      title: "",
+      showDate: "",
+      datetime: {
+          startTime: ""
+      },
+      detail: ""
+  }
+  private showCalendarDialog (index: number) {
+       if (this.calendarList[index].is_pass) return
        this.$nextTick(()=> {
           if (this.activityIndex != -1 && this.activityIndex != index) {
             this.$set(this.calendarList[this.activityIndex],'showDialogContent', false)
           }
           this.$set(this.calendarList[index],'showDialogContent', true)
           this.activityIndex = index
+          this.showDialog = false
           // 强制更新
           this.$forceUpdate();
+          const activityId = this.calendarList[this.activityIndex].activity_id
+          if (!activityId) {
+              this.$set(this.calendarList[index],'loading', false)
+              return
+          }
+          this.requestActivityRole(activityId as string)
        })
   }
-  private hideCalendarDialog (index: number, activityId: string | null) {
+  private hideCalendarDialog (index: number) {
       setTimeout(() => {
           this.$set(this.calendarList[index],'showDialogContent', false)
           this.activityIndex = -1
           // 强制更新
           this.$forceUpdate();   
       }, 0);
+  }
+  private requestActivityRole (activity_id: string) {
+      new Team().getActivityRole.call(this, {
+          team_id: this.teamId,
+          activity_id: activity_id,
+          user_id: this.userId || localStorage.getItem('User_ID') as string
+      }).then((res: any) => {
+          this.$set(this.calendarList[this.activityIndex],'loading', false)
+          const { join_state } = res
+          this.joinState = join_state
+          // 强制更新
+          this.$forceUpdate();   
+      })
+  }
+  private handleCreateActivity () {
+    const index = this.activityIndex
+    this.$set(this.calendarList[index],'showDialogContent', false)
+    this.activityIndex = -1
+    this.dialogInfo.showDate = this.calendarList[index].date
+    this.showDialog = true
+    this.$forceUpdate(); 
+  }
+  private changeDateTime (detail: string) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
+      this.dialogInfo.startTime = detail
+  }
+  private handlePublishAvtivity () {
+      const { title, showDate, datetime, detail } = this.dialogInfo
+      new Team().createTeamActivity.call(this, {
+          team_id: this.teamId,
+          user_id: this.userId || localStorage.getItem('User_ID') as string,
+          activity_title: title,
+          activity_date: showDate,
+          activity_time: datetime.startTime,
+          activity_detail: detail
+      }).then((res: any) => {
+          this.reload()
+      })
   }
 }
 </script>
@@ -193,7 +300,6 @@ export default class TeamCaleder extends Vue {
     }
     &-content {
         font-size: 14px;
-        
     }
     &-footer {
         text-align: end;
@@ -210,6 +316,74 @@ export default class TeamCaleder extends Vue {
         margin: 5px;
         cursor: pointer;
     }
+}
+.loading {
+    position: absolute;
+    bottom: 0;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    border-radius: 5px;
+    background-color: hsla(0,0%,100%,.9);
+}
+.dialog-content {
+    &-title {
+        position: relative;
+        text-align: start;
+        padding-left: 20px;
+        font-size: 20px;
+        font-weight: 500;
+        margin-bottom: 20px;
+        &::after {
+            content: " ";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 5px;
+            height: 100%;
+            background-color: $side-color;
+        }
+    }
+    &-line {
+        width: 100%;
+        text-align: start;
+        padding: 10px 5px;
+        &-left {
+            width: 30%;
+            display: inline-block;
+        }
+        &-right {
+            width: 70%;
+            display: inline-block;
+            &-time {
+                width: 75%;
+            }
+            &-input {
+                box-sizing: border-box;
+                width: 75%;
+                padding: 10px 5px;
+                outline: none;
+                border: 1px solid #DCDFE6;
+                border-radius: 5px;
+            }
+            &-textarea {
+                box-sizing: border-box;
+                resize: none;
+                outline: none;
+                width: 75%;
+                height: 10vh;
+                padding: 10px 5px;
+                border: 1px solid #DCDFE6;
+            }
+        }
+    }
+}
+.dialog-footer-btn {
+    background-color: $side-color;
+    color: white;
+    padding: 5px 20px;
+    border-radius: 5px;
 }
 </style>
 
