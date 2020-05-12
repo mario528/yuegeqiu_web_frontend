@@ -2,11 +2,30 @@
  * @Author: majiaao
  * @Date: 2020-05-12 11:57:09
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-12 19:03:31
+ * @LastEditTime: 2020-05-13 00:26:46
  * @Description: file content
  -->
 <template>
     <div class="flex-column-x-center search-container">
+        <side-dialog :showDialog="showDialog" @closeShowDialog="closeShowDialog">
+            <div slot="header">
+                <div class="title">搜索结果</div>
+            </div>
+            <div slot="content">
+                <div class="flex-row-y-center width-100 content-line" v-for="(item, index) in searhResult" :key="index">
+                    <div class="flex-row-y-center content-line-left">
+                        <img :src="item.team_icon" class="team-icon">
+                        <div>
+                            <div class="team-name">{{item.team_name}}</div>
+                            <div class="team-description">{{item.description}}</div>
+                        </div>
+                    </div>
+                    <div class="flex-row-center content-line-right" @click="handleTeamPage(item.id)">
+                        查看
+                    </div>
+                </div>
+            </div>
+        </side-dialog>
         <div class="flex-column-x-center search-input-area">
             <div class="flex-row search-tag">
                 <div :class="[searchType == 0 ? 'search-tag-item-choosed' : 'search-tag-item']" @click="swtichType(0)">球队名</div>
@@ -37,9 +56,11 @@
 import { Vue, Component, Prop } from "vue-property-decorator";
 import LocationSelect from '@/components/LocationSelect.vue'
 import Team from '@/model/Team/Team'
+import SideDialogByCommon from '@/components/SlideDialogByCommon.vue'
 @Component({
     components: {
-        'location-selecter': LocationSelect
+        'location-selecter': LocationSelect,
+        'side-dialog': SideDialogByCommon
     }
 })
 export default class TeamSearch extends Vue {
@@ -50,6 +71,7 @@ export default class TeamSearch extends Vue {
     city?: string;
     district?: string;
   }
+  private showDialog = false
   private searhResult !: []
   private querySearchAsync (queryString: any, cb: (result: any) => void) {
       if (!queryString) return
@@ -111,9 +133,22 @@ export default class TeamSearch extends Vue {
       this.searchLocationInfo = locationInfo
       
   }
+  private closeShowDialog () {
+      this.showDialog = false
+  }
   private handleFindTeamByLocation () {
+    if (!this.searchLocationInfo.province && !this.searchLocationInfo.city && !this.searchLocationInfo.district) return
     new Team().searchTeam.call(this, this.searchLocationInfo).then((res: any) => {
         this.searhResult = res      
+        this.showDialog = true
+    })
+  }
+  private handleTeamPage (teamId: any) {
+    this.$router.push({
+        path: '/team/detail',
+        query: {
+            td: teamId
+        }
     })
   }
 }
@@ -178,6 +213,41 @@ export default class TeamSearch extends Vue {
   }
   .location-area ::v-deep .el-input__inner {
     height: $search_height;
+  }
+  .content-line {
+      border-bottom: 1px solid $border_color;
+      padding: 10px 0;
+      &-left {
+          width: 80%;
+      }
+      &-right {
+          width: 20%;
+          background-color: $side_color;
+          color: white;
+          font-weight: 500;
+          padding: 5px 0;
+          border-radius: 5px;
+          cursor: pointer;
+      }
+  }
+  .team {
+      &-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 1px solid #333333;
+        margin-right: 5%;
+      }
+      &-name {
+          font-weight: 600;
+          font-size: 18px;
+          color: #333333;
+      }
+      &-description {
+          font-size: 12px;
+          margin-top: 5px;
+          color: $disable_color;
+      }
   }
 }
 </style>
