@@ -33,6 +33,8 @@ const url = {
 
     GET_ACTIVITY_ROLE: '/api/v1/team/activity/role',
 
-    CREATE_TEAM_ACTIVITY: '/api/v1/team/activity/create'
+    CREATE_TEAM_ACTIVITY: '/api/v1/team/activity/create',
+
+    SEARCH_TEAM: '/api/v1/team/search'
 }
 export default url

@@ -1,7 +1,6 @@
 <template>
   <div class="page">
     <div class="flex-column-x-center container">
-      Team
     </div>
   </div>
 </template>

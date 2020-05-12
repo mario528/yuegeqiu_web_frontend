@@ -83,6 +83,14 @@ const routes = [
     }
   },
   {
+    path: '/team/search',
+    name: 'teamSearch',
+    component: () => import('../views/Team/TeamSearch.vue'),
+    meta: {
+      title: '搜索球队'
+    }
+  },
+  {
     path: '/team/detail',
     name: 'teamDetail',
     component: () => import('../views/Team/TeamDetail.vue'),

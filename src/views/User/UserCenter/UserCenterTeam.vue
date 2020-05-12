@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-04-28 21:06:30
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-08 01:41:01
+ * @LastEditTime: 2020-05-12 13:05:48
  * @Description: file content
  -->
 <template>
@@ -52,6 +52,7 @@ export default class UserCenterTeam extends Vue {
         this.$router.push('/team/create')
         break;
       case "join_team":
+        this.$router.push('/team/search')
         break;
     }
   }

@@ -1,13 +1,17 @@
 .width-100 {
   width: 100%;
 }
+.width-50 {
+  width: 50%;
+}
 .flex {
     display: flex;
     &-row {
       @extend .flex;
       flex-direction: row;
       &-x-center {
-
+        @extend .flex-row;
+        justify-content: center;
       }
       &-y-center {
         display: flex;

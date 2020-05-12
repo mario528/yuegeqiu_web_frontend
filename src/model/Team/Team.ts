@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-04-30 22:08:23
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-11 20:09:20
+ * @LastEditTime: 2020-05-12 17:07:48
  * @Description: file content
  */
 import { Url } from '../../utils/index'
@@ -44,6 +44,12 @@ interface CreateTeamActivity {
     activity_date: string;
     activity_time: string;
     activity_detail?: string;
+}
+interface SearchTeam {
+    team_name?: string;
+    province?: string;
+    city?: string;
+    district?: string;
 }
 class Team {
     constructor() {}
@@ -103,6 +109,16 @@ class Team {
         return new Promise((reslove, reject) => {
             // @ts-ignore
             this.$http.post(Url.GET_ACTIVITY_ROLE, params).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
+    searchTeam (params: SearchTeam) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.post(Url.SEARCH_TEAM, params).then((res: any) => {
                 reslove(res)
             }).catch((err: any) => {
                 reject(err)

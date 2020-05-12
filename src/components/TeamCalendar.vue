@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-07 21:25:40
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-12 01:19:04
+ * @LastEditTime: 2020-05-12 11:38:11
  * @Description: file content
  -->
  <template>
@@ -78,7 +78,7 @@
                     <div slot="footer" class="popover-footer">
                         <span class="popover-join-btn" v-if="item.activity_id && joinState == -1">参与</span>
                         <span class="popover-join-btn" v-if="!item.activity_id" @click="handleCreateActivity">发起活动</span>
-                        <span class="popover-join-btn" v-if="item.activity_id && joinState != -1">取消参与</span>
+                        <span class="popover-join-btn" v-if="item.activity_id && joinState != -1" @click="cancelJoin">取消参与</span>
                     </div>
                 </mario-popover>
             </div>
