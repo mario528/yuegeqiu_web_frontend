@@ -39,6 +39,7 @@ Vue.config.productionTip = false
 Vue.prototype.$http = http
 Vue.prototype.$notify = Notification
 Vue.prototype.$msgbox = MessageBox
+Vue.prototype.$confirm = MessageBox.confirm
 // register a event handler
 import { EventHandler } from './utils/index'
 // @ts-ignore

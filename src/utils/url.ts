@@ -37,6 +37,10 @@ const url = {
 
     SEARCH_TEAM: '/api/v1/team/search',
 
-    UPLOAD_TEAM_ICON: '/api/v1/team/upload/icon'
+    UPLOAD_TEAM_ICON: '/api/v1/team/upload/icon',
+
+    JOIN_TEAM: '/api/v1/team/join',
+
+    DEPART_TEAM: '/api/v1/team/depart'
 }
 export default url

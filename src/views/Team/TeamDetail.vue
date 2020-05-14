@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-14 17:10:57
+ * @LastEditTime: 2020-05-14 20:37:14
  * @Description: file content
  -->
 <template>
@@ -11,11 +11,15 @@
          <div class="container-main">
             <div class="main-content">
                <!-- 球队信息 -->
-               <div class="width-100 team-troduction">
-                  <div class="team-troduction-name">
-                     {{teamInfo.team_name}}
+               <div class="width-100 flex-row-between team-troduction">
+                  <div>
+                     <div class="team-troduction-name">{{teamInfo.team_name}}</div>
+                     <div class="team-troduction-description">{{teamInfo.description}}</div>
                   </div>
-                  <div class="team-troduction-description">{{teamInfo.description}}</div>
+                  <div :class="[isTeamMember ? 'flex-row-y-center team-troduction-state' : 'flex-row-y-center team-troduction-state team-troduction-state-disable']" @click="handleMemberBtn">
+                     <img :src="isTeamMember ? require('../../assets/true.png') : require('../../assets/join.png')" class="team-troduction-state-icon">
+                     {{isTeamMember ? '已加入' : '加入球队'}}
+                  </div>
                </div>
                <!-- 球队通告 -->
                <div class="width-100">
@@ -130,7 +134,8 @@ export default class TeamDetail extends Vue {
   public showMoreInfo = false;
   public calendar !: string[]
   public calendarList !: []
-
+  public isTeamMember !: boolean
+ 
   mounted() {
     this.teamId = +this.$route.query.td;
     this.requestTeamDetail();
@@ -142,9 +147,10 @@ export default class TeamDetail extends Vue {
       user_id: this.userId || (localStorage.getItem("User_ID") as string)
     };
     teamType.getTeamDetail.call(this, params).then((res: any) => {
-      const { team_info, team_member, calendar } = res;
+      const { team_info, team_member, calendar, is_member } = res;
       this.teamInfo = team_info;
       this.teamMember = team_member;
+      this.isTeamMember = is_member
       this.calendar = [calendar['start_at'], calendar['end_at']]
       this.calendarList = calendar.calendar_list.map((item: any) => {
          item.showDialogContent = false
@@ -165,6 +171,37 @@ export default class TeamDetail extends Vue {
         Toast.showToastSuccess.call(this,"上传成功","成功")
      }).catch((err: any) => {
         Toast.showToastError.call(this, err.msg, '失败')
+     })
+  }
+  private handleMemberBtn () {
+     if (this.isTeamMember) {
+        this.$confirm('离队操作不可撤销，是否继续?', '离队', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+         }).then(() => {
+           this.handleLeaveTeam()
+        })
+     }else {
+        this.handleJoinTeam()
+     }
+  }
+  private handleJoinTeam () {
+     new TeamType().joinTeam.call(this, {
+        team_id: +this.teamId,
+        user_id: this.userId || (localStorage.getItem("User_ID") as string)
+     }).then((res: any) => {
+        Toast.showToastSuccess.call(this,"加入球队成功","成功")
+        this.requestTeamDetail();
+     })
+  }
+  private handleLeaveTeam () {
+   new TeamType().departTeam.call(this, {
+        team_id: +this.teamId,
+        user_id: this.userId || (localStorage.getItem("User_ID") as string)
+     }).then((res: any) => {
+        Toast.showToastSuccess.call(this,"离队成功","成功")
+        this.requestTeamDetail();
      })
   }
 }
@@ -331,6 +368,24 @@ export default class TeamDetail extends Vue {
      &-description {
         font-size: 14px;
         margin-top: 5px;
+     }
+     &-state {
+        padding: 10px 20px;
+        background-color: $side_color;
+        color: white;
+        font-weight: 500;
+        border-radius: 10px;
+        cursor: pointer;
+        &-disable {
+         background-color: $border_color;
+         color: #333333;
+        }
+        &-icon {
+           margin-right: 5px;
+           width: 20px;
+           height: 20px;
+           position: relative;
+        }
      }
   }
   .team-calendar {

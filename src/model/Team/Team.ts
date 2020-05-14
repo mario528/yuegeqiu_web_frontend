@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-04-30 22:08:23
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-14 17:00:37
+ * @LastEditTime: 2020-05-14 20:27:08
  * @Description: file content
  */
 import { Url } from '../../utils/index'
@@ -55,6 +55,14 @@ interface SearchTeam {
 interface UpLoadTeamIcon {
     team_id: number | string;
     form_data: any;
+}
+interface JoinTeam {
+    team_id: number | string;
+    user_id: number | string;
+}
+interface DepartTeam {
+    team_id: number | string;
+    user_id: number | string;
 }
 class Team {
     constructor() {}
@@ -136,6 +144,26 @@ class Team {
             new File().upload.call(this, params.form_data, Url.UPLOAD_TEAM_ICON, {
                 team_id: params.team_id
             }).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
+    joinTeam (params: JoinTeam) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.post(Url.JOIN_TEAM, params).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
+    departTeam (params: DepartTeam) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.post(Url.DEPART_TEAM, params).then((res: any) => {
                 reslove(res)
             }).catch((err: any) => {
                 reject(err)
