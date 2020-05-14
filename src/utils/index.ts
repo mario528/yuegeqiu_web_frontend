@@ -5,6 +5,7 @@ import RegExp from './regexp'
 import Toast from './toast'
 import Utils from './utils'
 import TimeFormate from './time'
+import FileType from './file'
 
 export {
     EventHandler,
@@ -13,5 +14,6 @@ export {
     RegExp,
     Toast,
     Utils,
-    TimeFormate
+    TimeFormate,
+    FileType
 }

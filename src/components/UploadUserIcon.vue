@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-04-26 17:04:16
  * @LastEditors: majiaao
- * @LastEditTime: 2020-04-27 02:31:34
+ * @LastEditTime: 2020-05-14 15:29:23
  * @Description: file content
  -->
 <template>
@@ -32,7 +32,7 @@ export default class UploadUserIcon extends Vue {
   public size !: number
   @Prop({ default: () => ['image/jpeg'] })
   public uploadType !: string[]
-  @Prop({ default: '/api/v1/user/upload/head' })
+  @Prop({ default: '/api/v1/user/upload/icon' })
   public uploadUrl !: string
   @Prop({default: {}})
   public formData !: {}

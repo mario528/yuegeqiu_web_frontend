@@ -2,10 +2,11 @@
  * @Author: majiaao
  * @Date: 2020-04-30 22:08:23
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-12 17:07:48
+ * @LastEditTime: 2020-05-14 17:00:37
  * @Description: file content
  */
 import { Url } from '../../utils/index'
+import File from '../../model/File/file'
 interface Location {
     province?: string;
     city?: string;
@@ -50,6 +51,10 @@ interface SearchTeam {
     province?: string;
     city?: string;
     district?: string;
+}
+interface UpLoadTeamIcon {
+    team_id: number | string;
+    form_data: any;
 }
 class Team {
     constructor() {}
@@ -119,6 +124,18 @@ class Team {
         return new Promise((reslove, reject) => {
             // @ts-ignore
             this.$http.post(Url.SEARCH_TEAM, params).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
+    uploadTeamIcon (params: UpLoadTeamIcon) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            new File().upload.call(this, params.form_data, Url.UPLOAD_TEAM_ICON, {
+                team_id: params.team_id
+            }).then((res: any) => {
                 reslove(res)
             }).catch((err: any) => {
                 reject(err)

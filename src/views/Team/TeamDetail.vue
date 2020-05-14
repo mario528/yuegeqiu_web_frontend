@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-11 14:14:18
+ * @LastEditTime: 2020-05-14 17:10:57
  * @Description: file content
  -->
 <template>
@@ -28,8 +28,11 @@
             </div>
          </div>
          <div class="container-left">
-            <div class="team-icon">
-               <img id="team-icon" :src="teamInfo.team_icon">
+            <div class="flex-row-center team-icon">
+               <!-- <img id="team-icon" :src="teamInfo.team_icon"> -->
+               <div id="team-icon">
+                  <mario-icon :iconPath="teamInfo.team_icon" :hoverModel="true" @uploadRequest="uploadRequest"></mario-icon>
+               </div>
             </div>
             <div class="team-info">
                <div class="flex-row-y-center team-info-line">
@@ -103,15 +106,18 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { Vue, Component } from "vue-property-decorator";
 import { State, Getter } from "vuex-class";
+import { Toast } from '@/utils/index'
 import TeamType from "@/model/Team/Team";
 import TeamShirt from "@/components/TeamShirt.vue";
 import TeamCenterInform from "@/components/TeamPageInform.vue"
 import TeamCalendar from "@/components/TeamCalendar.vue"
+import IconDIY from '@/components/IconDiy.vue'
 @Component({
   components: {
     "team-shirt": TeamShirt,
     "team-inform": TeamCenterInform,
-    "team-calendar": TeamCalendar
+    "team-calendar": TeamCalendar,
+    "mario-icon": IconDIY
   }
 })
 export default class TeamDetail extends Vue {
@@ -147,6 +153,19 @@ export default class TeamDetail extends Vue {
       })
       document.title = team_info.team_name;
     });
+  }
+  private uploadRequest (fileFormData: any) {
+     new TeamType().uploadTeamIcon.call(this,{
+        team_id: +this.teamId,
+        form_data: fileFormData
+     }).then((res: any) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // @ts-ignore
+        this.teamInfo.team_icon = res.team_url
+        Toast.showToastSuccess.call(this,"上传成功","成功")
+     }).catch((err: any) => {
+        Toast.showToastError.call(this, err.msg, '失败')
+     })
   }
 }
 </script>

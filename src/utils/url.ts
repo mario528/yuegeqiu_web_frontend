@@ -35,6 +35,8 @@ const url = {
 
     CREATE_TEAM_ACTIVITY: '/api/v1/team/activity/create',
 
-    SEARCH_TEAM: '/api/v1/team/search'
+    SEARCH_TEAM: '/api/v1/team/search',
+
+    UPLOAD_TEAM_ICON: '/api/v1/team/upload/icon'
 }
 export default url
