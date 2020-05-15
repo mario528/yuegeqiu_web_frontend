@@ -64,6 +64,9 @@ interface DepartTeam {
     team_id: number | string;
     user_id: number | string;
 }
+interface TeamSuggest {
+    user_id?: number | string;
+}
 class Team {
     constructor() {}
     crateTeam (params: CreateTeamInterface) {
@@ -164,6 +167,18 @@ class Team {
         return new Promise((reslove, reject) => {
             // @ts-ignore
             this.$http.post(Url.DEPART_TEAM, params).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
+    teamSuggest (params: TeamSuggest) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.get(Url.TEAM_SUGGEST, {
+                params
+            }).then((res: any) => {
                 reslove(res)
             }).catch((err: any) => {
                 reject(err)

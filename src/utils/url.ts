@@ -41,6 +41,8 @@ const url = {
 
     JOIN_TEAM: '/api/v1/team/join',
 
-    DEPART_TEAM: '/api/v1/team/depart'
+    DEPART_TEAM: '/api/v1/team/depart',
+
+    TEAM_SUGGEST: '/api/v1/team/suggest'
 }
 export default url

@@ -99,6 +99,14 @@ const routes = [
     }
   },
   {
+    path: '/chat',
+    name: 'chatHome',
+    component: () => import('../views/Chat/Home.vue'),
+    meta: {
+      title: '论坛'
+    }
+  },
+  {
     path: '*',
     name: "notFoundPage",
     component: () => import('../views/NotFound.vue')

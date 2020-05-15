@@ -8,6 +8,10 @@ const routerList = [
         navPath: "/team"
       },
       {
+        navTitle: "论坛",
+        navPath: "/chat"
+      },
+      {
         navTitle: "商城",
         navPath: "/mall"
       }

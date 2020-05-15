@@ -12,7 +12,7 @@ import { Getter, Action, State } from "vuex-class";
 export default class UpArrow extends Vue {
   public iconUrl: string = require("../assets/up_arrow.png");
   private backToTop() {
-    console.log(document.documentElement.scrollTop);
+    document.body.scrollTop = document.documentElement.scrollTop = 0
   }
 }
 </script>
