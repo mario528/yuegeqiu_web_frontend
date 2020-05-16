@@ -1,40 +1,81 @@
 <template>
   <div class="container">
-    <div class="flex-row-x-center content">
+    <div class="content">
       <div class="user-center-left">
         <div class="user-center-left-title">用户信息</div>
         <div class="user-center-left-info">
-          <div class="flex-row-x-center width-100 user-center-left-icon">
-            <icon-diy :iconPath="userInfo.head_url" :hoverModel="true"></icon-diy>
-          </div>
-          <div class="flex-row-center user-center-left-nickname">
-            {{userInfo.nick_name}}
-            <img :src="sexIcon" class="user-center-left-sex_icon">
-          </div>
-          <div class="flex-row-center user-center-left-friend_ship">
-            <div class="user-center-left-friend_ship-item">
-              <span>20</span>
-              <div>关注</div>
+          <div v-if="!screenModel">
+            <div class="flex-row-x-center width-100 user-center-left-icon">
+              <icon-diy :iconPath="userInfo.head_url" :hoverModel="true"></icon-diy>
             </div>
-            <div class="user-center-left-friend_ship-item">
-              <span>40</span>
-              <div>粉丝</div>
+            <div class="flex-row-center user-center-left-nickname">
+              {{userInfo.nick_name}}
+              <img :src="sexIcon" class="user-center-left-sex_icon">
+            </div>
+            <div class="flex-row-center user-center-left-friend_ship">
+              <div class="flex-column-y-center user-center-left-friend_ship-item">
+                <span>20</span>
+                <div>关注</div>
+              </div>
+              <div class="flex-column-y-center user-center-left-friend_ship-item">
+                  <span>40</span>
+                  <div>粉丝</div>
+              </div>
+            </div>
+            <div class="flex-row-center user-center-left-setting">
+              <img
+                :src="require('@/assets/setting_user_center.png')"
+                class="user-center-left-setting-icon"
+              >
+              <img :src="require('@/assets/find_icon.png')" class="user-center-left-setting-icon">
+              <img
+                :src="require('@/assets/message_user_center.png')"
+                class="user-center-left-setting-icon"
+              >
             </div>
           </div>
-          <div class="flex-row-center user-center-left-setting">
-            <img :src="require('@/assets/setting_user_center.png')" class="user-center-left-setting-icon">
-            <img :src="require('@/assets/find_icon.png')" class="user-center-left-setting-icon">
-            <img :src="require('@/assets/message_user_center.png')" class="user-center-left-setting-icon">
+          <div v-else>
+            <div class="flex-row-between mobile-line">
+              <div class="flex-row-y-center user-info-left-mobile">
+                <div class="user-center-left-icon">
+                  <icon-diy :iconPath="userInfo.head_url" :hoverModel="true"></icon-diy>
+                </div>
+                <div class="flex-row-center">
+                  <span>{{userInfo.nick_name}}</span>  
+                  <img :src="sexIcon" class="user-center-left-sex_icon">
+                </div>
+              </div>
+              <div class="flex-row-y-center user-info-right-mobile">
+                <div class="user-center-left-friend_ship-item">
+                  <span>20</span>
+                  <div>关注</div>
+                </div>
+                <div class="user-center-left-friend_ship-item">
+                  <span>40</span>
+                  <div>粉丝</div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="flex-column user-center-left-router">
+          <div class="user-center-left-router">
             <div class="user-center-left-router-item">
-              <router-link class="user-center-left-router-item-link" exact :to="{path: '/user/center/team'}">我的球队</router-link>
+              <router-link
+                class="user-center-left-router-item-link"
+                exact
+                :to="{path: '/user/center/team'}"
+              >我的球队</router-link>
             </div>
             <div class="user-center-left-router-item">
-              <router-link class="user-center-left-router-item-link" :to="{path: '/user/center/message'}">我的动态</router-link>
+              <router-link
+                class="user-center-left-router-item-link"
+                :to="{path: '/user/center/message'}"
+              >我的动态</router-link>
             </div>
             <div class="user-center-left-router-item">
-              <router-link class="user-center-left-router-item-link" :to="{path: '/user/center/history'}">购物记录</router-link>
+              <router-link
+                class="user-center-left-router-item-link"
+                :to="{path: '/user/center/history'}"
+              >购物记录</router-link>
             </div>
           </div>
         </div>
@@ -48,7 +89,7 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { Getter, Action, State } from "vuex-class";
-import IconDIY from "@/components/IconDiy.vue"
+import IconDIY from "@/components/IconDiy.vue";
 import UserModel from "@/model/User/User";
 @Component({
   components: {
@@ -111,13 +152,9 @@ export default class UserCenter extends Vue {
   background-color: $shallow_grey_color;
 }
 .content {
-  width: 90%;
-  text-align: center;
-  min-height: 100%;
 }
 .user-center {
   &-left {
-    float: left;
     height: auto;
     border: 1px solid $border_color;
     &-title {
@@ -195,30 +232,72 @@ export default class UserCenter extends Vue {
           font-weight: 500;
         }
       }
-      
     }
   }
   &-right {
-    float: left;
     min-height: 80vh;
   }
 }
 @media screen and (max-width: 450px) {
-  .user-center-left {
+  .content {
+    width: 100%;
+    text-align: center;
+    min-height: 100%;
+  }
+  .user-center {
+    &-left {
+      width: 100%;
+      &-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+      }
+      &-router {
+        padding: 0 5%;
+        &-item {
+          width: 30%;
+          display: inline-block;
+        }
+      }
+    }
+    &-right {
+      width: 100%;
+    }
+  }
+  .mobile-line {
+    border-bottom: 1px solid $border_color;
+  }
+  .user-info-left-mobile {
+    width: 40%;
+    text-align: center;
+  }
+  .user-info-right-mobile {
+    width: 40%;
+  }
+  .user-center-left-friend_ship-item {
+    height: 60%;
   }
 }
 @media screen and (min-width: 451px) {
   .content {
+    width: 90%;
+    text-align: center;
+    min-height: 100%;
     padding-top: 2vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
   }
   .user-center {
     &-left {
       width: 20%;
+      float: left;
     }
     &-right {
       width: 70%;
       min-height: 80vh;
       margin-left: 5%;
+      float: left;
     }
   }
 }
