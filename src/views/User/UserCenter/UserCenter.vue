@@ -113,7 +113,7 @@ export default class UserCenter extends Vue {
 .content {
   width: 90%;
   text-align: center;
-  height: 100%;
+  min-height: 100%;
 }
 .user-center {
   &-left {
@@ -217,7 +217,7 @@ export default class UserCenter extends Vue {
     }
     &-right {
       width: 70%;
-      height: 100%;
+      min-height: 80vh;
       margin-left: 5%;
     }
   }

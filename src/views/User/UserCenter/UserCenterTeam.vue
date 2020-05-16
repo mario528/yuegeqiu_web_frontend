@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-04-28 21:06:30
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-16 22:30:32
+ * @LastEditTime: 2020-05-17 00:19:38
  * @Description: file content
  -->
 <template>
@@ -41,7 +41,6 @@
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { Getter, Action, State } from "vuex-class";
 import Team from "@/model/Team/Team";
-import TeamCalendar from '../../../components/TeamCalendar.vue'
 @Component
 export default class UserCenterTeam extends Vue {
   @Getter("getUserId")
@@ -203,5 +202,11 @@ export default class UserCenterTeam extends Vue {
   100% {
     transform: rotateY(0deg)
   }
+}
+@media screen and (max-width: 450px){
+  
+}
+@media screen and (max-width: 451px){
+  
 }
 </style>
