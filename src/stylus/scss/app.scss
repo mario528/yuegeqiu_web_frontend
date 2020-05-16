@@ -1,3 +1,6 @@
+* {
+  font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
+}
 .width-100 {
   width: 100%;
 }
@@ -26,7 +29,7 @@
       }
       &-center {
         display: flex;
-        justify-content: space-around;
+        justify-content: center;
         align-items: center;
       }
       &-between {

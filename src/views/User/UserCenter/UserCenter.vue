@@ -1,45 +1,59 @@
 <template>
   <div class="container">
-    <div class="flex-row user-info">
-      <a v-if="!userInfo.nick_name || !userInfo.nick_name || !userInfo.city" class="flex-row-center user-info-detail-tip">完善信息</a>
-      <img class="user-info-icon" :src="userInfo.head_url" :alt="userInfo.nick_name || userInfo.telephone">
-      <div class="flex-row-y-center user-info-detail">
-        <div class="user-info-detail-name">{{userInfo.nick_name || userInfo.telephone}}</div>
-        <img :src="sexIcon" class="user-info-detail-sex-icon" v-if="userInfo.sex">
-      </div>
-    </div>
-    <div class="flex-row user-section-list">
-      <div class="flex-row-center follow-area" v-if="!screenModel">
-          <div class="flex-column-center follow-area-item">
-          <span class="follow-area-title">我的粉丝</span>
-          <div class="follow-area-num">20</div>
+    <div class="flex-row-x-center content">
+      <div class="user-center-left">
+        <div class="user-center-left-title">用户信息</div>
+        <div class="user-center-left-info">
+          <div class="flex-row-x-center width-100 user-center-left-icon">
+            <icon-diy :iconPath="userInfo.head_url" :hoverModel="true"></icon-diy>
+          </div>
+          <div class="flex-row-center user-center-left-nickname">
+            {{userInfo.nick_name}}
+            <img :src="sexIcon" class="user-center-left-sex_icon">
+          </div>
+          <div class="flex-row-center user-center-left-friend_ship">
+            <div class="user-center-left-friend_ship-item">
+              <span>20</span>
+              <div>关注</div>
+            </div>
+            <div class="user-center-left-friend_ship-item">
+              <span>40</span>
+              <div>粉丝</div>
+            </div>
+          </div>
+          <div class="flex-row-center user-center-left-setting">
+            <img :src="require('@/assets/setting_user_center.png')" class="user-center-left-setting-icon">
+            <img :src="require('@/assets/find_icon.png')" class="user-center-left-setting-icon">
+            <img :src="require('@/assets/message_user_center.png')" class="user-center-left-setting-icon">
+          </div>
+          <div class="flex-column user-center-left-router">
+            <div class="user-center-left-router-item">
+              <router-link class="user-center-left-router-item-link" exact :to="{path: '/user/center/team'}">我的球队</router-link>
+            </div>
+            <div class="user-center-left-router-item">
+              <router-link class="user-center-left-router-item-link" :to="{path: '/user/center/message'}">我的动态</router-link>
+            </div>
+            <div class="user-center-left-router-item">
+              <router-link class="user-center-left-router-item-link" :to="{path: '/user/center/history'}">购物记录</router-link>
+            </div>
+          </div>
         </div>
-        <div class="flex-column-center follow-area-item">
-          <span class="follow-area-title">我的关注</span>
-          <div class="follow-area-num">10</div>
-        </div>
       </div>
-      <div class="user-section-list-item">
-        <router-link class="user-section-list-item-link" exact :to="{path: '/user/center/team'}">我的球队</router-link>
+      <div class="user-center-right">
+        <router-view :key="randomKey"></router-view>
       </div>
-      <div class="user-section-list-item">
-        <router-link class="user-section-list-item-link" :to="{path: '/user/center/message'}">我的动态</router-link>
-      </div>
-      <div class="user-section-list-item">
-        <router-link class="user-section-list-item-link" :to="{path: '/user/center/history'}">购物记录</router-link>
-      </div>
-    </div>
-    <div class="user-section-container">
-      <router-view :key="randomKey"></router-view>
     </div>
   </div>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { Getter, Action, State } from "vuex-class";
+import IconDIY from "@/components/IconDiy.vue"
 import UserModel from "@/model/User/User";
 @Component({
-  components: {}
+  components: {
+    "icon-diy": IconDIY
+  }
 })
 export default class UserCenter extends Vue {
   public userName: any;
@@ -47,13 +61,13 @@ export default class UserCenter extends Vue {
   public token: string | undefined;
   public userInfo = {};
   public sexIcon!: string;
-  private randomKey!: number
-  @Getter('getScreenModel')
-  private screenModel!: boolean
+  private randomKey!: number;
+  @Getter("getScreenModel")
+  private screenModel!: boolean;
   @Watch("$route")
   onRouteChange(newValue: any, oldValue: any) {
-      // if (newValue.name == oldValue.name) return
-      this.randomKey = Math.random()
+    // if (newValue.name == oldValue.name) return
+    this.randomKey = Math.random();
   }
   beforeCreate() {
     this.userId =
@@ -82,8 +96,7 @@ export default class UserCenter extends Vue {
               : require("../../../assets/men_icon.png");
         }
       })
-      .catch((error: any) => {
-      });
+      .catch((error: any) => {});
   }
 }
 </script>
@@ -93,141 +106,120 @@ export default class UserCenter extends Vue {
 }
 .container {
   width: 100%;
+  min-height: 82vh;
+  margin-top: -2vh;
+  background-color: $shallow_grey_color;
+}
+.content {
+  width: 90%;
+  text-align: center;
   height: 100%;
 }
-.user-info {
-  width: 90%;
-  margin: 0 auto;
-  flex-wrap: wrap;
-  padding: 10px 30px 10px 30px;
-  background-color: #F6F6F6;
-  border-radius: 10px;
-  position: relative;
-  &-icon {
-    width: 8vw;
-    height: 8vw;
-    min-width: 70px;
-    min-height: 70px;
-    border-radius: 50%;
-  }
-  &-detail {
-    box-sizing: border-box;
-    width: 50vw;
-    padding: 0 0 0 20px;
-    &-sex-icon {
-      width: 25px;
-      height: 25px;
+.user-center {
+  &-left {
+    float: left;
+    height: auto;
+    border: 1px solid $border_color;
+    &-title {
+      padding: 15px 0;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+    }
+    &-icon {
+      width: 8vw;
+      height: 8vw;
+      border-radius: 50%;
+      margin: 2vh auto;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+    }
+    &-sex_icon {
+      width: 20px;
+      height: 20px;
       margin-left: 5px;
     }
-    &-tip {
-      position: absolute;
-      right: 0;
-      top: 0;
-      width: 35px;
-      height: 35px;
-      text-align: center;
-      background-color: $base_color;
-      color: white;
-      border-top-right-radius: 10px;
-      border-top-right-radius: 10px;
-      border-top-right-radius: 10px;
-      border-top-right-radius: 10px;
-      font-size: 4px;
-    }
-    &-name {
-      font-size: 26px;
-      color: #333333;
+    &-nickname {
+      color: $base_black_color;
       font-weight: 500;
+      padding-bottom: 10px;
+      font-family: "Microsoft YaHei";
+      border-bottom: 1px solid $border_color;
+    }
+    &-setting {
+      height: 50px;
+      border-bottom: 1px solid $border_color;
+      &-icon {
+        width: 25px;
+        height: 25px;
+        margin: 0 10px;
+        &:hover {
+          width: 30px;
+          height: 30px;
+        }
+      }
+    }
+    &-router {
+      &-item {
+        padding: 20px 0;
+        border-bottom: 1px solid $border_color;
+        cursor: pointer;
+        &-link {
+          text-decoration: none;
+          color: $base_black_color;
+          font-weight: 500;
+        }
+      }
+    }
+    &-friend_ship {
+      width: 80%;
+      margin: 0 auto;
+      padding: 20px 0;
+      border-bottom: 1px solid $border_color;
+      &-item {
+        color: #333333;
+        font-size: 16px;
+        position: relative;
+        width: 40%;
+        &:nth-of-type(1)::after {
+          position: absolute;
+          content: " ";
+          width: 2px;
+          height: 60%;
+          top: 20%;
+          right: 0;
+          background-color: $border_color;
+        }
+        div {
+          margin-top: 5px;
+        }
+        span {
+          font-size: 26px;
+          font-weight: 500;
+        }
+      }
+      
     }
   }
-}
-.follow-area {
-  padding: 40px 0;
-  border-bottom: 1px solid #eeeeee;
-  &-item {
-    position: relative;
-    &:nth-of-type(1):after {
-      content: ' ';
-      width: 2px;
-      height: 40px;
-      position: absolute;
-      right: -30%;
-      background-color: #eeeeee;
-    }
-  }
-  &-num {
-    margin-top: 15px;
-    font-size: 20px;
-    font-weight: 500;
-    color: #333333;
-    &:hover {
-      color: $base_color;
-      cursor: pointer;
-      text-decoration: underline;
-      font-weight: 600;
-    }
+  &-right {
+    float: left;
+    min-height: 80vh;
   }
 }
 @media screen and (max-width: 450px) {
-  .user-section-list {
-    width: 90vw;
-    margin: 10px 5%;
-    padding: 10px 0; 
-    border: 1px solid #eeeeee;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    &-item {
-      border-right: 1px solid #eeeeee;
-      padding: 5px 20px;
-      &:last-of-type {
-        border: none;
-      }
-      &-link {
-        text-decoration: none;
-        color: inherit;
-        font-weight: inherit;
-      }
-    }
-  }
-  .user-section-container {
-    width: 90vw;
-    margin: 0 5%;
-      background-color: #F6F6F6;
-
+  .user-center-left {
   }
 }
 @media screen and (min-width: 451px) {
-  .user-section-list {
-    box-sizing: 5px;
-    width: 15vw;
-    margin: 0 0 0 5%;
-    display: flex;
-    flex-direction: column;
-    border-left: 1px solid #eeeeee;
-    border-right: 1px solid #eeeeee;
-    border-top-left-radius: 10px;
-    float: left;
-    &-item {
-      padding: 20px 2vw;
-      color: #333333;
-      font-weight: 500;
-      border-bottom: 1px solid #eeeeee;
-      &-link {
-        text-decoration: none;
-        color: inherit;
-        font-weight: inherit;
-      }
-    }
+  .content {
+    padding-top: 2vh;
   }
-  .user-section-container {
-    box-sizing: border-box;
-    border-top: 1px solid #eeeeee;
-    width: 75vw;
-    float: left;
-    min-height: 500px;
-    padding: 20px;
-    background-color: #F6F6F6;
+  .user-center {
+    &-left {
+      width: 20%;
+    }
+    &-right {
+      width: 70%;
+      height: 100%;
+      margin-left: 5%;
+    }
   }
 }
 </style>

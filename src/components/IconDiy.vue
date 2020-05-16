@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-13 23:47:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-14 15:31:15
+ * @LastEditTime: 2020-05-15 23:54:55
  * @Description: file content
  -->
  <template>
@@ -69,6 +69,8 @@ export default class IconDiy extends Vue {
 </script>
 <style lang="scss" scoped>
 .icon-container {
+    width: 100%;
+    height: 100%;
     position: relative;
     margin: 0 auto;
 }

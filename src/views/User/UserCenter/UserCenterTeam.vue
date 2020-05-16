@@ -2,38 +2,54 @@
  * @Author: majiaao
  * @Date: 2020-04-28 21:06:30
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-12 13:05:48
+ * @LastEditTime: 2020-05-16 22:30:32
  * @Description: file content
  -->
 <template>
-    <div class="flex-column-center container">
-        <div class="width-100 flex-x-start user-center-title">我的球队</div>
-        <div class="team-area" v-if="teamList.length != 0">
-          <div class="flex-column-x-center team-area-item" :style="{'background-color': item.home_court_color}" v-for="(item, index) in teamList" :key="index" @click="handleTeamDetail(item.id)">
-            <img class="team-area-icon" :src="item.team_icon" alt="">
-            <div class="team-area-name">球队:{{item.team_name}}</div>
+    <div class="user-team-container">
+      <div class="width-100 flex-row-between user-team-container-title">
+        我的球队
+        <div class="flex-row-y-center" @click="handleRouter('join_team')">
+          <img :src="require('../../../assets/find_icon.png')" class="search-icon">
+          <span class="common-text">点击查找更多球队</span>
+        </div>
+      </div>
+      <!-- 球队列表 -->
+      <div class="flex-row width-100 user-team-container-line team-area">
+        <div class="team-area-item" v-for="(item, index) in teamList" :key="index" @click="handleTeamDetail(item.id)">
+          <img :src="item.team_icon" class="team-area-item-icon">
+          <div class="team-area-item-team_name">{{item.team_name}}</div>
+          <div class="team-area-item-description">{{item.description}}</div>
+        </div>
+      </div>
+      <!-- 近期活动 -->
+      <div class="width-100 user-team-container-line">
+        <span class="user-team-container-line-title">近期活动</span>
+        <div class="calendar">
+          <div class="calendar-week_list" v-for="(item, index) in weekList" :key="index">{{item}}</div>
+        </div>
+        <div class="calendar-content">
+          <div class="calendar-content-item" v-for="(item, index) in calendar.today_week" :key="index"></div>
+          <div class="calendar-content-item-white" v-for="(item, index) in calendar.calendar_list" :key="index">
+            <div class="calendar-content-item-date">{{item.date.substring(8)[0] == '0' ? item.date.substring(9) : item.date.substring(8)}}</div>
           </div>
         </div>
-        <div v-else class="empty-area">
-            <div class="flex-row-y-center empty-area-tips-line">
-                <div class="empty-area-tips-btn" @click="handleRouter('create_team')">创建球队</div>
-                <img class="empty-area-icon" :src="require('@/assets/empty_box.png')">
-                <div class="empty-area-tips-btn" @click="handleRouter('join_team')">加入球队</div>
-            </div>
-            <div class="empty-area-text">您暂时未加入任何球队</div>
-        </div>
+      </div>
     </div>
 </template> 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { Getter, Action, State } from "vuex-class";
 import Team from "@/model/Team/Team";
+import TeamCalendar from '../../../components/TeamCalendar.vue'
 @Component
 export default class UserCenterTeam extends Vue {
   @Getter("getUserId")
   private userId!: string | undefined;
   
   private teamList = [];
+  private weekList = ['日','一','二','三','四','五','六']
+  private calendar = {}
   mounted() {
     this.requestUserTeamInfo();
   }
@@ -42,8 +58,9 @@ export default class UserCenterTeam extends Vue {
       user_id: this.userId || (localStorage.getItem("User_ID") as string)
     };
     new Team().getUserTeamInfo.call(this, params).then((res: any) => {
-      const { team } = res;
-      this.teamList = res.team;
+      const { team, calendar } = res;
+      this.teamList = team;
+      this.calendar = calendar
     });
   }
   handleRouter(type: string) {
@@ -67,96 +84,124 @@ export default class UserCenterTeam extends Vue {
 }
 </script>
 <style lang="scss" scoped>
-.container {
-  padding: 20px;
-}
-.empty-area {
-  color: $base_color;
-  text-align: center;
-  font-weight: 500;
-  &-icon {
-    width: 5vw;
-    height: 5vw;
-    min-width: 55px;
-    min-height: 55px;
-    padding: 0 5px;
+.user-team-container {
+  width: 100%;
+  height: 100%;
+  &-title {
+    font-size: 18px;
+    font-weight: 500;
+    text-align: start;
+    box-sizing: border-box;
+    padding: 15px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
   }
-  &-tips {
-    &-btn {
-      display: inline-block;
+  &-line {
+    text-align: start;
+    box-sizing: border-box;
+    padding: 25px 20px;
+    &-title {
+      font-size: 16px;
       position: relative;
-      margin: 0 10px;
-      font-size: 13px;
-      background-color: $base_color;
-      color: white;
-      padding: 5px 10px;
-      border-radius: 5px;
-      width: 70px;
-      animation: crosswiseSlider 1.5s ease-in-out;
-      overflow: hidden;
-      display: block;
-      white-space: nowrap;
-      cursor: pointer;
+      padding-left: 8px;
+      font-weight: 500;
+      &::before {
+        content: " ";
+        width: 5px;
+        height: 100%;
+        background-color: $side_color;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
     }
   }
+}
+.search-icon {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+.common-text {
+  font-size: 12px;
+  color: $base_black_color;
+  margin-left: 10px;
+  cursor: pointer;
 }
 .team-area {
-  width: 100%;
-  float: left;
-  margin-top: 5vh;
+  text-align: center;
   &-item {
-    float: left;
-    margin-right: 5vw;
-    padding: 10px;
-    box-sizing: border-box;
-    border: 1px solid #a9a9a9;
-    border-radius: 15px;
-  }
-  &-icon {
-    width: 8vw;
-    height: 8vw;
-    min-width: 100px;
-    min-height: 100px;
-    background-color: white;
-    border-radius: 50%;
-    border: 1px solid #a9a9a9;
-    margin: 0 auto;
-  }
-  &-name {
-    margin: 10px auto;
-    font-weight: 500;
-    font-size: 16px;
-    text-align: center;
+    width: 25%;
+    height: width;
+    padding: 15px 0;
+    margin-right: 20px;
+    background-color: $base_color;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+    color: $light_green;
+    border-radius: 10px;
+    &-icon {
+      width: 50%;
+      height: width;
+      background-color: white;
+      border-radius: 50%;
+      animation: rotate3d 10s ease infinite;
+    }
+    &-team_name {
+      font-size: 16px;
+      font-weight: 500;
+      margin-top: 10px;
+    }
+    &-description {
+      font-size: 12px;
+      margin-top: 5px;
+    }
   }
 }
-@media screen and (max-width: 450px) {
-  .empty-area {
-    padding: 30px 0;
-    &-tips {
-      &-line {
-        padding: 30px 0;
+.calendar {
+  display: grid;
+  padding: 15px 0 0 0;
+  grid-template-columns: repeat(auto-fill, 13%);
+  color: #eeeeee;
+  font-weight: 500;
+  &-week {
+    &_list {
+      text-align: center;
+      padding: 10px 0;
+      background-color: $base_color;
+    }
+  }
+  &-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 13%);
+    height: 100px;
+    &-item {
+      background-color: rgba(0, 0, 0, 0.02);
+      text-align: center;
+      height: 100px;
+      position: relative;
+      border: 1px solid rgba(169,169,169,.1);
+      &-date {
+        font-size: 18px;
+        font-weight: 600;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+      }
+      &-white {
+        @extend .calendar-content-item;
+        background-color: rgba(0, 0, 0, 0.02);
       }
     }
   }
 }
-@media screen and (min-width: 451px) {
-  .empty-area {
-    padding: 15vh 0;
-    &-tips {
-      &-line {
-        margin-bottom: 5vh;
-      }
-    }
-  }
-}
-@keyframes crosswiseSlider {
+@keyframes rotate3d {
   0% {
-    width: 0;
-    height: 100%;
+    transform: rotateY(0deg)
+  }
+  50% {
+    transform: rotateY(360deg)
   }
   100% {
-    width: 70px;
-    height: 100%;
+    transform: rotateY(0deg)
   }
 }
 </style>

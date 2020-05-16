@@ -87,8 +87,21 @@
             >
           </div>
           <div v-else>
-            <div class="width-100 team-search-container-title">球队</div>
-            <div class="width-100 team-search-container-content"></div>
+            <div class="width-100 team-search-container-title">
+              <div class="flex-row-y-center">
+                <img :src="require('@/assets/more.png')" class="recommend-icon">
+                更多
+              </div>
+            </div>
+            <div class="flex-column-center width-100 team-search-container-content">
+              <img
+                class="team-search-container-mobile-bg"
+                style="border-radius: 0;"
+                src="https://yuegeqiu-mario.oss-cn-beijing.aliyuncs.com/football_search_2_bg.jpg"
+              >
+              <div class="team-search-container-content-btn" @click="routerBus('teamSearch')">搜索球队</div>
+              <div class="team-search-container-content-btn" @click="routerBus('chat')">球迷论坛</div>
+            </div>
           </div>
         </div>
       </div>
@@ -356,6 +369,19 @@ export default class Home extends Vue {
   &-content {
     @extend .team-suggest-content;
     background-color: white;
+    &-btn {
+      position: relative;
+      color: white;
+      font-weight: 600;
+      width: 40%;
+      padding: 10px 0;
+      background-color: rgba(48, 63, 159, 0.8);
+      text-align: center;
+      border-radius: 10px;
+      &:nth-of-type(2) {
+        margin-top: 20px;
+      }
+    }
   }
 }
 .team-search-container-mobile {
@@ -378,7 +404,7 @@ export default class Home extends Vue {
     position: relative;
   }
   &-btn {
-    background-color: rgba(48,63,159,.8);
+    background-color: rgba(48, 63, 159, 0.8);
     width: 40%;
     padding: 10px 0;
     text-align: center;
