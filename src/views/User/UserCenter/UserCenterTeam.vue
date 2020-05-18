@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-04-28 21:06:30
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-17 00:19:38
+ * @LastEditTime: 2020-05-18 14:02:55
  * @Description: file content
  -->
 <template>
@@ -128,15 +128,18 @@ export default class UserCenterTeam extends Vue {
 }
 .team-area {
   text-align: center;
+  flex-wrap: wrap;
   &-item {
     width: 25%;
+    min-width: 150px;
     height: width;
     padding: 15px 0;
-    margin-right: 20px;
+    margin: 0 20px 20px 0;
     background-color: $base_color;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
     color: $light_green;
     border-radius: 10px;
+    cursor: pointer;
     &-icon {
       width: 50%;
       height: width;
@@ -171,7 +174,6 @@ export default class UserCenterTeam extends Vue {
   &-content {
     display: grid;
     grid-template-columns: repeat(auto-fill, 13%);
-    height: 100px;
     &-item {
       background-color: rgba(0, 0, 0, 0.02);
       text-align: center;
@@ -204,9 +206,32 @@ export default class UserCenterTeam extends Vue {
   }
 }
 @media screen and (max-width: 450px){
-  
+  .team-area {
+    text-align: center;
+    flex-wrap: wrap;
+    &-item {
+      &-team_name {
+        font-size: 14px;
+      }
+      &-description {
+        font-size: 10px;
+      }
+    }
+  }
+  .calendar-content {
+    &-item-date {
+      position: relative;
+      margin: 0 auto;
+      top: 10px;
+      left: auto;
+    }
+  }
 }
 @media screen and (max-width: 451px){
-  
+  .team-area {
+    &-item {
+      
+    }
+  }
 }
 </style>

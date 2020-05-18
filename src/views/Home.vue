@@ -182,6 +182,7 @@ export default class Home extends Vue {
 }
 .bfc-box {
   // overflow: hidden;
+  margin-top: 3vh;
 }
 .swiper-container {
   width: 90vw;
@@ -429,13 +430,16 @@ export default class Home extends Vue {
     float: left;
   }
   .recent-competition-container {
-    width: 50%;
+    width: 40%;
+    margin: 0 5%;
     float: left;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
   }
   .team-search-container {
     width: 20%;
     height: 100%;
     float: left;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
   }
 }
 </style>

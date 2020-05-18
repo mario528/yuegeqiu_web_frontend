@@ -59,6 +59,9 @@ export default class SiderBar extends Vue {
           element.iconUrl = require("../assets/team_sidebar_icon.png");
           break;
         case 2:
+          element.iconUrl = require("../assets/chat_sidebar_icon.png");
+          break;
+        case 3:
           element.iconUrl = require("../assets/mall_sidebar_icon.png");
           break;
       }

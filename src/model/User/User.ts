@@ -35,6 +35,15 @@ interface UserCenter {
     user_id: string | undefined;
     token: string | undefined;
 }
+interface GetUserFriendShip {
+    user_id: string | undefined;
+}
+interface GetUserRelationShip {
+    interview_user_id: string;
+    mode: number | string;
+    user_id: string | null;
+    next_page: number;
+}
 class User {
     constructor() {
 
@@ -125,6 +134,28 @@ class User {
                     // @ts-ignore
                     this.$router.push('/404');
                 }
+                reject(err)
+            })
+        })
+    }
+    getUserFriendShip (params: GetUserFriendShip) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.get(Url.GET_FRIEND_SHIP_RELATIONS, {
+                params
+            }).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
+    getUserFriendShipDetail (params: GetUserRelationShip) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.post(Url.GET_USER_RELATION_ShIP_DETAIL, params).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
                 reject(err)
             })
         })

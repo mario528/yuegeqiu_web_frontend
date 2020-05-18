@@ -54,6 +54,14 @@ const routes = [
     component: () => import('@/views/User/UserCenter/UserCenter.vue')
   },
   {
+    path: '/user/relation',
+    name: 'FriendRelationShip',
+    component: () => import('@/views/User/FriendRelationShip.vue'),
+    meta: {
+      requireAuth: true  
+    }
+  },
+  {
     path: '/user/setting',
     name: 'userSetting',
     component: () => import('@/views/User/UserSetting.vue'),

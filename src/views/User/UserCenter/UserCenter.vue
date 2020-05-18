@@ -12,13 +12,13 @@
               {{userInfo.nick_name}}
               <img :src="sexIcon" class="user-center-left-sex_icon">
             </div>
-            <div class="flex-row-center user-center-left-friend_ship">
-              <div class="flex-column-y-center user-center-left-friend_ship-item">
-                <span>20</span>
+            <div class="flex-row-center user-center-left-friend_ship" @click="bindUserFriendShip">
+              <div class="flex-column-y-center user-center-left-friend_ship-item" data-type="attention">
+                <span>{{friendShipDetail.attention_num}}</span>
                 <div>关注</div>
               </div>
-              <div class="flex-column-y-center user-center-left-friend_ship-item">
-                  <span>40</span>
+              <div class="flex-column-y-center user-center-left-friend_ship-item" data-type="follow">
+                  <span>{{friendShipDetail.follow_num}}</span>
                   <div>粉丝</div>
               </div>
             </div>
@@ -45,13 +45,13 @@
                   <img :src="sexIcon" class="user-center-left-sex_icon">
                 </div>
               </div>
-              <div class="flex-row-y-center user-info-right-mobile">
-                <div class="user-center-left-friend_ship-item">
-                  <span>20</span>
+              <div class="flex-row-y-center user-info-right-mobile" @click="bindUserFriendShip">
+                <div class="user-center-left-friend_ship-item" data-type="attention">
+                  <span>{{friendShipDetail.attention_num}}</span>
                   <div>关注</div>
                 </div>
-                <div class="user-center-left-friend_ship-item">
-                  <span>40</span>
+                <div class="user-center-left-friend_ship-item" data-type="follow">
+                  <span>{{friendShipDetail.follow_num}}</span>
                   <div>粉丝</div>
                 </div>
               </div>
@@ -103,6 +103,7 @@ export default class UserCenter extends Vue {
   public userInfo = {};
   public sexIcon!: string;
   private randomKey!: number;
+  private friendShipDetail = {}
   @Getter("getScreenModel")
   private screenModel!: boolean;
   @Watch("$route")
@@ -119,6 +120,7 @@ export default class UserCenter extends Vue {
   }
   created() {
     this.getUserCenterInfo();
+    this.getUserFriendShip()
   }
   private getUserCenterInfo() {
     const userType = new UserModel();
@@ -138,6 +140,29 @@ export default class UserCenter extends Vue {
         }
       })
       .catch((error: any) => {});
+  }
+  private getUserFriendShip () {
+    const userType = new UserModel();
+    const params = {
+      user_id: this.userId
+    };
+    userType.getUserFriendShip
+      .call(this, params)
+      .then((res: any) => {
+        this.friendShipDetail = res.friend_ship
+      })
+      .catch((error: any) => {});
+  }
+  private bindUserFriendShip (event: any) {
+    const type = event.target.dataset.type
+    this.$router.push({
+      path: '/user/relation',
+      name: 'FriendRelationShip',
+      query: {
+        md: type == 'attention' ? '1' : '2',
+        vi: this.userId as string
+      }
+    })
   }
 }
 </script>

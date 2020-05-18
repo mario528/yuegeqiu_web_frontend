@@ -43,6 +43,10 @@ const url = {
 
     DEPART_TEAM: '/api/v1/team/depart',
 
-    TEAM_SUGGEST: '/api/v1/team/suggest'
+    TEAM_SUGGEST: '/api/v1/team/suggest',
+
+    GET_FRIEND_SHIP_RELATIONS: '/api/v1/user/friend',
+
+    GET_USER_RELATION_ShIP_DETAIL: '/api/v1/user/friend/detail'
 }
 export default url
