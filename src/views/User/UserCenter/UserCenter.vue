@@ -47,12 +47,12 @@
               </div>
               <div class="flex-row-y-center user-info-right-mobile" @click="bindUserFriendShip">
                 <div class="user-center-left-friend_ship-item" data-type="attention">
-                  <span>{{friendShipDetail.attention_num}}</span>
-                  <div>关注</div>
+                  <span data-type="attention">{{friendShipDetail.attention_num}}</span>
+                  <div data-type="attention">关注</div>
                 </div>
                 <div class="user-center-left-friend_ship-item" data-type="follow">
-                  <span>{{friendShipDetail.follow_num}}</span>
-                  <div>粉丝</div>
+                  <span data-type="follow">{{friendShipDetail.follow_num}}</span>
+                  <div data-type="follow">粉丝</div>
                 </div>
               </div>
             </div>

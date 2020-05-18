@@ -42,7 +42,7 @@ interface GetUserRelationShip {
     interview_user_id: string;
     mode: number | string;
     user_id: string | null;
-    next_page: number;
+    page: number;
 }
 class User {
     constructor() {

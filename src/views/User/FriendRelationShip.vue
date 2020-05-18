@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-17 23:38:38
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-19 00:47:41
+ * @LastEditTime: 2020-05-19 02:14:01
  * @Description: file content
 --> 
 <template>
@@ -34,6 +34,16 @@
         <div class="flex-column-center friend-list-container" v-else>
             <div class="empty-tips">{{ md == '1' ? '您暂无关注' : '您暂无粉丝' }}</div>
         </div>
+        <div class="width-100 flex-row-x-end pagination-area">
+            <el-pagination
+            background
+            :current-page="pageConfig._pageCurrent"
+            :page-size="pageConfig._pageSize"
+            layout="prev, pager, next"
+            :total="pageConfig._pageTotal"
+            @current-change="handleCurrentChange"
+            ></el-pagination>
+        </div> 
     </div>
 </template>
 <script lang="ts">
@@ -50,7 +60,12 @@ export default class FriendRelationShip extends Vue {
   private friendList!: any[];
   private menIcon = require("@/assets/men_icon.png");
   private womenIcon = require("@/assets/women_icon.png");
-  private pageIndex = 0;
+  private pageConfig = {
+    _pageCurrent: 1,
+    _pageIndex: 0,
+    _pageTotal: 0,
+    _pageSize: 5
+  }
   mounted() {
     if (this.$route.params) {
       this.md = (this.$route.query.md as string) || "1";
@@ -63,12 +78,19 @@ export default class FriendRelationShip extends Vue {
       user_id: this.userId || localStorage.getItem("User_ID"),
       interview_user_id: this.vi,
       mode: this.md,
-      next_page: this.pageIndex
+      page: this.pageConfig._pageIndex
     };
     new User().getUserFriendShipDetail.call(this, params).then((res: any) => {
       this.userInfo = res.interview_user_info;
       this.friendList = res.friend_list;
+      this.pageConfig._pageIndex = res.next_page
+      this.pageConfig._pageTotal = res.page_total
     });
+  }
+  private handleCurrentChange (pageIndex: number) {
+      this.pageConfig._pageCurrent = pageIndex
+      this.pageConfig._pageIndex = pageIndex - 1
+      this.requestUserFriendShipDetail()
   }
 }
 </script>
@@ -155,6 +177,10 @@ export default class FriendRelationShip extends Vue {
   font-size: 18px;
   color: $disable_color;
   font-weight: 500;
+}
+.pagination-area {
+    box-sizing: border-box;
+    padding: 20px 5%;
 }
 @media screen and (max-width: 450px) {
   .container {

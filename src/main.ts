@@ -31,7 +31,8 @@ import {
   ColorPicker,
   Calendar,
   TimeSelect,
-  Autocomplete
+  Autocomplete,
+  Pagination
 } from 'element-ui'
 import Loading from './components/Loading/libs/loading'
 import Dialog from './components/Dialog/libs/dialog'
@@ -74,6 +75,7 @@ Vue.use(ColorPicker)
 Vue.use(Calendar)
 Vue.use(TimeSelect)
 Vue.use(Autocomplete)
+Vue.use(Pagination)
 // 自定义插件
 Vue.use(Loading)
 Vue.use(Dialog)
