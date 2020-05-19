@@ -44,6 +44,10 @@ interface GetUserRelationShip {
     user_id: string | null;
     page: number;
 }
+interface GetUserInfoByUpdate {
+    user_id: string | undefined | null;
+    token?: string | undefined | null;
+}
 class User {
     constructor() {
 
@@ -154,6 +158,26 @@ class User {
         return new Promise((reslove, reject) => {
             // @ts-ignore
             this.$http.post(Url.GET_USER_RELATION_ShIP_DETAIL, params).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
+    getUserInfoByUpdate (params: GetUserInfoByUpdate) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.post(Url.GET_USER_INFO_BY_UPDATE, params).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
+    changeUserInfo (params: CompleteUserInfo) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.post(Url.UPDATE_USER_INFO, params).then((res: any) => {
                 reslove(res)
             }).catch((err: any) => {
                 reject(err)

@@ -82,6 +82,16 @@ const routes = [
     }
   },
   {
+    path: '/user/info/update',
+    name: 'updateInfo',
+    component: () => import('../views/User/UserUpdateInfo.vue'),
+    meta: {
+      title: '修改个人信息',
+      // this page need user login
+      requireAuth: true
+    }
+  },
+  {
     path: '/team/create',
     name: 'createTeam',
     component: () => import('../views/Team/TeamCreate.vue'),

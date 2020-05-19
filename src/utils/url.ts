@@ -47,6 +47,10 @@ const url = {
 
     GET_FRIEND_SHIP_RELATIONS: '/api/v1/user/friend',
 
-    GET_USER_RELATION_ShIP_DETAIL: '/api/v1/user/friend/detail'
+    GET_USER_RELATION_ShIP_DETAIL: '/api/v1/user/friend/detail',
+
+    GET_USER_INFO_BY_UPDATE: '/api/v1/user/info/get',
+
+    UPDATE_USER_INFO: '/api/v1/user/info/update'
 }
 export default url

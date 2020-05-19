@@ -14,23 +14,24 @@
             </div>
             <div class="flex-row-center user-center-left-friend_ship" @click="bindUserFriendShip">
               <div class="flex-column-y-center user-center-left-friend_ship-item" data-type="attention">
-                <span>{{friendShipDetail.attention_num}}</span>
-                <div>关注</div>
+                <span data-type="attention">{{friendShipDetail.attention_num}}</span>
+                <div data-type="attention">关注</div>
               </div>
               <div class="flex-column-y-center user-center-left-friend_ship-item" data-type="follow">
-                  <span>{{friendShipDetail.follow_num}}</span>
-                  <div>粉丝</div>
+                  <span data-type="follow">{{friendShipDetail.follow_num}}</span>
+                  <div data-type="follow">粉丝</div>
               </div>
             </div>
             <div class="flex-row-center user-center-left-setting">
               <img
                 :src="require('@/assets/setting_user_center.png')"
                 class="user-center-left-setting-icon"
+                @click="handleCenterIcon('updateInfo')"
               >
               <img :src="require('@/assets/find_icon.png')" class="user-center-left-setting-icon">
               <img
                 :src="require('@/assets/message_user_center.png')"
-                class="user-center-left-setting-icon"
+                class="user-center-left-setting-icon"                
               >
             </div>
           </div>
@@ -164,6 +165,18 @@ export default class UserCenter extends Vue {
       }
     })
   }
+  private handleCenterIcon (type: string) {
+    switch (type) {
+      case 'updateInfo':
+        this.$router.push({
+          path: '/user/info/update'
+        })
+        break;
+    
+      default:
+        break;
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -209,6 +222,7 @@ export default class UserCenter extends Vue {
       height: 50px;
       border-bottom: 1px solid $border_color;
       &-icon {
+        cursor: pointer;
         width: 25px;
         height: 25px;
         margin: 0 10px;

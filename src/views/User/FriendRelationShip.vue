@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-17 23:38:38
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-19 02:14:01
+ * @LastEditTime: 2020-05-19 19:29:03
  * @Description: file content
 --> 
 <template>
@@ -106,7 +106,7 @@ export default class FriendRelationShip extends Vue {
   border-bottom: 1px solid $border_color;
   color: white;
   box-sizing: border-box;
-  box-shadow: $basc_shadow;
+  box-shadow: $basic_shadow;
   &-bg {
     width: 100%;
     height: 100%;
