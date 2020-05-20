@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-14 20:37:14
+ * @LastEditTime: 2020-05-21 02:56:34
  * @Description: file content
  -->
 <template>
@@ -95,7 +95,7 @@
                   <div class="flex-row-y-center team-user-list-item-left">
                      <div class="user-icon-area">
                         <img :src="item.head_url" class="user-icon">
-                        <img :src="require('../../assets/caption.png')" class="caption-icon" />   
+                        <img :src="require('../../assets/caption.png')" class="caption-icon" v-if="item.role == 0" />   
                      </div>   
                      <div class="user-name">{{item.nick_name}}</div>
                   </div>

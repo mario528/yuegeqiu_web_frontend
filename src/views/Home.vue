@@ -43,7 +43,7 @@
             <div
               class="width-100 team-suggest-content-tips"
               v-if="suggestTeamList.length == 0"
-            >暂无推荐数据</div>
+            >暂无推荐球队</div>
             <div
               class="team-suggest-content-item"
               v-for="(item, index) in suggestTeamList"
@@ -146,6 +146,9 @@ export default class Home extends Vue {
       .then((res: any) => {
         this.suggestTeamList = res.suggest_team_list;
       });
+  }
+  private requestMatchSuggest () {
+    
   }
   private routerBus(to: string, params?: any) {
     switch (to) {
