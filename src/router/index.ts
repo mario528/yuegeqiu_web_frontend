@@ -117,6 +117,15 @@ const routes = [
     }
   },
   {
+    path: '/match/create',
+    name: 'createMatch',
+    component: () => import('../views/Match/CreateMatch.vue'),
+    meta: {
+      title: '创建赛事',
+      requireAuth: true
+    }
+  },
+  {
     path: '/chat',
     name: 'chatHome',
     component: () => import('../views/Chat/Home.vue'),

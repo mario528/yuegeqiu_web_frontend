@@ -1,6 +1,7 @@
 // register router hooks
 require('./utils/registerHooks')
 import Vue from 'vue'
+import AmapVue from '@amap/amap-vue'
 import App from './App.vue'
 import router from './router'
 import store from './store/index'
@@ -32,7 +33,9 @@ import {
   Calendar,
   TimeSelect,
   Autocomplete,
-  Pagination
+  Pagination,
+  DatePicker,
+  InputNumber
 } from 'element-ui'
 import Loading from './components/Loading/libs/loading'
 import Dialog from './components/Dialog/libs/dialog'
@@ -76,6 +79,8 @@ Vue.use(Calendar)
 Vue.use(TimeSelect)
 Vue.use(Autocomplete)
 Vue.use(Pagination)
+Vue.use(DatePicker)
+Vue.use(InputNumber)
 // 自定义插件
 Vue.use(Loading)
 Vue.use(Dialog)
@@ -85,6 +90,9 @@ Vue.component('nav-header', Header)
 Vue.component('side-bar', SideBar)
 Vue.component('footer-area', Footer)
 Vue.component('login-register', LoginOrRegister)
+// add amap
+AmapVue.config.key = 'f45c4c21a6db14cbc4c7e3721129bd10'
+Vue.use(AmapVue)
 // add router navigation keeper
 router.beforeEach((to, from, next) => {
   console.log("路由开始载入")

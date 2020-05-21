@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-21 02:56:34
+ * @LastEditTime: 2020-05-21 14:37:52
  * @Description: file content
  -->
 <template>
@@ -23,7 +23,14 @@
                </div>
                <!-- 球队通告 -->
                <div class="width-100">
-                  <team-inform :showInfromValue="teamInfo.team_inform" :teamId="teamId"></team-inform>
+                  <team-inform :showInfromValue="teamInfo.team_inform" :teamId="teamId" :canEdit="teamRole == 0 || teamRole == 1"></team-inform>
+               </div>
+               <!-- 球队赛事 -->
+               <div class="width-100">
+                  <div class="content-title">球队赛事</div>
+                  <div class="width-100 match-content">
+                     
+                  </div>
                </div>
                <!-- 球队日历 -->
                <div class="width-100 team-calendar-container">
@@ -135,6 +142,7 @@ export default class TeamDetail extends Vue {
   public calendar !: string[]
   public calendarList !: []
   public isTeamMember !: boolean
+  public teamRole !: null | number
  
   mounted() {
     this.teamId = +this.$route.query.td;
@@ -147,10 +155,11 @@ export default class TeamDetail extends Vue {
       user_id: this.userId || (localStorage.getItem("User_ID") as string)
     };
     teamType.getTeamDetail.call(this, params).then((res: any) => {
-      const { team_info, team_member, calendar, is_member } = res;
-      this.teamInfo = team_info;
-      this.teamMember = team_member;
+      const { team_info, team_member, calendar, is_member, team_role } = res;
+      this.teamInfo = team_info
+      this.teamMember = team_member
       this.isTeamMember = is_member
+      this.teamRole = team_role
       this.calendar = [calendar['start_at'], calendar['end_at']]
       this.calendarList = calendar.calendar_list.map((item: any) => {
          item.showDialogContent = false
@@ -355,6 +364,12 @@ export default class TeamDetail extends Vue {
   .main-content {
      width: 80%;
      margin: 0 auto;
+  }
+  .content-title {
+    width: 100%;
+    margin: 20px 0;
+    text-align: start;
+    font-weight: 500;
   }
   .team-troduction {
      text-align: start;
