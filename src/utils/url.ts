@@ -51,6 +51,10 @@ const url = {
 
     GET_USER_INFO_BY_UPDATE: '/api/v1/user/info/get',
 
-    UPDATE_USER_INFO: '/api/v1/user/info/update'
+    UPDATE_USER_INFO: '/api/v1/user/info/update',
+
+    CREATE_MATCH: '/api/v1/match/create',
+
+    GET_TODAY_TIME: '/api/v1/time/get'
 }
 export default url
