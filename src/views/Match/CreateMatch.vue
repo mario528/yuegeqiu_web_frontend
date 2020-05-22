@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-21 15:54:19
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-22 19:14:31
+ * @LastEditTime: 2020-05-23 00:06:49
  * @Description: file content
 --> 
 <template>
@@ -71,6 +71,24 @@
                         <textarea v-model="matchConfig._matchDetail" class="content-text_area" placeholder="详细介绍"/>
                     </div>
                 </div>
+                <div class="content-line" v-if="userTeamList.length != 0">
+                    <div class="content-line-title">所在球队是否参加比赛</div>
+                    <div class="content-line-content">
+                        <div class="flex-row-between team-item">
+                          <div class="flex-row-y-center">
+                            <span class="team-name">不参加该赛事</span>
+                          </div>
+                          <div :class="[matchConfig._joinTeamId == -1 ? 'select-icon-selected' : 'select-icon-common']" @click="matchConfig._joinTeamId = -1"></div>
+                        </div>
+                        <div class="flex-row-between team-item" v-for="(item, index) in userTeamList" :key="index">
+                          <div class="flex-row-y-center">
+                            <img :src="item.team_icon" class="team-icon">
+                            <span class="team-name">{{item.team_name}}</span>
+                          </div>
+                          <div :class="[matchConfig._joinTeamId == item.id ? 'select-icon-selected' : 'select-icon-common']" @click="matchConfig._joinTeamId = item.id"></div>
+                        </div>
+                    </div>
+                </div>
                 <div class="width-100 flex-row-x-center">
                   <button class="publish-btn" @click="handleCreateMatch">发布赛事</button>
                 </div>
@@ -122,9 +140,11 @@ export default class CreateMatch extends Vue {
       district: ''
     },
     _matchType: null,
-    _matchDetail: null
+    _matchDetail: null,
+    _joinTeamId: -1
   };
   private today !: string
+  private userTeamList = []
   @Watch('matchConfig._startTime')
   onStartTimeChanged (newValue: string, oldvalue: string) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
@@ -152,7 +172,7 @@ export default class CreateMatch extends Vue {
     newValue = new TimeFormate(newValue).formateTime('YYYY-MM-DD')
   }
   mounted () {
-    this.getStartTime()
+    this.getCreateMatchDetail()
   }
   private _testTimeAvaibalbe (type: number, time: Date) {
     const timeFormate = new Date(new TimeFormate(time).formateTime('YYYY-MM-DD')).valueOf()
@@ -173,7 +193,7 @@ export default class CreateMatch extends Vue {
     this.matchConfig._locationInfo = locationInfo
   }
   private handleCreateMatch() {
-    const  { _matchName, _matchProperty, _startTime, _endTime, _maxTeamNumber, _locationInfo, _matchType, _matchDetail } = this.matchConfig
+    const  { _matchName, _matchProperty, _startTime, _endTime, _maxTeamNumber, _locationInfo, _matchType, _matchDetail, _joinTeamId } = this.matchConfig
     if ( !_matchName || !_startTime || !_endTime || !_maxTeamNumber || _locationInfo == null ) {
       return
     }
@@ -186,7 +206,8 @@ export default class CreateMatch extends Vue {
       max_team_number: _maxTeamNumber,
       location_info: _locationInfo,
       match_detail: _matchDetail,
-      match_type: _matchType
+      match_type: _matchType,
+      team_id: _joinTeamId == -1 ? null : _joinTeamId
     }).then((res: any) => {
       Toast.showToastSuccess.call(this, '赛事创建成功', '成功');
       this.matchConfig = {
@@ -201,13 +222,17 @@ export default class CreateMatch extends Vue {
           district: ''
         },
         _matchType: null,
-        _matchDetail: null
+        _matchDetail: null,
+        _joinTeamId: -1
       }
     })
   }
-  private getStartTime () {
-    new Match().getTodayTime.call(this).then((res: any) => {
+  private getCreateMatchDetail () {
+    new Match().getCreateMatchDetail.call(this, {
+      user_id: this.userId || localStorage.getItem('User_ID') as string
+    }).then((res: any) => {
       this.today = res.today
+      this.userTeamList = res.join_team_list
     })
   }
 }
@@ -254,7 +279,8 @@ export default class CreateMatch extends Vue {
       &-input {
         padding: 5px;
         height: 30px;
-        width: 50%;
+        width: 70%;
+        border: 1px solid #DCDFE6;
       }
     }
   }
@@ -276,11 +302,66 @@ export default class CreateMatch extends Vue {
   font-size: 14px;
   cursor: pointer;
 }
+.team-item {
+  width: 60%;
+  padding: 10px 0;
+}
+.team-icon {
+  width: 3vw;
+  height: 3vw;
+  min-width: 30px;
+  min-height: 30px;
+  border-radius: 50%;
+}
+.team-name {
+  font-size: 14px;
+  font-weight: 500;
+  margin-left: 10px;
+}
+.select-icon-common {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  position: relative;
+  border: 1px solid $base_color;
+  cursor: pointer;
+}
+.select-icon-selected {
+  @extend .select-icon-common;
+  background-color: $base_color;
+  &::after {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    content: " ";
+    width: 9px;
+    height: 9px;
+    background-color: $light_green;
+    border-radius: 50%;
+  }
+}
 @media screen and (max-width: 450px) {
   .match-container {
     &-content {
       width: 100%;
     }
+  }
+  .content {
+    &-line {
+      &-title {
+        display: inline-block;
+        font-size: 12px;
+        width: 35%;
+      }
+      &-content {
+        display: inline-block;
+        width: 65%;
+      }
+    }
+  }
+  .team-item {
+    width: 100%;
+    padding: 10px 0;
   }
 }
 @media screen and (min-width: 451px) {
@@ -289,6 +370,7 @@ export default class CreateMatch extends Vue {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding: 5vh 0;
     &-bg {
       position: fixed;
       top: 0;

@@ -12,6 +12,10 @@ interface CreateMatch {
     end_time: string;
     max_team_number: number;
     location_info: Location;
+    team_id: number | null;
+}
+interface CreateMatchDetail {
+    user_id: string;
 }
 class Match {
     constructor() {
@@ -27,10 +31,12 @@ class Match {
             })
         })
     }
-    getTodayTime () {
+    getCreateMatchDetail (params: CreateMatchDetail) {
         return new Promise((reslove, reject) => {
             // @ts-ignore
-            this.$http.get(Url.GET_TODAY_TIME).then((res: any) => {
+            this.$http.get(Url.GET_CREATE_MATCH_DETAIL, {
+                params
+            }).then((res: any) => {
                 reslove(res)
             }).catch((err: any) => {
                 reject(err)

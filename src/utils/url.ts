@@ -55,6 +55,6 @@ const url = {
 
     CREATE_MATCH: '/api/v1/match/create',
 
-    GET_TODAY_TIME: '/api/v1/time/get'
+    GET_CREATE_MATCH_DETAIL: '/api/v1/match/create/detail'
 }
 export default url
