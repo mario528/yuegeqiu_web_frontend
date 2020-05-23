@@ -147,9 +147,6 @@ export default class Home extends Vue {
         this.suggestTeamList = res.suggest_team_list;
       });
   }
-  private requestMatchSuggest () {
-    
-  }
   private routerBus(to: string, params?: any) {
     switch (to) {
       case "teamSearch":
@@ -308,7 +305,7 @@ export default class Home extends Vue {
   &-content {
     min-height: 20vh;
     padding: 0 10px;
-    background-color: $border_color;
+    // background-color: $border_color;
     position: relative;
 
     &-tips {
@@ -392,6 +389,7 @@ export default class Home extends Vue {
   position: relative;
   height: 30vh;
   margin: 2vh 0;
+  // margin: 0vh 0;
   border-radius: 5px;
   &-bg {
     width: 100%;

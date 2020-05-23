@@ -133,7 +133,7 @@ export default class UserCenter extends Vue {
       .call(this, params)
       .then((res: any) => {
         this.userInfo = res.user_info;
-        if (res.user_info.sex) {
+        if (res.user_info.sex != undefined) {
           this.sexIcon =
             res.user_info.sex == 0
               ? require("../../../assets/women_icon.png")
@@ -327,6 +327,7 @@ export default class UserCenter extends Vue {
     flex-direction: row;
     justify-content: center;
   }
+  
   .user-center {
     &-left {
       width: 20%;

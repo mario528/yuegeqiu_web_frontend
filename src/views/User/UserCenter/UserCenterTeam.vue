@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-04-28 21:06:30
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-18 14:02:55
+ * @LastEditTime: 2020-05-23 17:58:02
  * @Description: file content
  -->
 <template>
@@ -210,11 +210,17 @@ export default class UserCenterTeam extends Vue {
     text-align: center;
     flex-wrap: wrap;
     &-item {
+      width: 100%;
+      margin: 0 0 20px 0;
       &-team_name {
         font-size: 14px;
       }
       &-description {
         font-size: 10px;
+      }
+      &-icon {
+        max-width: 80px;
+        max-height: 80px;
       }
     }
   }
