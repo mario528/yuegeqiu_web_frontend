@@ -133,7 +133,7 @@ export default class Home extends Vue {
     this.requestTeamSuggest();
   }
   private requestBannerData() {
-    this.$http.get(url.HOME_BANNER).then((res: any) => {
+    this.$http.post(url.HOME).then((res: any) => {
       this.bannerList = res.banner;
       this.newsList = res.news_list;
     });

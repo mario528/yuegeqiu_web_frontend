@@ -1,5 +1,5 @@
 const url = {
-    HOME_BANNER: '/api/v1/home/banner',
+    HOME: '/api/v1/home',
 
     LOGIN: '/api/v1/login',
 

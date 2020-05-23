@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-21 14:37:52
+ * @LastEditTime: 2020-05-23 15:26:29
  * @Description: file content
  -->
 <template>
@@ -16,25 +16,58 @@
                      <div class="team-troduction-name">{{teamInfo.team_name}}</div>
                      <div class="team-troduction-description">{{teamInfo.description}}</div>
                   </div>
-                  <div :class="[isTeamMember ? 'flex-row-y-center team-troduction-state' : 'flex-row-y-center team-troduction-state team-troduction-state-disable']" @click="handleMemberBtn">
-                     <img :src="isTeamMember ? require('../../assets/true.png') : require('../../assets/join.png')" class="team-troduction-state-icon">
+                  <div
+                     :class="[isTeamMember ? 'flex-row-y-center team-troduction-state' : 'flex-row-y-center team-troduction-state team-troduction-state-disable']"
+                     @click="handleMemberBtn"
+                  >
+                     <img
+                        :src="isTeamMember ? require('../../assets/true.png') : require('../../assets/join.png')"
+                        class="team-troduction-state-icon"
+                     >
                      {{isTeamMember ? '已加入' : '加入球队'}}
                   </div>
                </div>
                <!-- 球队通告 -->
                <div class="width-100">
-                  <team-inform :showInfromValue="teamInfo.team_inform" :teamId="teamId" :canEdit="teamRole == 0 || teamRole == 1"></team-inform>
+                  <team-inform
+                     :showInfromValue="teamInfo.team_inform"
+                     :teamId="teamId"
+                     :canEdit="teamRole == 0 || teamRole == 1"
+                  ></team-inform>
                </div>
                <!-- 球队赛事 -->
                <div class="width-100">
                   <div class="content-title">球队赛事</div>
                   <div class="width-100 match-content">
-                     
+                     <el-table :data="matchList" style="width: 100%">
+                        <div slot="empty">
+                           <div>您的球队暂未参加赛事</div>
+                        </div>
+                        <el-table-column label="赛事名" prop="match_name"></el-table-column>
+                        <el-table-column label="比赛类型" prop="match_property"></el-table-column>
+                        <el-table-column label="比赛类型" prop="match_type"></el-table-column>
+                        <el-table-column type="expand">
+                           <template slot-scope="props">
+                              <el-form label-position="left" inline>
+                                 <el-form-item label="开始时间">
+                                    <span>{{ props.row.start_time }}</span>
+                                 </el-form-item>
+                                 <el-form-item label="结束时间">
+                                    <span>{{ props.row.end_time }}</span>
+                                 </el-form-item>
+                              </el-form>
+                           </template>
+                        </el-table-column>
+                     </el-table>
                   </div>
                </div>
                <!-- 球队日历 -->
                <div class="width-100 team-calendar-container">
-                  <team-calendar :dateArray="calendar" :calendarList="calendarList" :teamId="teamId"></team-calendar>
+                  <team-calendar
+                     :dateArray="calendar"
+                     :calendarList="calendarList"
+                     :teamId="teamId"
+                  ></team-calendar>
                </div>
             </div>
          </div>
@@ -42,7 +75,11 @@
             <div class="flex-row-center team-icon">
                <!-- <img id="team-icon" :src="teamInfo.team_icon"> -->
                <div id="team-icon">
-                  <mario-icon :iconPath="teamInfo.team_icon" :hoverModel="true" @uploadRequest="uploadRequest"></mario-icon>
+                  <mario-icon
+                     :iconPath="teamInfo.team_icon"
+                     :hoverModel="true"
+                     @uploadRequest="uploadRequest"
+                  ></mario-icon>
                </div>
             </div>
             <div class="team-info">
@@ -92,23 +129,32 @@
             </div>
          </div>
          <div class="container-right">
-            <div class="team-user-title">球员列表</div>  
+            <div class="team-user-title">球员列表</div>
             <div class="team-user-list">
                <div class="team-user-list-title">
                   <div class="team-user-list-title-item">用户名</div>
                   <div class="team-user-list-title-item">位置</div>
                </div>
-               <div class="flex-row-y-center team-user-list-item" v-for="(item, index) in teamMember" :key="index" @click="handleUserCenter(item.id)">
+               <div
+                  class="flex-row-y-center team-user-list-item"
+                  v-for="(item, index) in teamMember"
+                  :key="index"
+                  @click="handleUserCenter(item.id)"
+               >
                   <div class="flex-row-y-center team-user-list-item-left">
                      <div class="user-icon-area">
                         <img :src="item.head_url" class="user-icon">
-                        <img :src="require('../../assets/caption.png')" class="caption-icon" v-if="item.role == 0" />   
-                     </div>   
+                        <img
+                           :src="require('../../assets/caption.png')"
+                           class="caption-icon"
+                           v-if="item.role == 0"
+                        >
+                     </div>
                      <div class="user-name">{{item.nick_name}}</div>
                   </div>
                   <div class="user-position-type">前锋</div>
                </div>
-            </div>       
+            </div>
          </div>
       </div>
    </div>
@@ -117,12 +163,12 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { Vue, Component } from "vue-property-decorator";
 import { State, Getter } from "vuex-class";
-import { Toast } from '@/utils/index'
+import { Toast, TimeFormate } from "@/utils/index";
 import TeamType from "@/model/Team/Team";
 import TeamShirt from "@/components/TeamShirt.vue";
-import TeamCenterInform from "@/components/TeamPageInform.vue"
-import TeamCalendar from "@/components/TeamCalendar.vue"
-import IconDIY from '@/components/IconDiy.vue'
+import TeamCenterInform from "@/components/TeamPageInform.vue";
+import TeamCalendar from "@/components/TeamCalendar.vue";
+import IconDIY from "@/components/IconDiy.vue";
 @Component({
   components: {
     "team-shirt": TeamShirt,
@@ -139,11 +185,12 @@ export default class TeamDetail extends Vue {
   public teamInfo: object = {};
   public teamMember: object = {};
   public showMoreInfo = false;
-  public calendar !: string[]
-  public calendarList !: []
-  public isTeamMember !: boolean
-  public teamRole !: null | number
- 
+  public calendar!: string[];
+  public calendarList!: [];
+  public isTeamMember!: boolean;
+  public teamRole!: null | number;
+  public matchList = [];
+
   mounted() {
     this.teamId = +this.$route.query.td;
     this.requestTeamDetail();
@@ -155,63 +202,88 @@ export default class TeamDetail extends Vue {
       user_id: this.userId || (localStorage.getItem("User_ID") as string)
     };
     teamType.getTeamDetail.call(this, params).then((res: any) => {
-      const { team_info, team_member, calendar, is_member, team_role } = res;
-      this.teamInfo = team_info
-      this.teamMember = team_member
-      this.isTeamMember = is_member
-      this.teamRole = team_role
-      this.calendar = [calendar['start_at'], calendar['end_at']]
+      const {
+        team_info,
+        team_member,
+        calendar,
+        is_member,
+        team_role,
+        match_list
+      } = res;
+      this.teamInfo = team_info;
+      this.teamMember = team_member;
+      this.isTeamMember = is_member;
+      this.teamRole = team_role;
+      this.calendar = [calendar["start_at"], calendar["end_at"]];
       this.calendarList = calendar.calendar_list.map((item: any) => {
-         item.showDialogContent = false
-         item.loading = true
-         return item
-      })
+        item.showDialogContent = false;
+        item.loading = true;
+        return item;
+      });
+      // this.matchList = match_list.map((item: any) => {
+      //   item.start_time = new TimeFormate(
+      //     new Date(item.start_time)
+      //   ).formateTime("YYYY-MM-DD");
+      //   item.end_time = new TimeFormate(new Date(item.end_time)).formateTime(
+      //     "YYYY-MM-DD"
+      //   );
+      //   item.match_property = item.match_property == 0 ? '友谊赛' : '正式比赛'
+      //   item.match_type = item.match_type == 0 ? '五人制' : item.match_type == 1 ? '七人制' : '十一人制'
+      //   return item;
+      // });
       document.title = team_info.team_name;
     });
   }
-  private uploadRequest (fileFormData: any) {
-     new TeamType().uploadTeamIcon.call(this,{
+  private uploadRequest(fileFormData: any) {
+    new TeamType().uploadTeamIcon
+      .call(this, {
         team_id: +this.teamId,
         form_data: fileFormData
-     }).then((res: any) => {
+      })
+      .then((res: any) => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
         // @ts-ignore
-        this.teamInfo.team_icon = res.team_url
-        Toast.showToastSuccess.call(this,"上传成功","成功")
-     }).catch((err: any) => {
-        Toast.showToastError.call(this, err.msg, '失败')
-     })
+        this.teamInfo.team_icon = res.team_url;
+        Toast.showToastSuccess.call(this, "上传成功", "成功");
+      })
+      .catch((err: any) => {
+        Toast.showToastError.call(this, err.msg, "失败");
+      });
   }
-  private handleMemberBtn () {
-     if (this.isTeamMember) {
-        this.$confirm('离队操作不可撤销，是否继续?', '离队', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-         }).then(() => {
-           this.handleLeaveTeam()
-        })
-     }else {
-        this.handleJoinTeam()
-     }
+  private handleMemberBtn() {
+    if (this.isTeamMember) {
+      this.$confirm("离队操作不可撤销，是否继续?", "离队", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        this.handleLeaveTeam();
+      });
+    } else {
+      this.handleJoinTeam();
+    }
   }
-  private handleJoinTeam () {
-     new TeamType().joinTeam.call(this, {
+  private handleJoinTeam() {
+    new TeamType().joinTeam
+      .call(this, {
         team_id: +this.teamId,
         user_id: this.userId || (localStorage.getItem("User_ID") as string)
-     }).then((res: any) => {
-        Toast.showToastSuccess.call(this,"加入球队成功","成功")
+      })
+      .then((res: any) => {
+        Toast.showToastSuccess.call(this, "加入球队成功", "成功");
         this.requestTeamDetail();
-     })
+      });
   }
-  private handleLeaveTeam () {
-   new TeamType().departTeam.call(this, {
+  private handleLeaveTeam() {
+    new TeamType().departTeam
+      .call(this, {
         team_id: +this.teamId,
         user_id: this.userId || (localStorage.getItem("User_ID") as string)
-     }).then((res: any) => {
-        Toast.showToastSuccess.call(this,"离队成功","成功")
+      })
+      .then((res: any) => {
+        Toast.showToastSuccess.call(this, "离队成功", "成功");
         this.requestTeamDetail();
-     })
+      });
   }
 }
 </script>
@@ -222,8 +294,8 @@ export default class TeamDetail extends Vue {
   box-sizing: border-box;
 }
 .container {
-   margin-bottom: 2vh;
-   border-bottom: 1px solid #eeeeee;
+  margin-bottom: 2vh;
+  border-bottom: 1px solid #eeeeee;
 }
 @media screen and (max-width: 450px) {
 }
@@ -317,53 +389,53 @@ export default class TeamDetail extends Vue {
     transform: rotate(360deg);
   }
   .team-user-title {
-     width: 100%;
-     padding: 10px 20px;
-     border-bottom: 1px solid $border_color;
+    width: 100%;
+    padding: 10px 20px;
+    border-bottom: 1px solid $border_color;
   }
   .team-user-list-title {
-     width: 100%;
-     padding: 20px 0;
-     &-item {
-        display: inline-block;
-        width: 35%;
-        &:nth-of-type(1) {
-           text-align: center;
-           width: 65%;
-        }
-     }
+    width: 100%;
+    padding: 20px 0;
+    &-item {
+      display: inline-block;
+      width: 35%;
+      &:nth-of-type(1) {
+        text-align: center;
+        width: 65%;
+      }
+    }
   }
   .team-user-list-item {
-     width: 100%;
-     &-left {
-        width: 65%;
-     }
+    width: 100%;
+    &-left {
+      width: 65%;
+    }
   }
   .user-icon-area {
-     position: relative;
+    position: relative;
   }
   .user-icon {
-     width: 35px;
-     height: 35px;
-     border-radius: 50%;
-     display: inline-block;
-     margin-left: 20px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 20px;
   }
   .caption-icon {
-     width: 10px;
-     height: 10px;
-     position: absolute;
+    width: 10px;
+    height: 10px;
+    position: absolute;
   }
   .user-position-type {
-     width: 35%;
-     display: inline-block;
+    width: 35%;
+    display: inline-block;
   }
   .user-name {
-     margin-left: 15px;
+    margin-left: 15px;
   }
   .main-content {
-     width: 80%;
-     margin: 0 auto;
+    width: 80%;
+    margin: 0 auto;
   }
   .content-title {
     width: 100%;
@@ -372,41 +444,79 @@ export default class TeamDetail extends Vue {
     font-weight: 500;
   }
   .team-troduction {
-     text-align: start;
-     margin: 10px 0; 
-     padding: 15px 0;
-     border-bottom: 1px solid $grey_color;
-     &-name {
-        font-size: 26px;
-        font-weight: 600;
-     }
-     &-description {
-        font-size: 14px;
-        margin-top: 5px;
-     }
-     &-state {
-        padding: 10px 20px;
-        background-color: $side_color;
-        color: white;
-        font-weight: 500;
-        border-radius: 10px;
-        cursor: pointer;
-        &-disable {
-         background-color: $border_color;
-         color: #333333;
-        }
-        &-icon {
-           margin-right: 5px;
-           width: 20px;
-           height: 20px;
-           position: relative;
-        }
-     }
+    text-align: start;
+    margin: 10px 0;
+    padding: 15px 0;
+    border-bottom: 1px solid $grey_color;
+    &-name {
+      font-size: 26px;
+      font-weight: 600;
+    }
+    &-description {
+      font-size: 14px;
+      margin-top: 5px;
+    }
+    &-state {
+      padding: 10px 20px;
+      background-color: $side_color;
+      color: white;
+      font-weight: 500;
+      border-radius: 10px;
+      cursor: pointer;
+      &-disable {
+        background-color: $border_color;
+        color: #333333;
+      }
+      &-icon {
+        margin-right: 5px;
+        width: 20px;
+        height: 20px;
+        position: relative;
+      }
+    }
   }
   .team-calendar {
-     &-container {
-        margin: 20px 0;
-     }
+    &-container {
+      margin: 20px 0;
+    }
+  }
+  .match-list {
+    width: 100%;
+    &-item {
+      padding: 10px;
+      background-color: white;
+      text-align: start;
+      &-match_name {
+        font-weight: 600;
+        font-size: 18px;
+      }
+      &-start_time {
+        background-color: $side-color;
+        color: white;
+        padding: 5px 2px;
+        border-radius: 5%;
+        margin-left: 20px;
+      }
+      &-end_time {
+        background-color: $base_color;
+        @extend .match-list-item-start_time;
+      }
+    }
+  }
+  .demo-table-expand {
+    font-size: 0;
+  }
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+  .el-form-item {
+     display: block;
+  }
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
   }
 }
 </style>

@@ -35,7 +35,11 @@ import {
   Autocomplete,
   Pagination,
   DatePicker,
-  InputNumber
+  InputNumber,
+  Form,
+  FormItem,
+  Table,
+  TableColumn,
 } from 'element-ui'
 import Loading from './components/Loading/libs/loading'
 import Dialog from './components/Dialog/libs/dialog'
@@ -81,6 +85,10 @@ Vue.use(Autocomplete)
 Vue.use(Pagination)
 Vue.use(DatePicker)
 Vue.use(InputNumber)
+Vue.use(Form)
+Vue.use(FormItem)
+Vue.use(Table)
+Vue.use(TableColumn)
 // 自定义插件
 Vue.use(Loading)
 Vue.use(Dialog)
