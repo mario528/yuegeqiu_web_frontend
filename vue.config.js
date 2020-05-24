@@ -16,12 +16,14 @@ module.exports = {
   },
   devServer: {
     host: 'localhost',
-    port: 3001,
+    port: 3000,
     https: false,
     hotOnly: false,
     proxy: {
       '/api': {
         target: 'http://localhost:3000',
+        // 部署时切换
+        // target: 'http://101.201.142.182:3000',
         changeOrigin: true,
         wx: false,
         pathRewrite: {
