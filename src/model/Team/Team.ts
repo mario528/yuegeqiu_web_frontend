@@ -65,7 +65,7 @@ interface DepartTeam {
     user_id: number | string;
 }
 interface TeamSuggest {
-    user_id?: number | string;
+    user_id?: number | string | null;
 }
 class Team {
     constructor() {}

@@ -72,7 +72,16 @@
               近期赛事
             </div>
           </div>
-          <div class="width-100 recent-competition-container-content"></div>
+          <div class="width-100 recent-competition-container-content">
+            <div class="empty-tips" v-if="suggestMatchList.length == 0">暂无推荐赛事</div>
+            <div class="flex-row-y-center recent-competition-container-content-item" v-for="(item, index) in suggestMatchList" :key="index" v-else>
+              <span class="name">{{item.match_name}}</span>
+              <span class="property">{{item.match_property == 0 ? '友谊赛' : '正式比赛'}}</span>
+              <span class="type">{{item.match_type == 0 ? '五人制' : item.match_type == 1 ? '七人制' : '十一人制'}}</span>  
+              <span class="city">{{item.match_city}}</span>
+              <span class="district">{{item.match_district}}</span>
+            </div>
+          </div>
         </div>
         <!-- 球队搜索入口 -->
         <div class="team-search-container">
@@ -123,25 +132,29 @@ export default class Home extends Vue {
   private bannerList = [];
   private newsList = [];
   private suggestTeamList = [];
+  private suggestMatchList = []
   @Getter("getScreenModel")
   public smallScreenModel!: boolean;
   @Getter("getUserId")
   public userId!: string | number | null;
   mounted() {}
   created() {
-    this.requestBannerData();
+    this.requestHomeData();
     this.requestTeamSuggest();
   }
-  private requestBannerData() {
-    this.$http.post(url.HOME).then((res: any) => {
+  private requestHomeData() {
+    this.$http.post(url.HOME, {
+      user_id: this.userId || localStorage.getItem('User_ID') || null
+    }).then((res: any) => {
       this.bannerList = res.banner;
       this.newsList = res.news_list;
+      this.suggestMatchList = res.match_list
     });
   }
   private requestTeamSuggest() {
     new Team().teamSuggest
       .call(this, {
-        user_id: this.userId || (localStorage.getItem("User_ID") as string)
+        user_id: this.userId || (localStorage.getItem("User_ID") as string) || null
       })
       .then((res: any) => {
         this.suggestTeamList = res.suggest_team_list;
@@ -430,11 +443,58 @@ export default class Home extends Vue {
     width: 30%;
     float: left;
   }
+  .empty-tips {
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $disable_color;
+    font-weight: 500;
+  }
   .recent-competition-container {
     width: 40%;
     margin: 0 5%;
     float: left;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+    &-content {
+      position: relative;
+    }
+    &-content-item {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px 10px;  
+      border-bottom: 1px solid $border_color;
+      span {
+        margin-right: 2%;
+      }
+      .name {
+        font-size: 18px;
+        font-weight: 500;  
+      }
+      .property {
+        background-color: $side_color;
+        color: white;
+        font-size: 8px;
+        padding: 2px 4px;
+        border-radius: 2px;
+      }
+      .type {
+        @extend .property;
+        background-color: #6495ED;
+        color:white;
+      }
+      .city {
+        @extend .property;
+        color: #483D8B	;
+        background-color: #E6E6FA;
+      }
+      .district {
+        @extend .property;
+        color: #F8F8FF;
+        background-color: #6A5ACD;
+      }
+    }
   }
   .team-search-container {
     width: 20%;
