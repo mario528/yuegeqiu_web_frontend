@@ -2,6 +2,7 @@
 require('./utils/registerHooks')
 import Vue from 'vue'
 import AmapVue from '@amap/amap-vue'
+import socketio from 'socket.io-client'
 import App from './App.vue'
 import router from './router'
 import store from './store/index'
@@ -43,11 +44,15 @@ import {
 } from 'element-ui'
 import Loading from './components/Loading/libs/loading'
 import Dialog from './components/Dialog/libs/dialog'
+// add websocket
+const io = socketio('http://localhost:3000')
+
 Vue.config.productionTip = false
 Vue.prototype.$http = http
 Vue.prototype.$notify = Notification
 Vue.prototype.$msgbox = MessageBox
 Vue.prototype.$confirm = MessageBox.confirm
+Vue.prototype.$socket = io
 // register a event handler
 import { EventHandler } from './utils/index'
 // @ts-ignore
@@ -144,6 +149,12 @@ router.afterEach((to, from) => {
   console.log("路由载入完成")
   // @ts-ignore
   Vue.$selfLoading.hide()
+})
+io.on('connect', (socket: any) => {
+  console.log('链接成功')
+})
+io.on('onlineNumber', (params: any) => {
+  store.commit('SET_ONLINE_NUMBERS', params.online_number)
 })
 new Vue({
   router,

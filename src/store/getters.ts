@@ -21,6 +21,9 @@ const getters: GetterTree<any, any> = {
   },
   getLoginOrRegisterState (state): number {
     return state.loginOrRegisterState
+  },
+  getOnlineNumbers (state): number {
+    return state.onlineNumber
   }
 }
 

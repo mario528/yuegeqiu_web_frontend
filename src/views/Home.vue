@@ -74,10 +74,17 @@
           </div>
           <div class="width-100 recent-competition-container-content">
             <div class="empty-tips" v-if="suggestMatchList.length == 0">暂无推荐赛事</div>
-            <div class="flex-row-y-center recent-competition-container-content-item" v-for="(item, index) in suggestMatchList" :key="index" v-else>
+            <div
+              class="flex-row-y-center recent-competition-container-content-item"
+              v-for="(item, index) in suggestMatchList"
+              :key="index"
+              v-else
+            >
               <span class="name">{{item.match_name}}</span>
               <span class="property">{{item.match_property == 0 ? '友谊赛' : '正式比赛'}}</span>
-              <span class="type">{{item.match_type == 0 ? '五人制' : item.match_type == 1 ? '七人制' : '十一人制'}}</span>  
+              <span
+                class="type"
+              >{{item.match_type == 0 ? '五人制' : item.match_type == 1 ? '七人制' : '十一人制'}}</span>
               <span class="city">{{item.match_city}}</span>
               <span class="district">{{item.match_district}}</span>
             </div>
@@ -114,6 +121,20 @@
           </div>
         </div>
       </div>
+      <div class="width-90 flex-row-between web-detail">
+        <div class="flex-column-x-center web-detail-item">
+          <div class="web-detail-item-title">当前在线人数</div>
+          <div class="web-detail-item-date">{{onlineNumbers}}</div>
+        </div>
+        <div class="flex-column-x-center web-detail-item">
+          <div class="web-detail-item-title">当前注册用户数</div>
+          <div class="web-detail-item-date">{{webDetail.userCount}}</div>
+        </div>
+        <div class="flex-column-x-center web-detail-item">
+          <div class="web-detail-item-title">当前注册球队数</div>
+          <div class="web-detail-item-date">{{webDetail.teamCount}}</div>
+        </div>
+      </div>
     </div>
     <up-arrow></up-arrow>
   </div>
@@ -132,29 +153,44 @@ export default class Home extends Vue {
   private bannerList = [];
   private newsList = [];
   private suggestTeamList = [];
-  private suggestMatchList = []
+  private suggestMatchList = [];
+  private webDetail = {
+    onlineVisiter: 0,
+    userCount: 0,
+    teamCount: 0
+  };
+  @Getter("getOnlineNumbers")
+  private onlineNumbers!: number;
   @Getter("getScreenModel")
   public smallScreenModel!: boolean;
   @Getter("getUserId")
   public userId!: string | number | null;
+  @Action("handleChangeOnlineNumber")
+  public handleChangeOnlineNumber!: (onlineNumbers: number) => void;
   mounted() {}
   created() {
     this.requestHomeData();
     this.requestTeamSuggest();
   }
   private requestHomeData() {
-    this.$http.post(url.HOME, {
-      user_id: this.userId || localStorage.getItem('User_ID') || null
-    }).then((res: any) => {
-      this.bannerList = res.banner;
-      this.newsList = res.news_list;
-      this.suggestMatchList = res.match_list
-    });
+    this.$http
+      .post(url.HOME, {
+        user_id: this.userId || localStorage.getItem("User_ID") || null
+      })
+      .then((res: any) => {
+        this.bannerList = res.banner;
+        this.newsList = res.news_list;
+        this.suggestMatchList = res.match_list;
+        this.webDetail.userCount = res.project_detail.user_count;
+        this.webDetail.teamCount = res.project_detail.team_count;
+        this.handleChangeOnlineNumber(res.project_detail.online_number);
+      });
   }
   private requestTeamSuggest() {
     new Team().teamSuggest
       .call(this, {
-        user_id: this.userId || (localStorage.getItem("User_ID") as string) || null
+        user_id:
+          this.userId || (localStorage.getItem("User_ID") as string) || null
       })
       .then((res: any) => {
         this.suggestTeamList = res.suggest_team_list;
@@ -429,6 +465,33 @@ export default class Home extends Vue {
     border-radius: 10px;
   }
 }
+.web-detail {
+  margin: 3vh 0;
+  box-shadow: $basic_shadow;
+  padding: 30px 10%;
+  z-index: -1;
+  background-image: url("https://yuegeqiu-mario.oss-cn-beijing.aliyuncs.com/project_detail_bg.jpg");
+  background-size: cover;
+  background-position: center 0;
+  background-repeat: no-repeat;
+  &-item {
+    padding: 20px 60px;
+    text-align: center;
+    // background-color: rgba(255,255,255,.4);
+    background-color: rgba(48, 63, 159, 0.6);
+    border-radius: 10px;
+    color: white;
+    &-title {
+      margin-bottom: 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    &-date {
+      font-weight: 600;
+      font-size: 30px;
+    }
+  }
+}
 @media screen and (max-width: 450px) {
   .team-suggest {
     width: 100%;
@@ -437,20 +500,40 @@ export default class Home extends Vue {
     width: 100%;
     margin-top: 20px;
   }
+  .web-detail {
+    padding: 30px 2%;
+  }
+  .web-detail-item {
+    padding: 20px 5px;
+    text-align: center;
+    // background-color: rgba(255,255,255,.4);
+    background-color: rgba(48, 63, 159, 0.6);
+    border-radius: 5px;
+    color: white;
+    &-title {
+      margin-bottom: 10px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    &-date {
+      font-weight: 600;
+      font-size: 20px;
+    }
+  }
+}
+.empty-tips {
+  width: 100%;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: $disable_color;
+  font-weight: 500;
 }
 @media screen and (min-width: 451px) {
   .team-suggest {
     width: 30%;
     float: left;
-  }
-  .empty-tips {
-    width: 100%;
-    text-align: center;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    color: $disable_color;
-    font-weight: 500;
   }
   .recent-competition-container {
     width: 40%;
@@ -463,14 +546,14 @@ export default class Home extends Vue {
     &-content-item {
       width: 100%;
       box-sizing: border-box;
-      padding: 10px 10px;  
+      padding: 10px 10px;
       border-bottom: 1px solid $border_color;
       span {
         margin-right: 2%;
       }
       .name {
         font-size: 18px;
-        font-weight: 500;  
+        font-weight: 500;
       }
       .property {
         background-color: $side_color;
@@ -481,18 +564,18 @@ export default class Home extends Vue {
       }
       .type {
         @extend .property;
-        background-color: #6495ED;
-        color:white;
+        background-color: #6495ed;
+        color: white;
       }
       .city {
         @extend .property;
-        color: #483D8B	;
-        background-color: #E6E6FA;
+        color: #483d8b;
+        background-color: #e6e6fa;
       }
       .district {
         @extend .property;
-        color: #F8F8FF;
-        background-color: #6A5ACD;
+        color: #f8f8ff;
+        background-color: #6a5acd;
       }
     }
   }

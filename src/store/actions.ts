@@ -14,7 +14,7 @@ const actions: ActionTree<any, any> = {
         commit(TYPES.SET_ACCOUNT_TOKEN, token)
     },
     async handleClearAccountToken ({state, commit}) {
-        commit(TYPES.CLEAR_ACCOUNt_TOKEN)
+        commit(TYPES.CLEAR_ACCOUNT_TOKEN)
     },
     async handleSetLoginState ({state, commit}, data: boolean) {
         commit(TYPES.SET_LOGIN_STATE, data)
@@ -24,6 +24,9 @@ const actions: ActionTree<any, any> = {
     },
     async handleLoginOrRegisterState ({state, commit}, dialogState: number) {
         commit(TYPES.SET_LOGIN_OR_REGISTER_STATE, dialogState)
+    },
+    async handleChangeOnlineNumber ({state, commit}, onlineNumber: number) {
+        commit(TYPES.SET_ONLINE_NUMBERS, onlineNumber)
     }
 }
 export default actions

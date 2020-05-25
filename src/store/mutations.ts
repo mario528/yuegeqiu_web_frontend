@@ -13,7 +13,7 @@ const mutations: MutationTree<any> = {
     [TYPES.SET_ACCOUNT_TOKEN] (state, token: string): void {
         state.token = token
     },
-    [TYPES.CLEAR_ACCOUNt_TOKEN] (state): void {
+    [TYPES.CLEAR_ACCOUNT_TOKEN] (state): void {
         state.token = undefined
     },
     [TYPES.SET_LOGIN_STATE] (state, status: boolean): void {
@@ -24,6 +24,9 @@ const mutations: MutationTree<any> = {
     },
     [TYPES.SET_LOGIN_OR_REGISTER_STATE] (state, dialogState: number): void {
         state.loginOrRegisterState = dialogState
+    },
+    [TYPES.SET_ONLINE_NUMBERS] (state, onlineNumber: number): void {
+        state.onlineNumber = onlineNumber
     }
 }
 export default mutations
