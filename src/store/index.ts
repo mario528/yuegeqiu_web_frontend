@@ -13,6 +13,8 @@ interface State {
     userId: string | undefined;
     loginOrRegisterState: number;
     onlineNumber: number;
+    registerUserNumber: number;
+    registerTeamNumber: number;
 }
 const state: State = {
     showSiderBar: false,
@@ -22,7 +24,9 @@ const state: State = {
     token: undefined,
     userId: undefined,
     loginOrRegisterState: Number(0),
-    onlineNumber: 0
+    onlineNumber: 0,
+    registerUserNumber: 0,
+    registerTeamNumber: 0
 }
 Vue.use(Vuex)
 export default new Vuex.Store({

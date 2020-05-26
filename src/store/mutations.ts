@@ -27,6 +27,12 @@ const mutations: MutationTree<any> = {
     },
     [TYPES.SET_ONLINE_NUMBERS] (state, onlineNumber: number): void {
         state.onlineNumber = onlineNumber
+    },
+    [TYPES.SET_REGISTER_USER_NUMBER] (state, userNumber: number): void {
+        state.registerUserNumber = userNumber
+    },
+    [TYPES.SET_REGISTER_TEAM_NUMBER] (state, teamNumber: number): void {
+        state.registerTeamNumber = teamNumber
     }
 }
 export default mutations

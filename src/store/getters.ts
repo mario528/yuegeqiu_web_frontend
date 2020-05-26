@@ -24,6 +24,12 @@ const getters: GetterTree<any, any> = {
   },
   getOnlineNumbers (state): number {
     return state.onlineNumber
+  },
+  getRegisterTeamNumber (state): number {
+    return state.registerTeamNumber
+  },
+  getRegisterUserNumber (state): number {
+    return state.registerUserNumber
   }
 }
 

@@ -128,11 +128,11 @@
         </div>
         <div class="flex-column-x-center web-detail-item">
           <div class="web-detail-item-title">当前注册用户数</div>
-          <div class="web-detail-item-date">{{webDetail.userCount}}</div>
+          <div class="web-detail-item-date">{{registerUserNumber}}</div>
         </div>
         <div class="flex-column-x-center web-detail-item">
           <div class="web-detail-item-title">当前注册球队数</div>
-          <div class="web-detail-item-date">{{webDetail.teamCount}}</div>
+          <div class="web-detail-item-date">{{registerTeamNumber}}</div>
         </div>
       </div>
     </div>
@@ -154,19 +154,22 @@ export default class Home extends Vue {
   private newsList = [];
   private suggestTeamList = [];
   private suggestMatchList = [];
-  private webDetail = {
-    onlineVisiter: 0,
-    userCount: 0,
-    teamCount: 0
-  };
   @Getter("getOnlineNumbers")
   private onlineNumbers!: number;
+  @Getter("getRegisterTeamNumber")
+  private registerTeamNumber!: number;
+  @Getter("getRegisterUserNumber")
+  private registerUserNumber!: number;
   @Getter("getScreenModel")
   public smallScreenModel!: boolean;
   @Getter("getUserId")
   public userId!: string | number | null;
   @Action("handleChangeOnlineNumber")
   public handleChangeOnlineNumber!: (onlineNumbers: number) => void;
+  @Action("handleAddUserRegisterNumber")
+  public handleAddUserRegisterNumber!: (userNumber: number) => void;
+  @Action("handleAddTeamRegisterNumber")
+  public handleAddTeamRegisterNumber!: (teamNumber: number) => void;
   mounted() {}
   created() {
     this.requestHomeData();
@@ -181,9 +184,9 @@ export default class Home extends Vue {
         this.bannerList = res.banner;
         this.newsList = res.news_list;
         this.suggestMatchList = res.match_list;
-        this.webDetail.userCount = res.project_detail.user_count;
-        this.webDetail.teamCount = res.project_detail.team_count;
         this.handleChangeOnlineNumber(res.project_detail.online_number);
+        this.handleAddUserRegisterNumber(res.project_detail.user_count);
+        this.handleAddTeamRegisterNumber(res.project_detail.team_count);
       });
   }
   private requestTeamSuggest() {

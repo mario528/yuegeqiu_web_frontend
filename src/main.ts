@@ -156,6 +156,12 @@ io.on('connect', (socket: any) => {
 io.on('onlineNumber', (params: any) => {
   store.commit('SET_ONLINE_NUMBERS', params.online_number)
 })
+io.on('addUser', (params: any) => {
+  store.commit('SET_REGISTER_USER_NUMBER', params.user_number)
+})
+io.on('addTeam', (params: any) => {
+  store.commit('SET_REGISTER_TEAM_NUMBER', params.team_number)
+})
 new Vue({
   router,
   store,

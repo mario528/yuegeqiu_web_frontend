@@ -27,6 +27,12 @@ const actions: ActionTree<any, any> = {
     },
     async handleChangeOnlineNumber ({state, commit}, onlineNumber: number) {
         commit(TYPES.SET_ONLINE_NUMBERS, onlineNumber)
+    },
+    async handleAddUserRegisterNumber ({ state, commit }, userNumber: number) {
+        commit(TYPES.SET_REGISTER_USER_NUMBER, userNumber)
+    },
+    async handleAddTeamRegisterNumber ({state, commit}, teamNumber: number) {
+        commit(TYPES.SET_REGISTER_TEAM_NUMBER, teamNumber)
     }
 }
 export default actions
