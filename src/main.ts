@@ -45,8 +45,7 @@ import {
 import Loading from './components/Loading/libs/loading'
 import Dialog from './components/Dialog/libs/dialog'
 // add websocket
-const socketUrl = process.env.NODE_ENV === 'production' ? 'http://101.201.142.182:3000' : 'http://localhost:3000'
-const io = socketio(socketUrl)
+const io = socketio('http://localhost:3000')
 // const io = socketio('http://101.201.142.182:3000')
 
 Vue.config.productionTip = false
