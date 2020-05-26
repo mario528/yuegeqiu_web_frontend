@@ -16,7 +16,7 @@ module.exports = {
   },
   devServer: {
     host: 'localhost',
-    port: 3001,
+    port: process.env.NODE_ENV === 'production' ? 3000 : 3001,
     https: false,
     hotOnly: false,
     proxy: {
