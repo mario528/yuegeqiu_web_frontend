@@ -13,7 +13,7 @@ const routes = [
     path: '/team',
     name: 'Team',
     meta: {
-      title: '球队'
+      title: '球队广场'
     },
     component: () => import('@/views/Team/Team.vue')
   },
@@ -114,6 +114,14 @@ const routes = [
     component: () => import('../views/Team/TeamDetail.vue'),
     meta: {
       title: '球队详情'
+    }
+  },
+  {
+    path: '/team/map',
+    name: 'teamMap',
+    component: () => import('../views/TeamMap/TeamMap.vue'),
+    meta: {
+      title: '球队地图'
     }
   },
   {

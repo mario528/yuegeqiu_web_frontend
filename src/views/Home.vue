@@ -36,7 +36,7 @@
             </div>
             <div class="flex-row-y-center">
               <img :src="require('@/assets/map_location.png')" class="recommend-icon-small">
-              <span class="map-text">地图</span>
+              <span class="map-text" @click="routerBus('map')">球队地图</span>
             </div>
           </div>
           <div class="width-100 team-suggest-content">
@@ -122,18 +122,24 @@
         </div>
       </div>
       <div class="width-90 flex-row-between web-detail">
-        <div class="flex-column-x-center web-detail-item">
-          <div class="web-detail-item-title">当前在线人数</div>
-          <div class="web-detail-item-date">{{onlineNumbers}}</div>
-        </div>
-        <div class="flex-column-x-center web-detail-item">
-          <div class="web-detail-item-title">当前注册用户数</div>
-          <div class="web-detail-item-date">{{registerUserNumber}}</div>
-        </div>
-        <div class="flex-column-x-center web-detail-item">
-          <div class="web-detail-item-title">当前注册球队数</div>
-          <div class="web-detail-item-date">{{registerTeamNumber}}</div>
-        </div>
+        <transition name="fade">
+          <div class="flex-column-x-center web-detail-item">
+            <div class="web-detail-item-title">当前在线人数</div>
+            <div class="web-detail-item-date">{{onlineNumbers}}</div>
+          </div>
+        </transition>
+        <transition name="fade">
+          <div class="flex-column-x-center web-detail-item">
+            <div class="web-detail-item-title">当前注册用户数</div>
+            <div class="web-detail-item-date">{{registerUserNumber}}</div>
+          </div>
+        </transition>
+        <transition name="fade">
+          <div class="flex-column-x-center web-detail-item">
+            <div class="web-detail-item-title">当前注册球队数</div>
+            <div class="web-detail-item-date">{{registerTeamNumber}}</div>
+          </div>
+        </transition>
       </div>
     </div>
     <up-arrow></up-arrow>
@@ -206,7 +212,7 @@ export default class Home extends Vue {
           path: "/team/search",
           name: "teamSearch"
         });
-        break;
+      break;
       case "teamDetail":
         this.$router.push({
           path: "/team/detail",
@@ -214,13 +220,19 @@ export default class Home extends Vue {
             td: params.teamId
           }
         });
-        break;
+      break;
       case "chat":
         this.$router.push({
           path: "/chat",
           name: "chatHome"
         });
-        break;
+      break;
+      case "map":
+        this.$router.push({
+          path: "/team/map",
+          name: "teamMap"
+        });
+      break;
     }
   }
 }
@@ -395,6 +407,7 @@ export default class Home extends Vue {
   font-size: 12px;
   color: #a9a9a9;
   font-weight: 400;
+  cursor: pointer;
 }
 .recent-competition-container {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
@@ -494,6 +507,14 @@ export default class Home extends Vue {
       font-size: 30px;
     }
   }
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter, .fade-leave-to
+/* .component-fade-leave-active for below version 2.1.8 */ {
+  opacity: 0;
 }
 @media screen and (max-width: 450px) {
   .team-suggest {

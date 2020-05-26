@@ -46,6 +46,7 @@ import Loading from './components/Loading/libs/loading'
 import Dialog from './components/Dialog/libs/dialog'
 // add websocket
 const io = socketio('http://localhost:3000')
+// const io = socketio('http://101.201.142.182:3000')
 
 Vue.config.productionTip = false
 Vue.prototype.$http = http

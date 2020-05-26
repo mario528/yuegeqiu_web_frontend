@@ -1,9 +1,7 @@
 <template>
   <div class="flex-column-center page">
     <div class="width-92 container">
-      <!-- 我的球队 -->
-      <!-- 近期活动 -->
-      <!-- 新的通知/活动-->
+      <div class="width-100">1</div>
     </div>
   </div>
 </template>
