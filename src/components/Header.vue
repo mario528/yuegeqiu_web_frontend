@@ -4,7 +4,10 @@
     <div class="flex-row-y-center" v-if="!smallScreenMode">
       <span class="flex-row-y-center">
         <img class="brand-icon" :src="brandIcon" alt="约个球">
-        <strong class="brand-name">约个球</strong>
+        <div>
+           <strong class="brand-name">约个球</strong>
+           <div class="slogan">足球爱好者专业平台</div>
+        </div>
       </span>
       <div class="flex-row-y-center">
         <nav class="nav-bar-item" v-for="(item, index) in navList" :key="index">
@@ -358,5 +361,9 @@ export default class Header extends Vue {
       border-bottom: none;
     }
   }
+}
+.slogan {
+  color: white;
+  font-size: 8px;
 }
 </style>

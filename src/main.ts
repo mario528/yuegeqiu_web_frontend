@@ -68,6 +68,9 @@ Vue.mixin({
 import dynamicDirectives from './directive/dynamicDirective'
 // register custom vue-directive
 dynamicDirectives(['inputFilterSpace','inputFocus'])
+import dynamicFilter from './filter/dynamicFilter'
+dynamicFilter(['unitStandard'])
+// register custom vue-filter
 
 // 引用Element-ui plugins
 Vue.use(Carousel)

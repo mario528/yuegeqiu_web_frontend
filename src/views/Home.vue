@@ -125,19 +125,19 @@
         <transition name="fade">
           <div class="flex-column-x-center web-detail-item">
             <div class="web-detail-item-title">当前在线人数</div>
-            <div class="web-detail-item-date">{{onlineNumbers}}</div>
+            <div class="web-detail-item-date">{{onlineNumbers | unitStandard}}</div>
           </div>
         </transition>
         <transition name="fade">
           <div class="flex-column-x-center web-detail-item">
             <div class="web-detail-item-title">当前注册用户数</div>
-            <div class="web-detail-item-date">{{registerUserNumber}}</div>
+            <div class="web-detail-item-date">{{registerUserNumber | unitStandard}}</div>
           </div>
         </transition>
         <transition name="fade">
           <div class="flex-column-x-center web-detail-item">
             <div class="web-detail-item-title">当前注册球队数</div>
-            <div class="web-detail-item-date">{{registerTeamNumber}}</div>
+            <div class="web-detail-item-date">{{registerTeamNumber | unitStandard}}</div>
           </div>
         </transition>
       </div>
