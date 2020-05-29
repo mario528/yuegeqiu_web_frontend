@@ -4,13 +4,25 @@
       <!-- 我的球队 -->
       <div class="flex-column mine-team">
         <div class="mine-team-title">我的球队</div>
-        <div class="flex-column-center mine-team-content">
-          <div class="mine-team-tip" v-if="is_login && joinTeamList.length == 0">暂无</div>
-          <div class="mine-team-login_btn fade-center" v-if="!is_login" @click="handleLogin">请登录</div>
+        <div class="mine-team-content">          
+          <div class="mine-team-tip" v-if="isLogin && joinTeamList.length == 0">暂无加盟球队</div>
+          <div class="mine-team-login_btn fade-center" v-if="!isLogin" @click="handleLogin">请登录</div>
+          <div class="mine-team-item" v-for="(item, index) in joinTeamList" :key="index">
+            {{item.team_name}}
+          </div> 
         </div>
       </div>
       <!-- 当前热门活动 -->
-      <div class="flex-column hot-match"></div>
+      <div class="flex-column hot-match">
+        <div class="hot-match-title">最新赛事</div>
+        <div class="hot-match-container">
+          <div class="hot-match-item" v-for="(item, index) in hotMatchList" :key="index">
+            {{item.match_name}}
+          </div>
+        </div>
+      </div>
+      <!-- 测试 -->
+      <div class="test"></div>
     </div>
   </div>
 </template>
@@ -26,10 +38,17 @@ import TeamType from "@/model/Team/Team";
 export default class Team extends Vue {
   @Getter("getUserId")
   private userId!: string | number | null;
-  private isLogin!: boolean;
-  private joinTeamList!: [];
+  private isLogin = false;
+  private joinTeamList = [];
+  private hotMatchList = []
   @Action("handleLoginOrRegisterState")
-  public handleLoginOrRegisterState!: (state: number) => void
+  public handleLoginOrRegisterState!: (state: number) => void;
+  @Watch("userId")
+  onUserIdChanged(newValue: string, oldvalue: string) {
+    if (oldvalue != newValue && !oldvalue) {
+      this.getTeamPageData();
+    }
+  }
   mounted() {
     this.getTeamPageData();
   }
@@ -39,13 +58,13 @@ export default class Team extends Vue {
         user_id: this.userId || localStorage.getItem("User_ID") || null
       })
       .then((res: any) => {
-        const { is_login, join_team_list } = res;
-        this.isLogin = is_login;
-        this.joinTeamList = join_team_list;
+        this.isLogin = res.is_login;
+        this.joinTeamList = res.join_team_list;
+        this.hotMatchList = res.hot_match_list;
       });
   }
-  private handleLogin () {
-    this.handleLoginOrRegisterState(1)
+  private handleLogin() {
+    this.handleLoginOrRegisterState(1);
     // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
     this.$event.emit("changeLoginDialogState");
@@ -81,7 +100,7 @@ export default class Team extends Vue {
   }
   &-content {
     width: 100%;
-    height: 20vh;
+    min-height: 20vh;
     margin-top: 20px;
     box-shadow: $basic_shadow;
   }
@@ -95,9 +114,49 @@ export default class Team extends Vue {
     transition: 0.3s ease-out;
     cursor: pointer;
   }
+  &-tip {
+    font-weight: 500;
+    color: $disable_color;
+    font-size: 16px;
+  }
+}
+.hot-match {
+  margin-top: 2vh;
+  &-title {
+    position: relative;
+    box-sizing: border-box;
+    padding: 10px 4%;
+    font-size: 18px;
+    font-weight: 600;
+    border-bottom: 1px solid $border_color;
+    &::before {
+      position: absolute;
+      content: " ";
+      top: 10%;
+      left: 0;
+      width: 2%;
+      height: 80%;
+      background-color: red;
+    }
+  }
+  &-container {
+    width: 100%;
+    margin-top: 20px;
+    min-height: 25vh;
+    box-shadow: $basic_shadow;
+  }
+}
+.test {
+  width: 40%;
+  float: left;
+  height: 500px;
+  box-shadow: $basic_shadow;
 }
 @media screen and (max-width: 450px) {
   .mine-team {
+    width: 100%;
+  }
+  .hot-match {
     width: 100%;
   }
 }
@@ -105,6 +164,22 @@ export default class Team extends Vue {
   .mine-team {
     width: 40%;
     float: left;
+    padding: 10px 0;
+    &-item {
+      float: left;
+      background-color: $side-color;
+      color: white;
+      font-weight: 500;
+      border-radius: 20px;
+      padding: 5px 10px;
+      margin-top: 10px;
+      margin-left: 10px;
+    }
+  }
+  .hot-match {
+    width: 55%;
+    float: right;
+    margin-left: 5%;
   }
 }
 </style>
