@@ -7,7 +7,7 @@
           <div class="separator">/</div>
           <div :class="[dialogState == 2 ? 'type-item-activity' : 'type-item']" @click="swithType(2)">注册</div>
         </div>
-        <div v-if="dialogState == 1" class="flex-column-x-center content ">
+        <div v-if="dialogState == 1" class="flex-column-center content ">
           <input class="user-input" v-model="loginTelNumber" placeholder="手机号" maxlength="11" />
           <div class="width-100" style="position: relative;">
             <input class="user-input-psw" @input="handleInputPsw($event.target.value, 1)" placeholder="密码" :value="showLoginPswStr" />

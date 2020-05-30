@@ -1,13 +1,17 @@
 <template>
   <div class="flex-column-center page">
     <div class="width-92 container">
+      <!-- 搜索球队 -->
+      <div class="width-100 flex-column-center search-item">
+        <div class="search-item-input" @click="handleRouterBus('teamSearch')">点击搜索球队</div>
+      </div>
       <!-- 我的球队 -->
       <div class="flex-column mine-team">
         <div class="mine-team-title">我的球队</div>
         <div class="mine-team-content">          
           <div class="mine-team-tip" v-if="isLogin && joinTeamList.length == 0">暂无加盟球队</div>
           <div class="mine-team-login_btn fade-center" v-if="!isLogin" @click="handleLogin">请登录</div>
-          <div class="mine-team-item" v-for="(item, index) in joinTeamList" :key="index">
+          <div class="mine-team-item" v-for="(item, index) in joinTeamList" :key="index" @click="handleRouterBus('teamDetail', item.id)">
             {{item.team_name}}
           </div> 
         </div>
@@ -19,10 +23,11 @@
           <div class="hot-match-item" v-for="(item, index) in hotMatchList" :key="index">
             {{item.match_name}}
           </div>
+          <div class="hot-match-tip" v-if="hotMatchList.length == 0">暂无热门赛事</div>
         </div>
       </div>
-      <!-- 测试 -->
-      <div class="test"></div>
+      <!-- 国际赛事 -->
+      <!-- <div class="test"></div> -->
     </div>
   </div>
 </template>
@@ -69,6 +74,23 @@ export default class Team extends Vue {
     // @ts-ignore
     this.$event.emit("changeLoginDialogState");
   }
+  private handleRouterBus (path: string, params?: any) {
+    switch (path) {
+      case 'teamSearch':
+        this.$router.push({
+          path: '/team/search'
+        })
+        break;
+      case 'teamDetail':
+        this.$router.push({
+          path: '/team/detail',
+          query: {
+            td: params
+          }
+        })
+        break;
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -78,6 +100,27 @@ export default class Team extends Vue {
 .container {
   margin-top: -2vh;
   min-height: 82vh;
+}
+.search-item {
+    margin-top: 2vh;
+    height: 30vh;
+    background-image: url('https://yuegeqiu-mario.oss-cn-beijing.aliyuncs.com/search_bg_main.jpg');
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 5px;
+    &-input {
+      width: 40%;
+      height: 50px;
+      padding: 0 20px;
+      border: 1px solid #DCDFE6;
+      border-radius: 5px;
+      color: #DCDFE6;
+      line-height: 50px;
+      background-color: white;
+      font-weight: 500;
+      cursor: pointer;
+    }
 }
 .mine-team {
   &-title {
@@ -103,6 +146,7 @@ export default class Team extends Vue {
     min-height: 20vh;
     margin-top: 20px;
     box-shadow: $basic_shadow;
+    padding: 10px 0 0 0;
   }
   &-login_btn {
     position: relative;
@@ -144,6 +188,17 @@ export default class Team extends Vue {
     margin-top: 20px;
     min-height: 25vh;
     box-shadow: $basic_shadow;
+    position: relative;
+  }
+  &-tip {
+    width: 100%;
+    font-weight: 500;
+    color: $disable_color;
+    font-size: 16px;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
   }
 }
 .test {
@@ -159,6 +214,13 @@ export default class Team extends Vue {
   .hot-match {
     width: 100%;
   }
+  .search-item {
+    &-input {
+      width: 70%;
+      height: 40px;
+      line-height: 40px;
+    }
+  }
 }
 @media screen and (min-width: 451px) {
   .mine-team {
@@ -170,10 +232,11 @@ export default class Team extends Vue {
       background-color: $side-color;
       color: white;
       font-weight: 500;
-      border-radius: 20px;
+      border-radius: 5px;
       padding: 5px 10px;
-      margin-top: 10px;
+      margin-bottom: 10px;
       margin-left: 10px;
+      box-shadow: $basic_shadow;
     }
   }
   .hot-match {

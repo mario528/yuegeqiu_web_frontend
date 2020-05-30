@@ -421,6 +421,46 @@ export default class Home extends Vue {
   &-content {
     @extend .team-suggest-content;
     background-color: white;
+    &-item {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px 10px;
+      border-bottom: 1px solid $border_color;
+      span {
+        margin-right: 2%;
+      }
+      .name {
+        font-size: 14px;
+        font-weight: 500;
+        width: 20%;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        word-break: break-all;
+      }
+      .property {
+        background-color: $side_color;
+        color: white;
+        font-size: 8px;
+        padding: 2px 4px;
+        border-radius: 2px;
+      }
+      .type {
+        @extend .property;
+        background-color: #6495ed;
+        color: white;
+      }
+      .city {
+        @extend .property;
+        color: #483d8b;
+        background-color: #e6e6fa;
+      }
+      .district {
+        @extend .property;
+        color: #f8f8ff;
+        background-color: #6a5acd;
+      }
+    }
   }
 }
 .team-search-container {
@@ -577,7 +617,7 @@ export default class Home extends Vue {
       }
       .name {
         font-size: 18px;
-        font-weight: 500;
+        font-weight: 500;        
       }
       .property {
         background-color: $side_color;

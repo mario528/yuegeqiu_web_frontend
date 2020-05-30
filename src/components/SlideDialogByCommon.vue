@@ -44,6 +44,7 @@ export default class SideDialogByCommon extends Vue {
 }
 .side-bar-container {
   width: 30vw;
+  min-width: 250px;
   height: 100vh;
   position: fixed;
   right: 0;
