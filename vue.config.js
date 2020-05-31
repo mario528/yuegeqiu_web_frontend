@@ -42,6 +42,11 @@ module.exports = {
         return options;
       });
   },
+  configureWebpack: {
+    externals: {
+      "AMap": "AMap"
+    }
+  },
   pluginOptions: {
     'style-resources-loader': {
       preProcessor: 'scss',

@@ -24,6 +24,11 @@
       "dom",
       "dom.iterable",
       "scripthost"
+    ],
+    "typeRoots" : [
+      "./node_modules/@types",
+      "./node_modules/amap-js-api-typings",
+      "./typings",
     ]
   },
   "include": [
