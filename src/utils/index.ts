@@ -6,7 +6,7 @@ import Toast from './toast'
 import Utils from './utils'
 import TimeFormate from './time'
 import FileType from './file'
-
+import BrowserLocation from './location'
 export {
     EventHandler,
     Optimize,
@@ -15,5 +15,6 @@ export {
     Toast,
     Utils,
     TimeFormate,
-    FileType
+    FileType,
+    BrowserLocation
 }

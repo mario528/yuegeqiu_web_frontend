@@ -1,7 +1,6 @@
 // register router hooks
 require('./utils/registerHooks')
 import Vue from 'vue'
-import AmapVue from '@amap/amap-vue'
 import socketio from 'socket.io-client'
 import App from './App.vue'
 import router from './router'
@@ -107,9 +106,6 @@ Vue.component('nav-header', Header)
 Vue.component('side-bar', SideBar)
 Vue.component('footer-area', Footer)
 Vue.component('login-register', LoginOrRegister)
-// add amap
-AmapVue.config.key = 'f45c4c21a6db14cbc4c7e3721129bd10'
-Vue.use(AmapVue)
 // add router navigation keeper
 router.beforeEach((to, from, next) => {
   console.log("路由开始载入")

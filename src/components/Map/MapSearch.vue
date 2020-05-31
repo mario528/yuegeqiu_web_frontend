@@ -6,9 +6,7 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch, Mixins } from "vue-property-decorator";
 import { Getter, Action, State } from "vuex-class";
-import { withAmap } from '@amap/amap-vue'
 @Component({
-  mixins: [withAmap],
   components: {}
 })
 export default class MapSearch extends Vue {
