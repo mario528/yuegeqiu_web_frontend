@@ -2,6 +2,7 @@
 require('./utils/registerHooks')
 import Vue from 'vue'
 import socketio from 'socket.io-client'
+import fastClick from 'fastclick'
 import App from './App.vue'
 import router from './router'
 import store from './store/index'
@@ -67,9 +68,12 @@ Vue.mixin({
 import dynamicDirectives from './directive/dynamicDirective'
 // register custom vue-directive
 dynamicDirectives(['inputFilterSpace','inputFocus'])
+// register custom vue-filter
 import dynamicFilter from './filter/dynamicFilter'
 dynamicFilter(['unitStandard'])
-// register custom vue-filter
+// attach fastclick
+// @ts-ignore
+fastClick.attach(document.body)
 
 // 引用Element-ui plugins
 Vue.use(Carousel)
