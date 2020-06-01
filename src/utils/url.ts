@@ -57,6 +57,8 @@ const url = {
 
     GET_CREATE_MATCH_DETAIL: '/api/v1/match/create/detail',
 
-    GET_TEAM_PAGE_DETAIL: '/api/v1/team'
+    GET_TEAM_PAGE_DETAIL: '/api/v1/team',
+
+    GET_TEAM_MAP: '/api/v1/team/map'
 }
 export default url

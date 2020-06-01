@@ -1,16 +1,16 @@
 <template>
-  <div class="map-container">
-    
-  </div>
+  <div class="map-container"></div>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue, Watch, Mixins } from "vue-property-decorator";
 import { Getter, Action, State } from "vuex-class";
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// @ts-ignore
+import AMap from "AMap";
 import { locationConf } from "@/config/index";
-import MapSearch from '@/components/Map/MapSearch.vue'
+import { MapUtils } from '../../utils/index'
 @Component({
   components: {
-    'map-search': MapSearch
   }
 })
 export default class BasicMap extends Vue {
@@ -23,7 +23,14 @@ export default class BasicMap extends Vue {
     ]
   })
   locationInfo!: any[];
-  
+  mounted() {
+    // 根据id获取用户定位
+    MapUtils.getUserLoactionByIp().then((res: any) => {
+    })
+  }
+  private getUserLocation () {
+
+  }
 }
 </script>
 <style lang="scss" scoped>

@@ -7,6 +7,7 @@ import Utils from './utils'
 import TimeFormate from './time'
 import FileType from './file'
 import BrowserLocation from './location'
+import MapUtils from './map'
 export {
     EventHandler,
     Optimize,
@@ -16,5 +17,6 @@ export {
     Utils,
     TimeFormate,
     FileType,
-    BrowserLocation
+    BrowserLocation,
+    MapUtils
 }

@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-04-30 22:08:23
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-14 20:27:08
+ * @LastEditTime: 2020-06-01 17:04:25
  * @Description: file content
  */
 import { Url } from '../../utils/index'
@@ -20,6 +20,8 @@ interface CreateTeamInterface {
     home_court_color: string;
     away_court_color: string;
     user_id: string;
+    longitude: number;
+    latitude: number;
 }
 interface GetUserTeamInfo {
     user_id: string;
