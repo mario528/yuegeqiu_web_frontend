@@ -117,6 +117,14 @@ const routes = [
     }
   },
   {
+    path: '/m/team/detail',
+    name: 'mTeamDetail',
+    component: () => import('@/views/Team/m/TeamDetail.vue'),
+    meta: {
+      title: '球队详情'
+    }
+  },
+  {
     path: '/team/map',
     name: 'teamMap',
     component: () => import('../views/TeamMap/TeamMap.vue'),

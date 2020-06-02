@@ -2,13 +2,13 @@
  * @Author: majiaao
  * @Date: 2020-05-13 23:47:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-15 23:54:55
+ * @LastEditTime: 2020-06-02 15:07:33
  * @Description: file content
  -->
  <template>
     <div class="icon-container" @mouseenter="handleHoverEvent('mouseover')" @mouseleave="handleHoverEvent('mouseout')">
         <img :src="iconPath" class="icon">
-        <div class="hover-content" v-if="showUpLoad">
+        <div class="hover-content" v-if="showUpLoad || !hoverModel">
             <!-- <form name="upload-image" id="img-form" enctype="multipart/form-data" method="post">
                 <input type="file" :accept="acceptFileType" @change="handleSelectImage($event)">
             </form> -->

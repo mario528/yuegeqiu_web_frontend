@@ -55,9 +55,9 @@ import User from '@/model/User/User'
     }
 })
 export default class UserRegisterInfo extends Vue {
-    private pageIndex = 0
+    private pageIndex = 1
     private progressState = 0
-    private sexRadio = -1
+    private sexRadio = 1
     private nickName = ''
     private stepsList = ['个人信息','头像']
     private locationInfo = {

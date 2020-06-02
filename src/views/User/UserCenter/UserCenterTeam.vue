@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-04-28 21:06:30
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-23 17:58:02
+ * @LastEditTime: 2020-06-02 20:03:50
  * @Description: file content
  -->
 <template>
@@ -16,10 +16,14 @@
       </div>
       <!-- 球队列表 -->
       <div class="flex-row width-100 user-team-container-line team-area">
+        <span class="user-team-container-line-title">我的球队</span>
         <div class="team-area-item" v-for="(item, index) in teamList" :key="index" @click="handleTeamDetail(item.id)">
           <img :src="item.team_icon" class="team-area-item-icon">
           <div class="team-area-item-team_name">{{item.team_name}}</div>
           <div class="team-area-item-description">{{item.description}}</div>
+        </div>
+        <div class="width-100 empty-tip" v-if="teamList.length == 0">
+          <div>暂未加入任何球队<a @click="handleRouter('teamSearch')">点击搜索球队</a></div>
         </div>
       </div>
       <!-- 近期活动 -->
@@ -68,6 +72,9 @@ export default class UserCenterTeam extends Vue {
         this.$router.push('/team/create')
         break;
       case "join_team":
+        this.$router.push('/team/search')
+        break;
+      case "teamSearch":
         this.$router.push('/team/search')
         break;
     }
@@ -140,9 +147,10 @@ export default class UserCenterTeam extends Vue {
     color: $light_green;
     border-radius: 10px;
     cursor: pointer;
+    overflow: hidden;
     &-icon {
-      width: 50%;
-      height: width;
+      width: 100px;
+      height: 100px;
       background-color: white;
       border-radius: 50%;
       animation: rotate3d 10s ease infinite;
@@ -192,6 +200,20 @@ export default class UserCenterTeam extends Vue {
         background-color: rgba(0, 0, 0, 0.02);
       }
     }
+  }
+}
+.empty-tip {
+  padding: 40px 0;
+  div {
+    font-size: 18px;
+    font-weight: 500;
+  }
+  a {
+    text-decoration: underline;
+    font-size: 14px;
+    color: $base_color;
+    margin-left: 10px;
+    cursor: pointer;
   }
 }
 @keyframes rotate3d {

@@ -12,7 +12,7 @@ import Header from './components/Header.vue'
 import SideBar from "@/components/Sidebar.vue";
 import Footer from '@/components/Footer.vue'
 import LoginOrRegister from '@/components/LoginOrRegister.vue'
-
+import Browser from '@/utils/browser'
 import {
   Carousel,
   CarouselItem,
@@ -41,6 +41,8 @@ import {
   FormItem,
   Table,
   TableColumn,
+  Tabs,
+  TabPane
 } from 'element-ui'
 import Loading from './components/Loading/libs/loading'
 import Dialog from './components/Dialog/libs/dialog'
@@ -101,6 +103,8 @@ Vue.use(Form)
 Vue.use(FormItem)
 Vue.use(Table)
 Vue.use(TableColumn)
+Vue.use(Tabs)
+Vue.use(TabPane)
 // 自定义插件
 Vue.use(Loading)
 Vue.use(Dialog)
@@ -146,7 +150,18 @@ router.beforeEach((to, from, next) => {
       next()
     })
   }else {
-    next()
+    // 球队页区分移动端PC端
+    if (to.name == 'teamDetail' && Browser.isMobileEnv()) {
+      router.push({
+        path: '/m/team/detail',
+        name: 'mTeamDetail',
+        query: {
+          td: to.query.td
+        }
+      })
+    }else {
+      next()
+    }
   }
 })
 router.afterEach((to, from) => {

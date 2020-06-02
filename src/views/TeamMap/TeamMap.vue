@@ -75,13 +75,13 @@ export default class TeamMap extends Vue {
                 position: [lng, lat]
               });
               const circle = new AMap.Circle({
-                center: new AMap.LngLat(lng,lat),  // 圆心位置
+                center: new AMap.LngLat(lng, lat), // 圆心位置
                 radius: 5000, // 圆半径
-                fillColor: '#1791fc',   // 圆形填充颜色
-                strokeColor: '#fff', // 描边颜色
+                fillColor: "#1791fc", // 圆形填充颜色
+                strokeColor: "#fff", // 描边颜色
                 strokeWeight: 2, // 描边宽度
                 strokeOpacity: 0.2,
-                fillOpacity: 0.4,
+                fillOpacity: 0.4
               });
               this.map.add(circle);
             }
@@ -112,9 +112,13 @@ export default class TeamMap extends Vue {
     const info = `<div class="card" style="margin-top: 5px;">
         <div style="padding: 5px 0; font-weight: 400; font-size: 14px;">球队详情</div>
         <div style="font-size: 12px;">${teamDetail.team_name}</div>
-        <div style="margin: 5px 0; font-size: 10px;">${teamDetail.description}</div>
+        <div style="margin: 5px 0; font-size: 10px;">${
+          teamDetail.description
+        }</div>
         <div class="card-bottom" style="margin: 10px 0 5px 0">
-          <span @click="handleTeamDetail(${teamDetail.id})" style="float:right;font-size: 12px; background-color: #303F9F; color: white; padding: 5px; border-radius: 5px;">球队首页</span>
+          <span @click="handleTeamDetail(${
+            teamDetail.id
+          })" style="float:right;font-size: 12px; background-color: #303F9F; color: white; padding: 5px; border-radius: 5px;">球队首页</span>
         </div>
     </div>`;
     this.infoWindow = new AMap.InfoWindow({
@@ -149,8 +153,8 @@ export default class TeamMap extends Vue {
     });
     this.map.add(marker);
   }
-  private handleTeamDetail (teamId: number) {
-    debugger
+  private handleTeamDetail(teamId: number) {
+    debugger;
   }
   private getMapDetail(searchCity: string) {
     MapType.getTeamMap
@@ -204,6 +208,16 @@ $loading_color: #000080;
   background-color: $base_color;
   color: white;
   border-radius: 5px;
+}
+@media screen and (max-width: 450px) {
+  .info {
+    text-align: center;
+    width: 50vw;
+    top: 3vh;
+    left: 5vw;
+    padding: 10px;
+    border-radius: 2px;
+  }
 }
 </style>
 

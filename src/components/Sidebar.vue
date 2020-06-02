@@ -86,7 +86,7 @@ export default class SiderBar extends Vue {
   width: 100vw;
   height: 100vh;
   background: rgba(0, 0, 0, 0.4);
-  z-index: 10;
+  z-index: 100;
 }
 .sider-bar {
   position: fixed;
@@ -96,7 +96,7 @@ export default class SiderBar extends Vue {
   width: 40vw;
   height: 100vh;
   text-align: center;
-  z-index: 11;
+  z-index: 150;
   &-item {
     width: 80%;
     margin: 0 auto;

@@ -34,7 +34,12 @@
         </div>
       </div>
       <!-- 国际赛事 -->
-      <!-- <div class="test"></div> -->
+      <div class="team-map">
+        <div class="team-map-title">球队地图</div>
+        <div class="flex-column-center team-map-content">
+          <div class="team-map-btn" @click="handleRouterBus('teamMap')">球队地图</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -96,6 +101,11 @@ export default class Team extends Vue {
           }
         });
         break;
+      case "teamMap":
+        this.$router.push({
+          path: "/team/map"
+        })
+        break;
     }
   }
 }
@@ -112,7 +122,7 @@ export default class Team extends Vue {
   margin-top: 2vh;
   height: 30vh;
   background-image: url("https://yuegeqiu-mario.oss-cn-beijing.aliyuncs.com/search_bg_main.jpg");
-  background-size: 100%;
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   border-radius: 5px;
@@ -184,15 +194,15 @@ export default class Team extends Vue {
     transform: translateY(-50%);
   }
   &-item {
-      float: left;
-      background-color: $side-color;
-      color: white;
-      font-weight: 500;
-      border-radius: 5px;
-      padding: 5px 10px;
-      margin-bottom: 10px;
-      margin-left: 10px;
-      box-shadow: $basic_shadow;
+    float: left;
+    background-color: $side-color;
+    color: white;
+    font-weight: 500;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    box-shadow: $basic_shadow;
   }
 }
 .hot-match {
@@ -232,11 +242,46 @@ export default class Team extends Vue {
     transform: translateY(-50%);
   }
 }
-.test {
+.team-map {
   width: 40%;
   float: left;
-  height: 500px;
   box-shadow: $basic_shadow;
+  margin: 0 0 2vh 0;
+  &-title {
+    position: relative;
+    box-sizing: border-box;
+    padding: 10px 4%;
+    font-size: 18px;
+    font-weight: 600;
+    border-bottom: 1px solid $border_color;
+    &::before {
+      position: absolute;
+      content: " ";
+      top: 10%;
+      left: 0;
+      width: 2%;
+      height: 80%;
+      background-color: red;
+    }
+  }
+  &-content {
+    height: 30vh;
+    width: 100%;
+    background: url('https://yuegeqiu-mario.oss-cn-beijing.aliyuncs.com/street_map.jpg');
+    background-size: 100% 100%;
+  }
+  &-btn {
+    background-color: $base_color;
+    padding: 10px 0px;
+    width: 40%;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 5px;
+    color: white;
+    letter-spacing: 5px;
+    cursor: pointer;
+  }
 }
 @media screen and (max-width: 450px) {
   .mine-team {
@@ -251,6 +296,10 @@ export default class Team extends Vue {
       height: 40px;
       line-height: 40px;
     }
+  }
+  .team-map {
+    width: 100%;
+    margin-top: 2vh;
   }
 }
 @media screen and (min-width: 451px) {

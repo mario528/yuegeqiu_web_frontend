@@ -6,7 +6,7 @@
         <div class="user-center-left-info">
           <div v-if="!screenModel">
             <div class="flex-row-x-center width-100 user-center-left-icon">
-              <icon-diy :iconPath="userInfo.head_url" :hoverModel="true"></icon-diy>
+              <icon-diy :iconPath="userInfo.head_url" :hoverModel="!screenModel"></icon-diy>
             </div>
             <div class="flex-row-center user-center-left-nickname">
               {{userInfo.nick_name}}
@@ -39,7 +39,7 @@
             <div class="flex-row-between mobile-line">
               <div class="flex-row-y-center user-info-left-mobile">
                 <div class="user-center-left-icon">
-                  <icon-diy :iconPath="userInfo.head_url" :hoverModel="true"></icon-diy>
+                  <icon-diy :iconPath="userInfo.head_url" :hoverModel="!screenModel"></icon-diy>
                 </div>
                 <div class="flex-row-center">
                   <span>{{userInfo.nick_name}}</span>  
@@ -102,7 +102,7 @@ export default class UserCenter extends Vue {
   public userId: string | undefined;
   public token: string | undefined;
   public userInfo = {};
-  public sexIcon!: string;
+  public sexIcon = '';
   private randomKey!: number;
   private friendShipDetail = {}
   @Getter("getScreenModel")
@@ -307,11 +307,11 @@ export default class UserCenter extends Vue {
     border-bottom: 1px solid $border_color;
   }
   .user-info-left-mobile {
-    width: 40%;
+    width: 60%;
     text-align: center;
   }
   .user-info-right-mobile {
-    width: 40%;
+    width: 35%;
   }
   .user-center-left-friend_ship-item {
     height: 60%;
