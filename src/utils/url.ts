@@ -59,6 +59,10 @@ const url = {
 
     GET_TEAM_PAGE_DETAIL: '/api/v1/team',
 
-    GET_TEAM_MAP: '/api/v1/team/map'
+    GET_TEAM_MAP: '/api/v1/team/map',
+
+    CHANGE_TEAM_MEMBER_NUMBER: '/api/v1/team/update/member/number',
+
+    CHANGE_TEAM_MEMBER_POSITION: '/api/v1/team/update/member/position'
 }
 export default url

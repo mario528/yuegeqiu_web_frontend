@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-11 15:56:06
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-11 18:36:06
+ * @LastEditTime: 2020-06-03 15:23:54
  * @Description: file content
  -->
 <template>
@@ -22,6 +22,7 @@ export default class Dialog extends Vue {
   @Prop({default: false}) showDialog !: boolean
   private handleDialog (state: boolean) {
     this.showDialog = state
+    if (!state) this.$emit('closeDialog')
   }
   private stop () {}
 }

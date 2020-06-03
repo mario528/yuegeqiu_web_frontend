@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-04-28 21:06:30
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-02 20:03:50
+ * @LastEditTime: 2020-06-03 14:04:30
  * @Description: file content
  -->
 <template>
@@ -23,7 +23,8 @@
           <div class="team-area-item-description">{{item.description}}</div>
         </div>
         <div class="width-100 empty-tip" v-if="teamList.length == 0">
-          <div>暂未加入任何球队<a @click="handleRouter('teamSearch')">点击搜索球队</a></div>
+          <div>暂未加入任何球队</div>
+          <a @click="handleRouter('teamSearch')">点击搜索球队</a>或<a @click="handleRouter('create_team')">创建球队</a>
         </div>
       </div>
       <!-- 近期活动 -->
@@ -207,13 +208,14 @@ export default class UserCenterTeam extends Vue {
   div {
     font-size: 18px;
     font-weight: 500;
+    margin-bottom: 10px;
   }
   a {
     text-decoration: underline;
     font-size: 14px;
     color: $base_color;
-    margin-left: 10px;
     cursor: pointer;
+    font-weight: 500;
   }
 }
 @keyframes rotate3d {

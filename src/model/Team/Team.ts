@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-04-30 22:08:23
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-01 17:04:25
+ * @LastEditTime: 2020-06-03 16:59:20
  * @Description: file content
  */
 import { Url } from '../../utils/index'
@@ -71,6 +71,16 @@ interface TeamSuggest {
 }
 interface TeamPage {
     user_id: string | number | null;
+}
+interface TeamMemberNumber {
+    user_id: string | number | null;
+    team_number: number;
+    team_id: number | string;
+}
+interface TeamMemberPosition {
+    user_id: string | number | null;
+    team_position: number;
+    team_id: number | string;
 }
 class Team {
     constructor() {}
@@ -194,6 +204,30 @@ class Team {
         return new Promise((reslove, reject) => {
             // @ts-ignore
             this.$http.post(Url.GET_TEAM_PAGE_DETAIL, params).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
+    changeTeamMemberNumber (params: TeamMemberNumber) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.get(Url.CHANGE_TEAM_MEMBER_NUMBER, {
+                params
+            }).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
+    changeTeamMemberPosition (params: TeamMemberPosition) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.get(Url.CHANGE_TEAM_MEMBER_POSITION, {
+                params
+            }).then((res: any) => {
                 reslove(res)
             }).catch((err: any) => {
                 reject(err)

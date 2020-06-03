@@ -55,7 +55,7 @@ import User from '@/model/User/User'
     }
 })
 export default class UserRegisterInfo extends Vue {
-    private pageIndex = 1
+    private pageIndex = 0
     private progressState = 0
     private sexRadio = 1
     private nickName = ''
@@ -195,6 +195,7 @@ export default class UserRegisterInfo extends Vue {
         font-size: 14px;
         cursor: pointer;
         min-width: 100px;
+        border: none;
         &-disable {
             @extend .button-area-btn ;
             background-color: $disable_color;
