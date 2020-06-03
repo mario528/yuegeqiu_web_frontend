@@ -13,13 +13,19 @@
               <img :src="sexIcon" class="user-center-left-sex_icon">
             </div>
             <div class="flex-row-center user-center-left-friend_ship" @click="bindUserFriendShip">
-              <div class="flex-column-y-center user-center-left-friend_ship-item" data-type="attention">
+              <div
+                class="flex-column-y-center user-center-left-friend_ship-item"
+                data-type="attention"
+              >
                 <span data-type="attention">{{friendShipDetail.attention_num}}</span>
                 <div data-type="attention">关注</div>
               </div>
-              <div class="flex-column-y-center user-center-left-friend_ship-item" data-type="follow">
-                  <span data-type="follow">{{friendShipDetail.follow_num}}</span>
-                  <div data-type="follow">粉丝</div>
+              <div
+                class="flex-column-y-center user-center-left-friend_ship-item"
+                data-type="follow"
+              >
+                <span data-type="follow">{{friendShipDetail.follow_num}}</span>
+                <div data-type="follow">粉丝</div>
               </div>
             </div>
             <div class="flex-row-center user-center-left-setting">
@@ -31,7 +37,7 @@
               <img :src="require('@/assets/find_icon.png')" class="user-center-left-setting-icon">
               <img
                 :src="require('@/assets/message_user_center.png')"
-                class="user-center-left-setting-icon"                
+                class="user-center-left-setting-icon"
               >
             </div>
           </div>
@@ -41,9 +47,28 @@
                 <div class="user-center-left-icon">
                   <icon-diy :iconPath="userInfo.head_url" :hoverModel="!screenModel"></icon-diy>
                 </div>
-                <div class="flex-row-center">
-                  <span>{{userInfo.nick_name}}</span>  
-                  <img :src="sexIcon" class="user-center-left-sex_icon">
+                <div class="flex-column">
+                  <div class="flex-row-center">
+                    <span>{{userInfo.nick_name}}</span>
+                    <img :src="sexIcon" class="user-center-left-sex_icon">
+                  </div>
+                  <div>
+                    <div class="flex-row-center user-center-left-setting-mobile">
+                      <img
+                        :src="require('@/assets/setting_user_center.png')"
+                        class="user-center-left-setting-icon-mobile"
+                        @click="handleCenterIcon('updateInfo')"
+                      >
+                      <img
+                        :src="require('@/assets/find_icon.png')"
+                        class="user-center-left-setting-icon-mobile"
+                      >
+                      <img
+                        :src="require('@/assets/message_user_center.png')"
+                        class="user-center-left-setting-icon-mobile"
+                      >
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="flex-row-y-center user-info-right-mobile" @click="bindUserFriendShip">
@@ -102,9 +127,9 @@ export default class UserCenter extends Vue {
   public userId: string | undefined;
   public token: string | undefined;
   public userInfo = {};
-  public sexIcon = '';
+  public sexIcon = "";
   private randomKey!: number;
-  private friendShipDetail = {}
+  private friendShipDetail = {};
   @Getter("getScreenModel")
   private screenModel!: boolean;
   @Watch("$route")
@@ -121,7 +146,7 @@ export default class UserCenter extends Vue {
   }
   created() {
     this.getUserCenterInfo();
-    this.getUserFriendShip()
+    this.getUserFriendShip();
   }
   private getUserCenterInfo() {
     const userType = new UserModel();
@@ -142,7 +167,7 @@ export default class UserCenter extends Vue {
       })
       .catch((error: any) => {});
   }
-  private getUserFriendShip () {
+  private getUserFriendShip() {
     const userType = new UserModel();
     const params = {
       user_id: this.userId
@@ -150,29 +175,29 @@ export default class UserCenter extends Vue {
     userType.getUserFriendShip
       .call(this, params)
       .then((res: any) => {
-        this.friendShipDetail = res.friend_ship
+        this.friendShipDetail = res.friend_ship;
       })
       .catch((error: any) => {});
   }
-  private bindUserFriendShip (event: any) {
-    const type = event.target.dataset.type
+  private bindUserFriendShip(event: any) {
+    const type = event.target.dataset.type;
     this.$router.push({
-      path: '/user/relation',
-      name: 'FriendRelationShip',
+      path: "/user/relation",
+      name: "FriendRelationShip",
       query: {
-        md: type == 'attention' ? '1' : '2',
+        md: type == "attention" ? "1" : "2",
         vi: this.userId as string
       }
-    })
+    });
   }
-  private handleCenterIcon (type: string) {
+  private handleCenterIcon(type: string) {
     switch (type) {
-      case 'updateInfo':
+      case "updateInfo":
         this.$router.push({
-          path: '/user/info/update'
-        })
+          path: "/user/info/update"
+        });
         break;
-    
+
       default:
         break;
     }
@@ -221,6 +246,10 @@ export default class UserCenter extends Vue {
     &-setting {
       height: 50px;
       border-bottom: 1px solid $border_color;
+      &-mobile {
+        @extend .user-center-left-setting;
+        border-bottom: none;
+      }
       &-icon {
         cursor: pointer;
         width: 25px;
@@ -229,6 +258,11 @@ export default class UserCenter extends Vue {
         &:hover {
           width: 30px;
           height: 30px;
+        }
+        &-mobile {
+          @extend .user-center-left-setting-icon;
+          width: 20px;
+          height: 20px;
         }
       }
     }
@@ -327,7 +361,7 @@ export default class UserCenter extends Vue {
     flex-direction: row;
     justify-content: center;
   }
-  
+
   .user-center {
     &-left {
       width: 20%;

@@ -334,6 +334,7 @@ export default class MTeamDetail extends Vue {
 <style lang="scss" scoped>
 .container {
   width: 100vw;
+  overflow-x: hidden;
   min-height: 82vh;
   margin-top: -2vh;
 }

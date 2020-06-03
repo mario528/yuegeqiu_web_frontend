@@ -24,6 +24,9 @@
             v-for="(item, index) in newsList"
             :key="index"
           >{{item.article_title}}</div>
+          <div v-if="newsList.length == 0" class="news-list-empty_tips">
+            暂无热点新闻
+          </div>
         </div>
       </div>
       <div class="width-90 bfc-box">
@@ -292,9 +295,10 @@ export default class Home extends Vue {
   overflow: hidden;
   border-radius: 0px 10px 10px 0px;
   z-index: 1;
+  background-color: #536dfe;
+  position: relative;
   &-line {
     cursor: pointer;
-    background-color: #536dfe;
     color: #ffffff;
     height: calc(100% / 4);
     box-sizing: border-box;
@@ -314,6 +318,16 @@ export default class Home extends Vue {
       background-color: white;
       transform: scaleY(0.5);
     }
+  }
+  &-empty_tips {
+    width: 100%;
+    color: #ffffff;
+    font-weight: 600;
+    letter-spacing: 5px;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: auto;
   }
 }
 .el-carousel__container {

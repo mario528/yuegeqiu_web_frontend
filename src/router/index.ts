@@ -74,7 +74,7 @@ const routes = [
   {
     path: '/user/info/complete',
     name: 'completeInfo',
-    component: () => import('../views/User/UserRegisterInfo.vue'),
+    component: () => import('@/views/User/UserRegisterInfo.vue'),
     meta: {
       title: '完善信息',
       // this page need user login
@@ -84,7 +84,7 @@ const routes = [
   {
     path: '/user/info/update',
     name: 'updateInfo',
-    component: () => import('../views/User/UserUpdateInfo.vue'),
+    component: () => import('@/views/User/UserUpdateInfo.vue'),
     meta: {
       title: '修改个人信息',
       // this page need user login
@@ -94,7 +94,7 @@ const routes = [
   {
     path: '/team/create',
     name: 'createTeam',
-    component: () => import('../views/Team/TeamCreate.vue'),
+    component: () => import('@/views/Team/TeamCreate.vue'),
     meta: {
       title: '创建球队',
       requireAuth: true
@@ -103,7 +103,7 @@ const routes = [
   {
     path: '/team/search',
     name: 'teamSearch',
-    component: () => import('../views/Team/TeamSearch.vue'),
+    component: () => import('@/views/Team/TeamSearch.vue'),
     meta: {
       title: '搜索球队'
     }
@@ -111,7 +111,7 @@ const routes = [
   {
     path: '/team/detail',
     name: 'teamDetail',
-    component: () => import('../views/Team/TeamDetail.vue'),
+    component: () => import('@/views/Team/TeamDetail.vue'),
     meta: {
       title: '球队详情'
     }
@@ -127,7 +127,7 @@ const routes = [
   {
     path: '/team/map',
     name: 'teamMap',
-    component: () => import('../views/TeamMap/TeamMap.vue'),
+    component: () => import('@/views/TeamMap/TeamMap.vue'),
     meta: {
       title: '球队地图'
     }
@@ -135,7 +135,7 @@ const routes = [
   {
     path: '/match/create',
     name: 'createMatch',
-    component: () => import('../views/Match/CreateMatch.vue'),
+    component: () => import('@/views/Match/CreateMatch.vue'),
     meta: {
       title: '创建赛事',
       requireAuth: true
@@ -144,7 +144,7 @@ const routes = [
   {
     path: '/chat',
     name: 'chatHome',
-    component: () => import('../views/Chat/Home.vue'),
+    component: () => import('@/views/Chat/Home.vue'),
     meta: {
       title: '论坛'
     }
@@ -152,7 +152,7 @@ const routes = [
   {
     path: '*',
     name: "notFoundPage",
-    component: () => import('../views/NotFound.vue')
+    component: () => import('@/views/NotFound.vue')
   }
 ]
 
