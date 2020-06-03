@@ -6,7 +6,8 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "start": "vue-cli-service serve",
-    "rm_node_modules": "rm -rf node_modules/"
+    "rm_node_modules": "rm -rf node_modules/",
+    "show_build_report": "vue-cli-service build --report"
   },
   "dependencies": {
     "core-js": "^3.6.4",
