@@ -297,11 +297,9 @@ export default class TeamDetail extends Vue {
   margin-bottom: 2vh;
   border-bottom: 1px solid #eeeeee;
 }
-@media screen and (max-width: 450px) {
-}
 @media screen and (min-width: 451px) {
   .container-box {
-    width: 90%;
+    width: 95%;
     min-height: 800px;
     margin: 0 auto;
     //  BFC

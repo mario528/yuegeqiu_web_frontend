@@ -8,6 +8,7 @@ module.exports = {
   indexPath: 'index.html',
   filenameHashing: true,
   lintOnSave: true,
+  productionSourceMap: false,
   pages: {
     index: {
       entry: 'src/main.ts',
@@ -33,6 +34,8 @@ module.exports = {
       }
     }
   },
+  // webpack-chain
+  // https://github.com/mozilla-neutrino/webpack-chain#getting-started
   chainWebpack: config => {
     config.module
       .rule("eslint")
@@ -49,6 +52,9 @@ module.exports = {
     }
   },
   pluginOptions: {
+    // 自动化导入全局样式表
+    // style-resources-loader
+    // https://github.com/yenshih/style-resources-loader 
     'style-resources-loader': {
       preProcessor: 'scss',
       patterns: [

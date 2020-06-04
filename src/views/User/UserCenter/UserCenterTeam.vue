@@ -24,7 +24,7 @@
         </div>
         <div class="width-100 empty-tip" v-if="teamList.length == 0">
           <div>暂未加入任何球队</div>
-          <a @click="handleRouter('teamSearch')">点击搜索球队</a>或<a @click="handleRouter('create_team')">创建球队</a>
+          <a @click="handleRouter('teamSearch')">点击搜索球队</a><span style="margin: 0 10px">或</span><a @click="handleRouter('create_team')">创建球队</a>
         </div>
       </div>
       <!-- 近期活动 -->

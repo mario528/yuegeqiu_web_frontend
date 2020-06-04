@@ -38,9 +38,9 @@
       </div>
     </el-dialog>
     <div class="team-info">
-      <div class="flex-row-y-center team-state">
+      <div class="flex-row-y-center team-state" @click="handleMemberBtn">
         <img
-          :src="isTeamMember ? require('../../../assets/true.png') : require('../../../assets/join.png')"
+          :src="isTeamMember ? require('@/assets/true.png') : require('@/assets/join.png')"
           class="team-state-icon"
         >
         {{isTeamMember ? '已关注' : '点击关注'}}
@@ -65,17 +65,9 @@
       </el-carousel>
     </div>
     <!-- 球队通告 非队长/管理员-->
-    <div class="flex-row team-inform" v-if="teamRole == 2">
+    <div class="flex-row team-inform">
       <div class="team-inform-title">球队通告</div>
       <div class="team-inform-content">{{teamInfo.team_inform || '暂未发布任何通告'}}</div>
-    </div>
-    <!-- 球队通告 队长/管理员-->
-    <div class="flex-row team-inform" v-if="teamRole != 2">
-      <team-inform
-        :showInfromValue="teamInfo.team_inform"
-        :teamId="teamId"
-        :canEdit="teamRole == 0 || teamRole == 1"
-      ></team-inform>
     </div>
     <!-- 标签页 -->
     <div class="width-100 flex-row team-tab" @click.stop="handleSwitchTab">
@@ -153,7 +145,10 @@
     </div>
     <div class="content" v-show="activityIndex == 2"></div>
     <div class="content" v-show="activityIndex == 3">
-      <div class="width-100 empty-tip" v-if="matchList.length == 0">您的球队暂未参与赛事</div>
+      <div class="width-100 empty-tip" v-if="matchList.length == 0">
+        {{isTeamMember ? '您的' : '该'}}球队暂未参与赛事
+        
+      </div>
     </div>
   </div>
 </template>
@@ -165,7 +160,8 @@ enum Positiontype {
   "后腰",
   "前腰",
   "边锋",
-  "前锋"
+  "前锋",
+  "教练"
 }
 import { Vue, Component } from "vue-property-decorator";
 import { Getter } from "vuex-class";
@@ -329,6 +325,41 @@ export default class MTeamDetail extends Vue {
       this.handleEditDialog(false)
     })
   }
+  private handleMemberBtn() {
+    if (this.isTeamMember) {
+      this.$confirm("离队操作不可撤销，是否继续?", "离队", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        this.handleLeaveTeam();
+      });
+    } else {
+      this.handleJoinTeam();
+    }
+  }
+  private handleJoinTeam() {
+    new TeamType().joinTeam
+      .call(this, {
+        team_id: +this.teamId,
+        user_id: this.userId || (localStorage.getItem("User_ID") as string)
+      })
+      .then((res: any) => {
+        Toast.showToastSuccess.call(this, "加入球队成功", "成功");
+        this.requestTeamDetail();
+      });
+  }
+  private handleLeaveTeam() {
+    new TeamType().departTeam
+      .call(this, {
+        team_id: +this.teamId,
+        user_id: this.userId || (localStorage.getItem("User_ID") as string)
+      })
+      .then((res: any) => {
+        Toast.showToastSuccess.call(this, "离队成功", "成功");
+        this.requestTeamDetail();
+      });
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -468,7 +499,7 @@ export default class MTeamDetail extends Vue {
   width: 96vw;
   margin: 10px auto;
   &-title {
-    width: 20%;
+    width: 25%;
     text-align: center;
     color: $side_color;
     font-weight: 500;
@@ -476,11 +507,12 @@ export default class MTeamDetail extends Vue {
     padding: 5px 0;
   }
   &-content {
-    width: 78%;
+    width: 73%;
     margin-left: 2%;
     padding: 5px 0;
     font-size: 14px;
     font-family: serif;
+    overflow: hidden;
   }
 }
 .member-list {

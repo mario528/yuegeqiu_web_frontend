@@ -10,7 +10,9 @@
                 <div>
                     <div class="flex-row-center sider-bar-brand">
                         <img class="sider-bar-brand-icon" :src="brandIcon" alt="约个球">
-                        <strong class="sider-bar-brand-text">约个球</strong>
+                        <div class="flex-column" style="margin-left: 10px;">
+                          <strong class="sider-bar-brand-text">约个球</strong>
+                        </div>
                     </div>
                     <div
                         class="flex-row-y-center sider-bar-item"
@@ -86,7 +88,7 @@ export default class SiderBar extends Vue {
   width: 100vw;
   height: 100vh;
   background: rgba(0, 0, 0, 0.4);
-  z-index: 100;
+  z-index: 998;
 }
 .sider-bar {
   position: fixed;
@@ -96,15 +98,15 @@ export default class SiderBar extends Vue {
   width: 40vw;
   height: 100vh;
   text-align: center;
-  z-index: 150;
+  z-index: 999;
   &-item {
     width: 80%;
     margin: 0 auto;
     padding: 20px 0;
     border-bottom: 1px solid #eeeeee;
     &-icon {
-      width: 30px;
-      height: 30px;
+      width: 25px;
+      height: 25px;
     }
     &-title {
       font-size: 15px;

@@ -321,6 +321,7 @@ export default class LoginOrRegister extends Vue {
     font-size: 14px;
     font-weight: 500;
     color: $base_color;
+    border-radius: 5px;
     &-available {
       @extend .verification-btn ;
       background-color: $base_color;
@@ -338,6 +339,8 @@ export default class LoginOrRegister extends Vue {
   color: #ffffff;
   font-size: 16px;
   font-weight: 500;
+  border: none;
+  border-radius: 5px;
 }
 .grey-color {
   cursor: pointer;

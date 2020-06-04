@@ -43,11 +43,11 @@
         </div>
       </div>
       <div v-if="isLogin">
-        <el-dropdown trigger="click" size="medium" @command="handleSelectDropDownItem">
+        <el-dropdown trigger="click" size="medium" @command="handleSelectDropDownItem" @visible-change="handleVisibleChange">
           <div class="flex-row-y-center">
             <img class="user-img" :src="userInfo.head_url" /> 
             <div class="user-name">{{userInfo.nick_name.length > 7 ? userInfo.nick_name.slice(0,7) + '...' : userInfo.nick_name || userInfo.telephone}}</div>
-            <img :src="downArrow" class="user-arrow">
+            <img :src="downArrow" :class="[dropDownVisible ? 'user-arrow-up' : 'user-arrow']">
           </div>
           <el-dropdown-menu slot="dropdown" class="dropdown-menu">
             <div class="dropdown-menu-item">{{userInfo.nick_name.length > 7 ? userInfo.nick_name.slice(0,7) + '...' : userInfo.nick_name || userInfo.telephone}}</div>
@@ -111,6 +111,7 @@ export default class Header extends Vue {
   public routePath: any;
   public userInfo = {}
   public isLogin = false
+  public dropDownVisible = false
 
   @Watch("clientWindowWidth")
   onWindowWidthChange(newValue: number, oldValue: number): void {
@@ -224,6 +225,9 @@ export default class Header extends Vue {
         break;
     }
   }
+  private handleVisibleChange (visible: boolean) {
+    this.dropDownVisible = visible
+  }
 }
 </script>
 <style scoped lang="scss">
@@ -239,6 +243,7 @@ export default class Header extends Vue {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  user-select: none;
   // box-shadow: 0 15px 10px #e3f2fd;
   &-slider-icon {
     width: 40px;
@@ -344,6 +349,11 @@ export default class Header extends Vue {
     height: 2vw;
     min-width: 15px;
     min-height: 15px;
+    transition: all 0.3s ease;
+    &-up {
+      @extend .user-arrow;
+      transform: rotate(180deg);
+    }
   }
 }
 .dropdown-menu {

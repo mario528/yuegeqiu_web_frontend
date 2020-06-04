@@ -41,6 +41,8 @@ export default class Mall extends Vue {
   &-icon {
     width: 10vw;
     height: 10vw;
+    min-width: 80px;
+    min-height: 80px;
     margin-bottom: 5vh;
   }
 }
