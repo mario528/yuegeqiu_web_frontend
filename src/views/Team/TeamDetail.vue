@@ -150,7 +150,7 @@
                            v-if="item.role == 0"
                         >
                      </div>
-                     <div class="user-name">{{item.nick_name}}</div>
+                     <div class="user-name">{{item.nick_name | standardNickName}}</div>
                   </div>
                   <div class="user-position-type">前锋</div>
                </div>

@@ -9,7 +9,7 @@
               <icon-diy :iconPath="userInfo.head_url" :hoverModel="!screenModel"></icon-diy>
             </div>
             <div class="flex-row-center user-center-left-nickname">
-              {{userInfo.nick_name}}
+              {{userInfo.nick_name | standardNickName}}
               <img :src="sexIcon" class="user-center-left-sex_icon">
             </div>
             <div class="flex-row-center user-center-left-friend_ship" @click="bindUserFriendShip">

@@ -67,13 +67,12 @@ Vue.mixin({
     this.$event = Vue.$event
   }
 })
-
-import dynamicDirectives from './directive/dynamicDirective'
 // register custom vue-directive
+import dynamicDirectives from './directive/dynamicDirective'
 dynamicDirectives(['inputFilterSpace','inputFocus'])
 // register custom vue-filter
 import dynamicFilter from './filter/dynamicFilter'
-dynamicFilter(['unitStandard'])
+dynamicFilter(['unitStandard', 'standardNickName'])
 // attach fastclick
 // @ts-ignore
 fastClick.attach(document.body)
