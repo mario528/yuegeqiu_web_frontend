@@ -16,7 +16,7 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
   components: {}
 })
 export default class Mall extends Vue {
-  private isOpen !: boolean
+  private isOpen = true
   mounted() {
     this.isOpen = false 
   }

@@ -8,7 +8,7 @@
         <div
           :class="[ smallScreenModel ? 'flex-row carousel-container-small' : 'flex-row carousel-container' ]"
         >
-          <el-carousel class="carousel-box" :interval="5000" arrow="always" height="100%">
+          <el-carousel class="carousel-box" :interval="4000" arrow="always" direction="vertical" height="100%">
             <el-carousel-item v-for="(item, index) in bannerList" :key="index">
               <el-image class="carousel-box-img" :src="item.url" fit="cover" style="width: 100%;">
                 <div slot="error" class="flex-row-center image-slot" style="height: 100%;">
@@ -571,6 +571,9 @@ export default class Home extends Vue {
   opacity: 0;
 }
 @media screen and (max-width: 450px) {
+  .page {
+    margin-top: -2vh;
+  }
   .team-suggest {
     width: 100%;
   }

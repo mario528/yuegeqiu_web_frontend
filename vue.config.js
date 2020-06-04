@@ -17,7 +17,7 @@ module.exports = {
   },
   devServer: {
     host: 'localhost',
-    port: 3000,
+    port: isProductionEnv ? 3000 : 3001,
     https: false,
     hotOnly: false,
     proxy: {
