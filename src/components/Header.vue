@@ -99,10 +99,10 @@ export default class Header extends Vue {
   // @Getter("getLoginState")
   // public isLogin!: boolean;
 
-  public brandIcon: string = require("../assets/brand_icon.png");
-  public commonUserIcon: string = require("../assets/common_user_icon.png")
-  public leftSidebarIcon: string = require("../assets/left_sidebar_icon.png")
-  public downArrow: string = require('../assets/user_arrow.png')
+  public brandIcon: string = require("@/assets/brand_icon.png");
+  public commonUserIcon: string = require("@/assets/common_user_icon.png")
+  public leftSidebarIcon: string = require("@/assets/left_sidebar_icon.png")
+  public downArrow: string = require('@/assets/user_arrow.png')
   public clientWindowWidth = 1440;
   public smallScreenMode = document.body.clientWidth <= 850;
   public domHeight = 75;

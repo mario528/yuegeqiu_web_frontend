@@ -2,21 +2,26 @@
  * @Author: majiaao
  * @Date: 2020-05-07 13:52:27
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-05 14:45:34
+ * @LastEditTime: 2020-06-06 02:45:51
  * @Description: file content
  -->
 <template>
     <div class="team-inform">
-        <div class="team-inform-title">球队通告</div>
-        <div class="team-inform-content" v-show="!isEdit">{{showInfromValue ? showInfromValue : '暂无通告'}}</div>
-        <div class="team-inform-edit-container">
-            <textarea style="border: 1px solid rgba($side-color, 0.8);" class="team-inform-edit" :placeholder="showInfromValue ? showInfromValue : ''" v-show="isEdit" v-model="emitValue" ref="focusTextarea"/>
-            <div :class="[emitLen == maxLen ? 'number-count-down number-count-down-warn' : 'number-count-down']" v-if="isEdit">{{emitLen}}/{{maxLen}}</div>
+        <div class="flex-row-between team-inform-title" @click="handleContentVisible">
+            球队通告
+            <img v-if="showHideModel" :class="[hideContent ? 'down-arrow' : 'down-arrow-up']" :src="downArrow" />
         </div>
-        <div class="width-100 button-area" v-if="canEdit">
-            <div class="button" v-show="!isEdit" @click="showEdit">编辑</div>
-            <div class="button" v-show="isEdit" @click="closeEdit">取消</div>
-            <div class="button" v-show="isEdit" @click="saveEditData">保存</div>
+        <div v-if="(showHideModel && !hideContent) || !showHideModel">
+            <div class="team-inform-content" v-show="!isEdit">{{showInfromValue ? showInfromValue : '暂无通告'}}</div>
+            <div class="team-inform-edit-container" v-show="isEdit">
+                <textarea style="border: 1px solid rgba($side-color, 0.8);" class="team-inform-edit" :placeholder="showInfromValue ? showInfromValue : ''"  v-model="emitValue" ref="focusTextarea"/>
+                <div :class="[emitLen == maxLen ? 'number-count-down number-count-down-warn' : 'number-count-down']">{{emitLen}}/{{maxLen}}</div>
+            </div>
+            <div class="width-100 button-area" v-show="canEdit">
+                <div class="button" v-show="!isEdit" @click="showEdit">编辑</div>
+                <div class="button" v-show="isEdit" @click="closeEdit">取消</div>
+                <div class="button" v-show="isEdit" @click="saveEditData">保存</div>
+            </div>
         </div>
     </div>
 </template>
@@ -31,12 +36,15 @@ export default class TeamCenterInform extends Vue {
     private maxLen = 200
     private emitLen = 0
     private emitValue = ''
+    private hideContent = true
+    private downArrow: string = require('@/assets/user_arrow_black.png')
     @Getter('getUserId')
     private userId !: string
     @Prop({ default: '' }) showInfromValue !: string
     @Prop({ default: -1 }) teamId !: string
     @Prop({ default: false }) canEdit !: boolean 
     @Prop({ default: '' }) contentStyle !: string
+    @Prop({ default: false }) showHideModel !: boolean
     @Watch('emitValue')
     computedEmitValueLen () {
         if (this.emitValue.length >= this.maxLen) this.emitValue = this.emitValue.substring(0, this.maxLen)
@@ -65,7 +73,10 @@ export default class TeamCenterInform extends Vue {
             this.closeEdit()
         })
     }
-
+    private handleContentVisible () {
+        if (!this.showHideModel) return
+        this.hideContent = !this.hideContent
+    }
 }
 </script>
 <style lang="scss" scoped>
@@ -128,6 +139,15 @@ export default class TeamCenterInform extends Vue {
     color: $header_font_color_common;
     &-warn {
         color: red;
+    }
+}
+.down-arrow {
+    width: 25px;
+    height: 25px;
+    transition: all 0.3s ease;
+    &-up {
+        @extend .down-arrow;
+        transform: rotate(180deg);
     }
 }
 </style>

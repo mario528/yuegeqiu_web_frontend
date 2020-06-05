@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-07 21:25:40
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-12 11:38:11
+ * @LastEditTime: 2020-06-06 01:56:14
  * @Description: file content
  -->
  <template>
@@ -48,12 +48,12 @@
             </div>
         </mario-dialog>
         <div class="caleder-title">近期活动</div>
-        <div class="calendar-week-title">
+        <div class="calendar-week-title" v-if="!isMobile">
             <div class="calendar-week-title-item" v-for="(item, index) in weekList" :key="index">
                 {{item}}
             </div>
         </div>
-        <div class="width-100 calendar-area">
+        <div class="width-100 calendar-area" v-if="!isMobile">
             <div class="calendar-area-item-weekend"></div>
             <div class="relativity" v-for="(item, index) in calendarList" :key="index" @mouseover="showCalendarDialog(index)" @mouseleave="hideCalendarDialog(index)">
                 <div :class="[activityIndex == index ? 'calendar-area-item-hover' : item.is_weekend ? 'calendar-area-item-weekend' : 'calendar-area-item']">
@@ -102,6 +102,7 @@ export default class TeamCaleder extends Vue {
   @Prop({ default: () => [] }) dateArray!: string[];
   @Prop({default: () => []}) calendarList!: any[]
   @Prop() teamId!: string
+  @Prop({ default: false }) isMobile !: boolean
   @Getter('getUserId') private userId !: string
   @Inject('reload') private reload!: () => void
   private weekList = ['日','一','二','三','四','五','六']

@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-06-02 20:54:38
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-05 23:29:32
+ * @LastEditTime: 2020-06-06 02:48:22
  * @Description: file content
 --> 
 <template>
@@ -72,7 +72,7 @@
       </el-carousel>
     </div>
     <!-- 球队通告 非队长/管理员-->
-    <div class="flex-row team-inform">
+    <div class="flex-row team-inform" v-if="![0,1].includes(teamRole)">
       <div class="team-inform-title">球队通告</div>
       <div class="team-inform-content">{{teamInfo.team_inform || '暂未发布任何通告'}}</div>
     </div>
@@ -101,11 +101,12 @@
     <!-- 详细内容 -->
     <div class="content" v-show="activityIndex == 0">
       <!-- 可编辑 -->
-      <div class="team-info" v-if="teamRole != 2">
+      <div class="team-inform-edit" v-if="teamRole != 2">
         <team-inform
           :showInfromValue="teamInfo.team_inform"
           :teamId="teamId"
           :canEdit="teamRole == 0 || teamRole == 1"
+          :showHideModel="true"
         ></team-inform>
       </div>
       <div class="title">球队基本资料</div>
@@ -161,7 +162,7 @@
     </div>
     <!-- 近期活动 -->
     <div class="content" v-show="activityIndex == 2">
-      <team-calendar :dateArray="calendar" :calendarList="calendarList" :teamId="teamId"></team-calendar>
+      <team-calendar :dateArray="calendar" :calendarList="calendarList" :teamId="teamId" :isMobile="true"></team-calendar>
     </div>
     <!-- 赛事信息 -->
     <div class="content" v-show="activityIndex == 3">
