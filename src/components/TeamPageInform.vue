@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-07 13:52:27
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-21 13:57:07
+ * @LastEditTime: 2020-06-05 14:45:34
  * @Description: file content
  -->
 <template>
@@ -10,7 +10,7 @@
         <div class="team-inform-title">球队通告</div>
         <div class="team-inform-content" v-show="!isEdit">{{showInfromValue ? showInfromValue : '暂无通告'}}</div>
         <div class="team-inform-edit-container">
-            <textarea class="team-inform-edit" :placeholder="showInfromValue ? showInfromValue : ''" v-show="isEdit" v-model="emitValue" ref="focusTextarea"/>
+            <textarea style="border: 1px solid rgba($side-color, 0.8);" class="team-inform-edit" :placeholder="showInfromValue ? showInfromValue : ''" v-show="isEdit" v-model="emitValue" ref="focusTextarea"/>
             <div :class="[emitLen == maxLen ? 'number-count-down number-count-down-warn' : 'number-count-down']" v-if="isEdit">{{emitLen}}/{{maxLen}}</div>
         </div>
         <div class="width-100 button-area" v-if="canEdit">
@@ -24,9 +24,6 @@
 import { Vue, Component, Watch, Prop } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import Team from '@/model/Team/Team'
-enum Role {
-    
-}
 @Component({
 })
 export default class TeamCenterInform extends Vue {
@@ -39,6 +36,7 @@ export default class TeamCenterInform extends Vue {
     @Prop({ default: '' }) showInfromValue !: string
     @Prop({ default: -1 }) teamId !: string
     @Prop({ default: false }) canEdit !: boolean 
+    @Prop({ default: '' }) contentStyle !: string
     @Watch('emitValue')
     computedEmitValueLen () {
         if (this.emitValue.length >= this.maxLen) this.emitValue = this.emitValue.substring(0, this.maxLen)
@@ -89,6 +87,7 @@ export default class TeamCenterInform extends Vue {
         color: #333333;
         border-radius: 5px;
         line-height: 18px;
+        border: 1px solid rgba($side-color, 0.5);
     }
     &-edit-container {
         position: relative;
@@ -105,6 +104,7 @@ export default class TeamCenterInform extends Vue {
         font-size: 16px;
         box-sizing: border-box;
         line-height: 18px;
+        border: 1px solid rgba($side-color, 0.5);
     }
 }
 .button-area {

@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-06-02 20:54:38
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-03 17:55:02
+ * @LastEditTime: 2020-06-05 23:29:32
  * @Description: file content
 --> 
 <template>
@@ -26,14 +26,21 @@
           </div>
           <div v-show="tagIndex == 1">
             <div class="number-area" @click.stop="handleSelectNumber">
-              <div :class="[!disabledNumberList.includes(item) ? 'number-area-item' : selectNumber == item ? 'number-area-item-selected' : 'number-area-item-disable']" v-for="(item, index) in 50" :key="index" data-avaiable="!disabledNumberList.includes(item)" :data-teamNumber="item">
-                {{item}}
-              </div>
+              <div
+                :class="[!disabledNumberList.includes(item) ? 'number-area-item' : selectNumber == item ? 'number-area-item-selected' : 'number-area-item-disable']"
+                v-for="(item, index) in 50"
+                :key="index"
+                data-avaiable="!disabledNumberList.includes(item)"
+                :data-teamNumber="item"
+              >{{item}}</div>
             </div>
           </div>
         </div>
         <div class="width-100 flex-row-x-center">
-          <span class="tag-content-btn" @click="handleDialogBtn">修改{{(tagIndex == 1 && selectNumber != -1 ? '号码:' + selectNumber : '')}}</span>
+          <span
+            class="tag-content-btn"
+            @click="handleDialogBtn"
+          >修改{{(tagIndex == 1 && selectNumber != -1 ? '号码:' + selectNumber : '')}}</span>
         </div>
       </div>
     </el-dialog>
@@ -93,6 +100,14 @@
     </div>
     <!-- 详细内容 -->
     <div class="content" v-show="activityIndex == 0">
+      <!-- 可编辑 -->
+      <div class="team-info" v-if="teamRole != 2">
+        <team-inform
+          :showInfromValue="teamInfo.team_inform"
+          :teamId="teamId"
+          :canEdit="teamRole == 0 || teamRole == 1"
+        ></team-inform>
+      </div>
       <div class="title">球队基本资料</div>
       <div class="flex-row-y-center detail-line">
         <div class="detail-line-title">球队地区</div>
@@ -109,6 +124,7 @@
         </div>
       </div>
     </div>
+    <!-- 成员列表 -->
     <div class="content" v-show="activityIndex == 1">
       <div class="div.member-list">
         <div class="flex-row member-list-head">
@@ -143,11 +159,18 @@
         </div>
       </div>
     </div>
-    <div class="content" v-show="activityIndex == 2"></div>
+    <!-- 近期活动 -->
+    <div class="content" v-show="activityIndex == 2">
+      <team-calendar :dateArray="calendar" :calendarList="calendarList" :teamId="teamId"></team-calendar>
+    </div>
+    <!-- 赛事信息 -->
     <div class="content" v-show="activityIndex == 3">
       <div class="width-100 empty-tip" v-if="matchList.length == 0">
         {{isTeamMember ? '您的' : '该'}}球队暂未参与赛事
-        
+        <div class="flex-row-x-center width-50 animation-area">
+          <div class="create-match">创建赛事</div>
+          <div class="match-square">赛事广场</div>
+        </div>
       </div>
     </div>
   </div>
@@ -168,12 +191,14 @@ import { Getter } from "vuex-class";
 import TeamType from "@/model/Team/Team";
 import TeamCenterInform from "@/components/TeamPageInform.vue";
 import Dialog from "@/components/Dialog/DialogComponent.vue";
-import Team from '@/model/Team/Team'
-import { Toast } from '@/utils/index'
+import TeamCalendar from "@/components/TeamCalendar.vue";
+import Team from "@/model/Team/Team";
+import { Toast } from "@/utils/index";
 @Component({
   components: {
     "team-inform": TeamCenterInform,
-    "el-dialog": Dialog
+    "el-dialog": Dialog,
+    "team-calendar": TeamCalendar
   }
 })
 export default class MTeamDetail extends Vue {
@@ -200,31 +225,41 @@ export default class MTeamDetail extends Vue {
   private tagIndex = 0;
   private tagOptions = [
     {
-      value: '门将',
+      value: "门将",
       type: 0
-    },{
-      value: '边后卫',
+    },
+    {
+      value: "边后卫",
       type: 1
-    },{
-      value: '中后卫',
+    },
+    {
+      value: "中后卫",
       type: 2
-    },{
-      value: '后腰',
+    },
+    {
+      value: "后腰",
       type: 3
-    },{
-      value: '前腰',
+    },
+    {
+      value: "前腰",
       type: 4
-    },{
-      value: '边锋',
+    },
+    {
+      value: "边锋",
       type: 5
-    },{
-      value: '前锋',
+    },
+    {
+      value: "前锋",
       type: 6
+    },
+    {
+      value: "教练",
+      type: 7
     }
-  ]
+  ];
   private positionType = 6;
   private disabledNumberList = [];
-  private selectNumber = -1
+  private selectNumber = -1;
   mounted() {
     this.teamId = +this.$route.query.td;
     this.requestTeamDetail();
@@ -256,7 +291,7 @@ export default class MTeamDetail extends Vue {
         if (item.team_number != null) {
           // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
           // @ts-ignore
-          this.disabledNumberList.push(item.team_number)
+          this.disabledNumberList.push(item.team_number);
         }
       });
       this.teamInfo = team_info;
@@ -284,46 +319,50 @@ export default class MTeamDetail extends Vue {
     this.showEditDialog = state;
   }
   private handleSwitchTag(event: any) {
-    const tagIndex = +event.target.dataset.tag
-    this.tagIndex = tagIndex
-    this.selectNumber = 0
-    this.positionType = 6
+    const tagIndex = +event.target.dataset.tag;
+    this.tagIndex = tagIndex;
+    this.selectNumber = 0;
+    this.positionType = 6;
   }
-  private handleSelectNumber (event: any) {
+  private handleSelectNumber(event: any) {
     const { avaiable, teamnumber } = event.target.dataset;
-    if (!avaiable) return
-    this.selectNumber = +teamnumber
+    if (!avaiable) return;
+    this.selectNumber = +teamnumber;
   }
-  private handleDialogBtn () {
+  private handleDialogBtn() {
     if (this.tagIndex == 0) {
-      this.handleSwitchTeamPosition()
-    }else {
-      this.handleSwitchTeamNumber()
+      this.handleSwitchTeamPosition();
+    } else {
+      this.handleSwitchTeamNumber();
     }
   }
-  private handleSwitchTeamNumber () {
-    if (this.selectNumber == -1) return
-    new Team().changeTeamMemberNumber.call(this, {
-      user_id: this.userId || localStorage.getItem('User_ID'),
-      team_number: this.selectNumber,
-      team_id: this.teamId 
-    }).then((res: any) => {
-      Toast.showToastSuccess.call(this, '修改成功')
-      this.requestTeamDetail()
-      this.handleEditDialog(false)
-    })
+  private handleSwitchTeamNumber() {
+    if (this.selectNumber == -1) return;
+    new Team().changeTeamMemberNumber
+      .call(this, {
+        user_id: this.userId || localStorage.getItem("User_ID"),
+        team_number: this.selectNumber,
+        team_id: this.teamId
+      })
+      .then((res: any) => {
+        Toast.showToastSuccess.call(this, "修改成功");
+        this.requestTeamDetail();
+        this.handleEditDialog(false);
+      });
   }
-  private handleSwitchTeamPosition () {
-    if (!this.positionType) return 
-    new Team().changeTeamMemberPosition.call(this, {
-      user_id: this.userId || localStorage.getItem('User_ID'),
-      team_position: +this.positionType,
-      team_id: this.teamId
-    }).then((res: any) => {
-      Toast.showToastSuccess.call(this, '修改成功')
-      this.requestTeamDetail()
-      this.handleEditDialog(false)
-    })
+  private handleSwitchTeamPosition() {
+    if (!this.positionType) return;
+    new Team().changeTeamMemberPosition
+      .call(this, {
+        user_id: this.userId || localStorage.getItem("User_ID"),
+        team_position: +this.positionType,
+        team_id: this.teamId
+      })
+      .then((res: any) => {
+        Toast.showToastSuccess.call(this, "修改成功");
+        this.requestTeamDetail();
+        this.handleEditDialog(false);
+      });
   }
   private handleMemberBtn() {
     if (this.isTeamMember) {
@@ -460,7 +499,7 @@ export default class MTeamDetail extends Vue {
 }
 .title {
   width: 100%;
-  padding: 5px;
+  padding: 10px 5px;
   box-sizing: border-box;
   background-color: rgba(#eeeeee, 0.4);
   color: #909399;
@@ -607,13 +646,77 @@ export default class MTeamDetail extends Vue {
   z-index: 50;
   &-disable {
     @extend .number-area-item;
-    background-color: #C0C4CC;
+    background-color: #c0c4cc;
     color: white;
   }
   &-selected {
     @extend .number-area-item;
-    background-color: #F56C6C;
+    background-color: #f56c6c;
     color: white;
+  }
+}
+.animation-area {
+  position: relative;
+  margin: 0 auto;
+  height: 10vh;
+}
+.match-square {
+  width: 50%;
+  height: 5vh;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: match_square_anim 2s ease;
+  animation-fill-mode: forwards;
+  background-color: #1e90ff;
+  color: white;
+  line-height: 5vh;
+  border-radius: 5px;
+}
+.create-match {
+  width: 50%;
+  height: 5vh;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: red;
+  animation: create_match_anim 2s ease;
+  animation-fill-mode: forwards;
+  color: white;
+  line-height: 5vh;
+  border-radius: 5px;
+}
+// TODO 卡顿
+@keyframes match_square_anim {
+  0% {
+    opacity: 0;
+  }
+  80% {
+    left: 20%;
+    top: 0%;
+    opacity: 0.8;
+  }
+  100% {
+    left: 20%;
+    top: 30px;
+    opacity: 1;
+  }
+}
+@keyframes create_match_anim {
+  0% {
+    opacity: 0;
+  }
+  80% {
+    left: 80%;
+    top: 0%;
+    opacity: 0.8;
+  }
+  100% {
+    left: 80%;
+    top: 30px;
+    opacity: 1;
   }
 }
 </style>
