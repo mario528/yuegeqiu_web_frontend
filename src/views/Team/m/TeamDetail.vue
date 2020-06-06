@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-06-02 20:54:38
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-06 02:48:22
+ * @LastEditTime: 2020-06-07 01:25:01
  * @Description: file content
 --> 
 <template>
@@ -431,6 +431,31 @@ export default class MTeamDetail extends Vue {
   height: 100%;
   background-color: rgba($side-color, 0.8);
   z-index: 100;
+  &:before, &:after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    min-width: 300vw;
+    min-height: 300vw;
+    background-color: rgba($side-color, 0.6);
+    animation-name: wave;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    z-index: -1;
+  }
+  &:before {
+    bottom: 15vh;
+    border-radius: 45%;
+    animation-duration: 10s;
+  }
+  &:after {
+    min-width: 250vw;
+    min-height: 250vw;
+    bottom: 10vh;
+    opacity: .5;
+    border-radius: 47%;
+    animation-duration: 10s;
+  }
 }
 .carousel-box ::v-deep .el-carousel__item.is-active {
   z-index: -1;
@@ -718,6 +743,17 @@ export default class MTeamDetail extends Vue {
     left: 80%;
     top: 30px;
     opacity: 1;
+  }
+}
+@keyframes wave {
+  0% {
+      transform: translate(-50%, 0) rotateZ(0deg);
+  }
+  50% {
+      transform: translate(-50%, -2%) rotateZ(180deg);
+  }
+  100% {
+      transform: translate(-50%, 0%) rotateZ(360deg);
   }
 }
 </style>
