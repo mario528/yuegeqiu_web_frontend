@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-07 21:25:40
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-06 01:56:14
+ * @LastEditTime: 2020-06-08 14:41:21
  * @Description: file content
  -->
  <template>
@@ -47,13 +47,16 @@
                 <span class="dialog-footer-btn" @click="handlePublishAvtivity">发布</span>
             </div>
         </mario-dialog>
-        <div class="caleder-title">近期活动</div>
-        <div class="calendar-week-title" v-if="!isMobile">
-            <div class="calendar-week-title-item" v-for="(item, index) in weekList" :key="index">
+        <div class="flex-row-between caleder-title" @click="handleContentVisible">
+            近期活动
+            <img v-if="showHideModel" :class="[hideContent ? 'down-arrow' : 'down-arrow-up']" :src="downArrow" />
+        </div>
+        <div class="calendar-week-title" v-if="!isMobile && (showHideModel && !hideContent) || !showHideModel">
+            <div :style="{'background-color': baseColor}" class="calendar-week-title-item" v-for="(item, index) in weekList" :key="index">
                 {{item}}
             </div>
         </div>
-        <div class="width-100 calendar-area" v-if="!isMobile">
+        <div class="width-100 calendar-area" v-if="!isMobile && (showHideModel && !hideContent) || !showHideModel">
             <div class="calendar-area-item-weekend"></div>
             <div class="relativity" v-for="(item, index) in calendarList" :key="index" @mouseover="showCalendarDialog(index)" @mouseleave="hideCalendarDialog(index)">
                 <div :class="[activityIndex == index ? 'calendar-area-item-hover' : item.is_weekend ? 'calendar-area-item-weekend' : 'calendar-area-item']">
@@ -103,6 +106,8 @@ export default class TeamCaleder extends Vue {
   @Prop({default: () => []}) calendarList!: any[]
   @Prop() teamId!: string
   @Prop({ default: false }) isMobile !: boolean
+  @Prop({ default: false }) showHideModel !: boolean
+  @Prop({ default: false }) hideContent !: boolean
   @Getter('getUserId') private userId !: string
   @Inject('reload') private reload!: () => void
   private weekList = ['日','一','二','三','四','五','六']
@@ -118,6 +123,7 @@ export default class TeamCaleder extends Vue {
       },
       detail: ""
   }
+  private downArrow: string = require('@/assets/user_arrow_black.png')
   private showCalendarDialog (index: number) {
        if (this.calendarList[index].is_pass) return
        this.$nextTick(()=> {
@@ -184,6 +190,10 @@ export default class TeamCaleder extends Vue {
           this.reload()
       })
   }
+  private handleContentVisible () {
+    if (!this.showHideModel) return
+    this.hideContent = !this.hideContent
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -198,7 +208,7 @@ export default class TeamCaleder extends Vue {
     grid-template-columns: repeat(auto-fill, calc(100% / 7));
     margin-bottom: 10px;
     &-item {
-        padding: 20px 0;
+        padding: 20px 10px;
         background-color: $side-color;
         font-weight: 500;
         color: $base_font_color;
@@ -385,6 +395,15 @@ export default class TeamCaleder extends Vue {
     color: white;
     padding: 5px 20px;
     border-radius: 5px;
+}
+.down-arrow {
+    width: 25px;
+    height: 25px;
+    transition: all 0.3s ease;
+    &-up {
+        @extend .down-arrow;
+        transform: rotate(180deg);
+    }
 }
 </style>
 

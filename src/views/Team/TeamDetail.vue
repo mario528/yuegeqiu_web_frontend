@@ -2,168 +2,140 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-03 14:27:26
+ * @LastEditTime: 2020-06-08 15:41:55
  * @Description: file content
  -->
 <template>
-   <div class="container">
-      <div class="container-box">
-         <div class="container-main">
-            <div class="main-content">
-               <!-- 球队信息 -->
-               <div class="width-100 flex-row-between team-troduction">
-                  <div>
-                     <div class="team-troduction-name">{{teamInfo.team_name}}</div>
-                     <div class="team-troduction-description">{{teamInfo.description}}</div>
-                  </div>
-                  <div
-                     :class="[isTeamMember ? 'flex-row-y-center team-troduction-state' : 'flex-row-y-center team-troduction-state team-troduction-state-disable']"
-                     @click="handleMemberBtn"
-                  >
-                     <img
-                        :src="isTeamMember ? require('../../assets/true.png') : require('../../assets/join.png')"
-                        class="team-troduction-state-icon"
-                     >
-                     {{isTeamMember ? '已加入' : '加入球队'}}
-                  </div>
-               </div>
-               <!-- 球队通告 -->
-               <div class="width-100">
-                  <team-inform
-                     :showInfromValue="teamInfo.team_inform"
-                     :teamId="teamId"
-                     :canEdit="teamRole == 0 || teamRole == 1"
-                  ></team-inform>
-               </div>
-               <!-- 球队赛事 -->
-               <div class="width-100">
-                  <div class="content-title">球队赛事</div>
-                  <div class="width-100 match-content">
-                     <el-table :data="matchList" style="width: 100%">
-                        <div slot="empty">
-                           <div>您的球队暂未参加赛事</div>
-                        </div>
-                        <el-table-column label="赛事名" prop="match_name"></el-table-column>
-                        <el-table-column label="比赛类型" prop="match_property"></el-table-column>
-                        <el-table-column label="比赛类型" prop="match_type"></el-table-column>
-                        <el-table-column type="expand">
-                           <template slot-scope="props">
-                              <el-form label-position="left" inline>
-                                 <el-form-item label="开始时间">
-                                    <span>{{ props.row.start_time }}</span>
-                                 </el-form-item>
-                                 <el-form-item label="结束时间">
-                                    <span>{{ props.row.end_time }}</span>
-                                 </el-form-item>
-                              </el-form>
-                           </template>
-                        </el-table-column>
-                     </el-table>
-                  </div>
-               </div>
-               <!-- 球队日历 -->
-               <div class="width-100 team-calendar-container">
-                  <team-calendar
-                     :dateArray="calendar"
-                     :calendarList="calendarList"
-                     :teamId="teamId"
-                  ></team-calendar>
-               </div>
+  <div class="team-detail_container">
+    <up-arrow></up-arrow>
+    <div class="width-100 flex-column team-detail-content">
+      <!-- 球队详情 -->
+      <div class="width-100 flex-row team-info">
+        <img
+          src="https://yuegeqiu-mario.oss-cn-beijing.aliyuncs.com/4fd3026cc54fe450787965c631f63c02.jpg"
+          class="team-info-icon"
+        >
+        <div class="flex-column-y-center team-info-detail">
+          <div class="team-info-name">{{teamInfo.team_name}}</div>
+          <div class="team-info-description">{{teamInfo.description}}</div>
+          <div class="flex-row-y-center team-address">
+            <span class="team-address-title">活动区域</span>
+            <div class="flex-row">
+              <span
+                class="team-location team-province"
+                v-if="teamInfo.province != teamInfo.city"
+              >{{teamInfo.province}}</span>
+              <span class="team-location team-city">{{teamInfo.city}}</span>
+              <span class="team-location team-district">{{teamInfo.district}}</span>
             </div>
-         </div>
-         <div class="container-left">
-            <div class="flex-row-center team-icon">
-               <!-- <img id="team-icon" :src="teamInfo.team_icon"> -->
-               <div id="team-icon">
-                  <mario-icon
-                     :iconPath="teamInfo.team_icon"
-                     :hoverModel="true"
-                     @uploadRequest="uploadRequest"
-                  ></mario-icon>
-               </div>
-            </div>
-            <div class="team-info">
-               <div class="flex-row-y-center team-info-line">
-                  <div class="team-info-line-title">主场球衣</div>
-                  <team-shirt
-                     canvasId="home-team-shirt"
-                     :baseColor="teamInfo.home_court_color"
-                     :another="teamInfo.away_court_color"
-                     :canvasWidth="50"
-                     :canvasHeight="50"
-                  ></team-shirt>
-               </div>
-               <div class="flex-row-y-center team-info-line">
-                  <div class="team-info-line-title">客场球衣</div>
-                  <team-shirt
-                     canvasId="away-team-shirt"
-                     :baseColor="teamInfo.away_court_color"
-                     :another="teamInfo.home_court_color"
-                     :canvasWidth="50"
-                     :canvasHeight="50"
-                  ></team-shirt>
-               </div>
-               <div
-                  class="flex-row-y-center team-info-line"
-                  v-show="teamInfo.city != teamInfo.province && showMoreInfo"
-               >
-                  <div class="team-info-line-title">省市</div>
-                  <div class="team-info-line-content">{{teamInfo.province}}</div>
-               </div>
-               <div class="flex-row-y-center team-info-line">
-                  <div class="team-info-line-title">城市</div>
-                  <div class="team-info-line-content">{{teamInfo.city}}</div>
-               </div>
-               <div class="flex-row-y-center team-info-line" v-show="showMoreInfo">
-                  <div class="team-info-line-title">区域</div>
-                  <div class="team-info-line-content">{{teamInfo.district}}</div>
-               </div>
-               <div class="show-slider">
-                  <img
-                     @click="showMoreInfo = !showMoreInfo"
-                     :class="[showMoreInfo ? 'show-slider-icon arrow-down' : 'show-slider-icon arrow-up']"
-                     :src="require('@/assets/slider_icon.png')"
-                     alt=""
-                  >
-               </div>
-            </div>
-         </div>
-         <div class="container-right">
-            <div class="team-user-title">球员列表</div>
-            <div class="team-user-list">
-               <div class="team-user-list-title">
-                  <div class="team-user-list-title-item">用户名</div>
-                  <div class="team-user-list-title-item">位置</div>
-               </div>
-               <div
-                  class="flex-row-y-center team-user-list-item"
-                  v-for="(item, index) in teamMember"
-                  :key="index"
-                  @click="handleUserCenter(item.id)"
-               >
-                  <div class="flex-row-y-center team-user-list-item-left">
-                     <div class="user-icon-area">
-                        <img :src="item.head_url" class="user-icon">
-                        <img
-                           :src="require('../../assets/caption.png')"
-                           class="caption-icon"
-                           v-if="item.role == 0"
-                        >
-                     </div>
-                     <div class="user-name">{{item.nick_name | standardNickName}}</div>
-                  </div>
-                  <div class="user-position-type">前锋</div>
-               </div>
-            </div>
-         </div>
+          </div>
+        </div>
       </div>
-   </div>
+      <!-- 通告 -->
+      <div
+        class="width-100 flex-row team-inform-container"
+        v-if="isTeamMember && teamRole && ![0,1].includes(teamRole)"
+      >
+        <div class="team-inform-btn">通告</div>
+        <div refs="teamInformContainer" class="flex-row-y-center team-inform-content">
+          <span ref="teamInform">{{teamInfo.team_inform}}</span>
+        </div>
+      </div>
+      <!-- 编辑通告 -->
+      <div class="team-line" v-if="isTeamMember && [0,1].includes(teamRole)">
+        <div class="width-100">
+          <team-inform
+            :showInfromValue="teamInfo.team_inform"
+            :teamId="teamId"
+            :canEdit="teamRole == 0 || teamRole == 1"
+            :baseColor="'#303F9F'"
+          ></team-inform>
+        </div>
+      </div>
+      <!-- 球队活动 -->
+      <div class="width-100 team-line">
+        <team-calendar :dateArray="calendar" :calendarList="calendarList" :teamId="teamId"></team-calendar>
+      </div>
+      <!-- 球队赛事 -->
+      <div class="team-line width-100" style="padding-bottom: 20px;">
+        <div class="flex-row-between content-title">球队赛事</div>
+        <div class="width-100 match-content" v-show="!pageConfig._hideMatch">
+          <el-table :data="matchList" style="width: 100%">
+            <div slot="empty">
+              <div>您的球队暂未参加赛事</div>
+            </div>
+            <el-table-column label="赛事名" prop="match_name"></el-table-column>
+            <el-table-column label="比赛类型" prop="match_property"></el-table-column>
+            <el-table-column label="比赛类型" prop="match_type"></el-table-column>
+            <el-table-column type="expand">
+              <template slot-scope="props">
+                <el-form label-position="left" inline>
+                  <el-form-item label="开始时间">
+                    <span>{{ props.row.start_time }}</span>
+                  </el-form-item>
+                  <el-form-item label="结束时间">
+                    <span>{{ props.row.end_time }}</span>
+                  </el-form-item>
+                </el-form>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+      </div>
+    </div>
+    <div class="team-detail-member_list">
+      <div class="nav-title">球队成员</div>
+      <div class="flex-row member-list-header">
+        <div class="member-list-item list-number">号码</div>
+        <div class="member-list-item list-nick_name">用户名</div>
+        <div class="member-list-item list-position">位置</div>
+        <div class="member-list-item list-role">身份</div>
+        <div
+          class="member-list-item list-edit"
+          v-if="isTeamMember && teamRole && [0,1].includes(teamRole)"
+        >编辑</div>
+      </div>
+      <div class="flex-column member-list-content">
+        <div class="flex-row member-list-line" v-for="(item, index) in teamMember" :key="index">
+          <div class="member-list-item list-number flex-row-y-center">{{item.team_number}}</div>
+          <div class="member-list-item list-nick_name flex-row-y-center">
+            <img :src="item.head_url" class="list-user_icon">
+            <span style="margin-left: 5px;">{{item.nick_name}}</span>
+          </div>
+          <div class="member-list-item list-position flex-row-y-center">{{item.team_position}}</div>
+          <div
+            class="member-list-item list-role flex-row-y-center"
+          >{{item.role == 0 ? '队长' : item.role == 1 ? '副队长' : '球员'}}</div>
+          <div
+            class="member-list-item list-edit flex-row-y-center"
+            v-if="isTeamMember && teamRole && [0,1].includes(teamRole)"
+          >编辑</div>
+        </div>
+      </div>
+      <!-- 球队地图 -->
+      <div class="nav-title" style="margin-top: 5vh">活动位置</div>
+      <div id="team-map"></div>
+    </div>
+  </div>
 </template>
 <script lang="ts">
+enum Positiontype {
+  "门将",
+  "边后卫",
+  "中后卫",
+  "后腰",
+  "前腰",
+  "边锋",
+  "前锋",
+  "教练"
+}
 /* eslint-disable @typescript-eslint/camelcase */
 import { Vue, Component } from "vue-property-decorator";
 import { State, Getter } from "vuex-class";
-import { Toast, TimeFormate } from "@/utils/index";
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// @ts-ignore
+import AMap from "AMap";
+import { Toast, TimeFormate, MapUtils } from "@/utils/index";
 import TeamType from "@/model/Team/Team";
 import TeamShirt from "@/components/TeamShirt.vue";
 import TeamCenterInform from "@/components/TeamPageInform.vue";
@@ -180,20 +152,33 @@ import IconDIY from "@/components/IconDiy.vue";
 export default class TeamDetail extends Vue {
   @Getter("getUserId")
   public userId!: string | number;
-
+  public map!: any;
   public teamId!: string | number;
   public teamInfo: object = {};
   public teamMember: object = {};
   public showMoreInfo = false;
   public calendar!: string[];
-  public calendarList!: [];
-  public isTeamMember!: boolean;
+  public calendarList = [];
+  public isTeamMember = false;
   public teamRole!: null | number;
   public matchList = [];
-
+  private positionType = 6;
+  private disabledNumberList = [];
+  private pageConfig = {
+    _hideMatch: false
+  };
+  private downArrow: string = require("@/assets/user_arrow_black.png");
   mounted() {
+    const that = this;
     this.teamId = +this.$route.query.td;
     this.requestTeamDetail();
+    this.map = new AMap.Map("team-map", {
+      resizeEnable: true,
+      mapStyle: "amap://styles/fresh",
+      zooms: [10, 16],
+      loadComplete: false
+    });
+    this.map.setFeatures(["point", "road", "building", "bg"]);
   }
   private requestTeamDetail() {
     const teamType = new TeamType();
@@ -210,6 +195,16 @@ export default class TeamDetail extends Vue {
         team_role,
         match_list
       } = res;
+      team_member.forEach((item: any) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // @ts-ignore
+        item.team_position = Positiontype[item.team_position];
+        if (item.team_number != null) {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+          // @ts-ignore
+          this.disabledNumberList.push(item.team_number);
+        }
+      });
       this.teamInfo = team_info;
       this.teamMember = team_member;
       this.isTeamMember = is_member;
@@ -220,18 +215,36 @@ export default class TeamDetail extends Vue {
         item.loading = true;
         return item;
       });
-      // this.matchList = match_list.map((item: any) => {
-      //   item.start_time = new TimeFormate(
-      //     new Date(item.start_time)
-      //   ).formateTime("YYYY-MM-DD");
-      //   item.end_time = new TimeFormate(new Date(item.end_time)).formateTime(
-      //     "YYYY-MM-DD"
-      //   );
-      //   item.match_property = item.match_property == 0 ? '友谊赛' : '正式比赛'
-      //   item.match_type = item.match_type == 0 ? '五人制' : item.match_type == 1 ? '七人制' : '十一人制'
-      //   return item;
-      // });
+      if (
+        this.isTeamMember &&
+        this.teamRole &&
+        ![0, 1].includes(this.teamRole)
+      ) {
+        this.$nextTick(() => {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+          // @ts-ignore
+          const contentWidth = this.$refs.teamInform.scrollWidth;
+          // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+          // @ts-ignore
+          const containerWidth = document.body.clientWidth * 0.8 * 0.55 * 0.9;
+          if (contentWidth < containerWidth) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+            // @ts-ignore
+            this.$refs.teamInform.style = "animation: none;";
+          }
+        });
+      }
       document.title = team_info.team_name;
+      const marker = new AMap.Marker({
+        size: new AMap.Size(20, 20),
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // @ts-ignore
+        title: this.teamInfo.team_name,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // @ts-ignore
+        position: [this.teamInfo.longitude, this.teamInfo.latitude]
+      });
+      this.map.add(marker)
     });
   }
   private uploadRequest(fileFormData: any) {
@@ -285,6 +298,11 @@ export default class TeamDetail extends Vue {
         this.requestTeamDetail();
       });
   }
+  private handleContentVisibleByType(type: any) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
+    this.pageConfig._hideMatch = !this.pageConfig._hideMatch;
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -293,228 +311,176 @@ export default class TeamDetail extends Vue {
   padding: 0;
   box-sizing: border-box;
 }
-.container {
-  margin-bottom: 2vh;
-  border-bottom: 1px solid #eeeeee;
-}
-@media screen and (min-width: 451px) {
-  .container-box {
-    width: 95%;
-    min-height: 800px;
-    margin: 0 auto;
-    //  BFC
-    overflow: hidden;
+.team-detail {
+  &_container {
+    width: 80vw;
+    margin: 0px auto;
+    background-color: blue;
   }
-  .container-main,
-  .container-left,
-  .container-right {
+  &-content {
     float: left;
+    width: 55%;
+    margin-bottom: 15px;
   }
-  .container-main {
-    box-sizing: border-box;
+  &-member_list {
+    float: left;
+    margin-left: 5%;
+    width: 40%;
+  }
+}
+.nav-title {
+  background: linear-gradient(
+    -45deg,
+    rgba($base-color, 0.6) 50%,
+    $base-color 50%
+  );
+  padding: 8px;
+  color: white;
+  font-weight: 500;
+  border-radius: 5px;
+}
+.member-list {
+  &-header {
     width: 100%;
-    min-width: 400px;
-    min-height: 800px;
-    padding: 0 10vw;
-    background-color: $shallow_grey_color;
-    text-align: center;
+    border-bottom: 1px solid #eeeeee;
   }
-  .container-left {
-    box-sizing: border-box;
-    width: 15vw;
-    min-width: 100px;
-    height: 100%;
-    min-height: 800px;
-    background-color: $side-color;
-    margin-left: -100%;
-    border-right: 1px solid $high_light_color;
-    color: white;
-    font-weight: 600;
-  }
-  .container-right {
-    box-sizing: border-box;
-    width: 15vw;
-    min-width: 100px;
-    height: 100%;
-    min-height: 800px;
-    margin-left: -15vw;
-    background-color: $side-color;
-    border-left: 1px solid $high_light_color;
-    color: white;
-  }
-  .team-icon {
-    width: 100%;
-    text-align: center;
+  &-item {
     padding: 10px 0;
-    border-bottom: 3px solid $high_light_color;
   }
-  #team-icon {
-    width: 10vw;
-    height: 10vw;
-    min-width: 80px;
-    min-height: 80px;
+  &-line {
+    padding: 5px 0;
+    border-bottom: 1px solid #eeeeee;
+  }
+}
+.list {
+  &-number {
+    flex: 1;
+  }
+  &-nick_name {
+    flex: 2;
+  }
+  &-user_icon {
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    padding: 20px;
-    border: 3px solid $high_light_color;
-    background-color: $high_light_color;
   }
-  .team-info {
-    &-line {
-      padding: 20px 5px;
-      border-bottom: 3px solid $high_light_color;
-      font-size: 14px;
-      &-title {
-        min-width: 30%;
-      }
-      &-content {
-        margin-left: 5%;
-      }
-    }
+  &-position {
+    flex: 1;
   }
-  .show-slider {
-    margin-top: 20px;
-    width: 100%;
-    text-align: center;
-    &-icon {
-      width: 20px;
-      height: 20px;
-    }
+  &-role {
+    flex: 1;
   }
-  .arrow-down {
-    transform: rotate(180deg);
+  &-edit {
+    flex: 1;
   }
-  .arrow-up {
-    transform: rotate(360deg);
+}
+.team-info {
+  border-bottom: 1px solid #eeeeee;
+  &-detail {
+    margin-left: 5%;
   }
-  .team-user-title {
-    width: 100%;
-    padding: 10px 20px;
-    border-bottom: 1px solid $border_color;
-  }
-  .team-user-list-title {
-    width: 100%;
-    padding: 20px 0;
-    &-item {
-      display: inline-block;
-      width: 35%;
-      &:nth-of-type(1) {
-        text-align: center;
-        width: 65%;
-      }
-    }
-  }
-  .team-user-list-item {
-    width: 100%;
-    &-left {
-      width: 65%;
-    }
-  }
-  .user-icon-area {
+  &-icon {
     position: relative;
-  }
-  .user-icon {
-    width: 35px;
-    height: 35px;
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
-    display: inline-block;
-    margin-left: 20px;
+    margin: 10px;
   }
-  .caption-icon {
-    width: 10px;
-    height: 10px;
-    position: absolute;
+  &-name {
+    font-size: 22px;
+    font-weight: 500;
+    font-family: "Tahoma";
+    letter-spacing: 2px;
   }
-  .user-position-type {
-    width: 35%;
-    display: inline-block;
+  &-description {
+    font-size: 14px;
+    color: #909399;
+    font-weight: 500;
+    margin: 10px 0;
+    letter-spacing: 1px;
   }
-  .user-name {
-    margin-left: 15px;
-  }
-  .main-content {
-    width: 80%;
-    margin: 0 auto;
-  }
-  .content-title {
-    width: 100%;
-    margin: 20px 0;
-    text-align: start;
+}
+.team-address {
+  &-title {
+    font-size: 14px;
     font-weight: 500;
   }
-  .team-troduction {
-    text-align: start;
-    margin: 10px 0;
-    padding: 15px 0;
-    border-bottom: 1px solid $grey_color;
-    &-name {
-      font-size: 26px;
-      font-weight: 600;
-    }
-    &-description {
-      font-size: 14px;
-      margin-top: 5px;
-    }
-    &-state {
-      padding: 10px 20px;
-      background-color: $side_color;
-      color: white;
-      font-weight: 500;
-      border-radius: 10px;
-      cursor: pointer;
-      &-disable {
-        background-color: $border_color;
-        color: #333333;
-      }
-      &-icon {
-        margin-right: 5px;
-        width: 20px;
-        height: 20px;
-        position: relative;
-      }
-    }
+}
+.team-location {
+  padding: 2px;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  border-radius: 5px;
+  margin-left: 10px;
+}
+.team-province {
+  background-color: #1e90ff;
+}
+.team-city {
+  background-color: #0000cd;
+}
+.team-district {
+  background-color: #4169e1;
+}
+.team-inform {
+  &-container {
+    margin: 20px 0;
+    box-shadow: $basic_shadow;
   }
-  .team-calendar {
-    &-container {
-      margin: 20px 0;
-    }
+  &-btn {
+    width: 10%;
+    text-align: center;
+    padding: 5px 0;
+    background-color: #67c23a;
+    color: white;
   }
-  .match-list {
-    width: 100%;
-    &-item {
-      padding: 10px;
-      background-color: white;
-      text-align: start;
-      &-match_name {
-        font-weight: 600;
-        font-size: 18px;
-      }
-      &-start_time {
-        background-color: $side-color;
-        color: white;
-        padding: 5px 2px;
-        border-radius: 5%;
-        margin-left: 20px;
-      }
-      &-end_time {
-        background-color: $base_color;
-        @extend .match-list-item-start_time;
-      }
+  &-content {
+    width: 90%;
+    background-color: white;
+    font-size: 14px;
+    padding: 0 20px;
+    overflow: hidden;
+    span {
+      white-space: nowrap;
+      display: inline-block;
+      animation: wordLoop 25s linear infinite normal;
     }
   }
-  .demo-table-expand {
-    font-size: 0;
+}
+.team-line {
+  border-bottom: 1px solid #eeeeee;
+  padding-bottom: 5px;
+}
+.content-title {
+  width: 100%;
+  margin: 20px 0;
+  text-align: start;
+  font-weight: 500;
+}
+.down-arrow {
+  width: 25px;
+  height: 25px;
+  transition: all 0.3s ease;
+  &-up {
+    @extend .down-arrow;
+    transform: rotate(180deg);
   }
-  .demo-table-expand label {
-    width: 90px;
-    color: #99a9bf;
+}
+#team-map {
+  width: 100%;
+  height: 400px;
+  margin-top: 2vh;
+}
+@keyframes wordLoop {
+  0% {
+    transform: translateX(0%);
   }
-  .el-form-item {
-     display: block;
+  30% {
+    transform: translateX(0%);
   }
-  .demo-table-expand .el-form-item {
-    margin-right: 0;
-    margin-bottom: 0;
-    width: 50%;
+  100% {
+    transform: translateX(-100%);
   }
 }
 </style>

@@ -83,6 +83,11 @@
         flex-direction: column;
         align-items: center;
       }
+      &-y-center {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
       &-x-start {
         display: flex;
         flex-direction: column;

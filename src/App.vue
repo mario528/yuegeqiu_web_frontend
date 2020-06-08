@@ -36,6 +36,7 @@ export default class App extends Vue {
 
 <style lang="scss">
 @import "./stylus/scss/app";
+@import url(https://fonts.googleapis.com/css?family=Righteous);
 * {
   margin: 0;
   padding: 0;
