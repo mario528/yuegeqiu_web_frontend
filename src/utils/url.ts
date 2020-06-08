@@ -63,6 +63,8 @@ const url = {
 
     CHANGE_TEAM_MEMBER_NUMBER: '/api/v1/team/update/member/number',
 
-    CHANGE_TEAM_MEMBER_POSITION: '/api/v1/team/update/member/position'
+    CHANGE_TEAM_MEMBER_POSITION: '/api/v1/team/update/member/position',
+
+    UPLOAD_USER_ICON: '/api/v1/user/upload/icon'
 }
 export default url

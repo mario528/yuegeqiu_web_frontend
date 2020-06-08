@@ -10,7 +10,10 @@
             </div>
             <div class="flex-row-center user-center-left-nickname">
               {{userInfo.nick_name | standardNickName}}
-              <img :src="sexIcon" class="user-center-left-sex_icon">
+              <img
+                :src="sexIcon"
+                class="user-center-left-sex_icon"
+              >
             </div>
             <div class="flex-row-center user-center-left-friend_ship" @click="bindUserFriendShip">
               <div
@@ -45,7 +48,11 @@
             <div class="flex-row-between mobile-line">
               <div class="flex-row-y-center user-info-left-mobile">
                 <div class="user-center-left-icon">
-                  <icon-diy :iconPath="userInfo.head_url" :hoverModel="!screenModel"></icon-diy>
+                  <icon-diy
+                    :iconPath="userInfo.head_url"
+                    :hoverModel="!screenModel"
+                    @uploadRequest="uploadRequest"
+                  ></icon-diy>
                 </div>
                 <div class="flex-column">
                   <div class="flex-row-center">
@@ -115,6 +122,7 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { Getter, Action, State } from "vuex-class";
+import { Toast } from '@/utils/index'
 import IconDIY from "@/components/IconDiy.vue";
 import UserModel from "@/model/User/User";
 @Component({
@@ -201,6 +209,22 @@ export default class UserCenter extends Vue {
       default:
         break;
     }
+  }
+  private uploadRequest(fileFormData: any) {
+    new UserModel().uploadUserIcon
+      .call(this, {
+        user_id: this.userId,
+        form_data: fileFormData
+      })
+      .then((res: any) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // @ts-ignore
+        this.userInfo.head_url = res.head_url;
+        Toast.showToastSuccess.call(this, "上传成功", "成功");
+      })
+      .catch((err: any) => {
+        Toast.showToastError.call(this, err.msg, "失败");
+      });
   }
 }
 </script>

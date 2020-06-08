@@ -48,6 +48,10 @@ interface GetUserInfoByUpdate {
     user_id: string | undefined | null;
     token?: string | undefined | null;
 }
+interface UploadUserIcon {
+    user_id: string | undefined | null;
+    form_data: any;
+}
 class User {
     constructor() {
 
@@ -178,6 +182,16 @@ class User {
         return new Promise((reslove, reject) => {
             // @ts-ignore
             this.$http.post(Url.UPDATE_USER_INFO, params).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
+    uploadUserIcon (params: UploadUserIcon) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.post(Url.UPLOAD_USER_ICON, params).then((res: any) => {
                 reslove(res)
             }).catch((err: any) => {
                 reject(err)
