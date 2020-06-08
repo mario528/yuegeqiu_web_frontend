@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-08 15:41:55
+ * @LastEditTime: 2020-06-08 16:28:35
  * @Description: file content
  -->
 <template>
@@ -15,18 +15,28 @@
           src="https://yuegeqiu-mario.oss-cn-beijing.aliyuncs.com/4fd3026cc54fe450787965c631f63c02.jpg"
           class="team-info-icon"
         >
-        <div class="flex-column-y-center team-info-detail">
+        <div class="flex-column-y-center width-100 team-info-detail">
           <div class="team-info-name">{{teamInfo.team_name}}</div>
           <div class="team-info-description">{{teamInfo.description}}</div>
-          <div class="flex-row-y-center team-address">
-            <span class="team-address-title">活动区域</span>
-            <div class="flex-row">
-              <span
-                class="team-location team-province"
-                v-if="teamInfo.province != teamInfo.city"
-              >{{teamInfo.province}}</span>
-              <span class="team-location team-city">{{teamInfo.city}}</span>
-              <span class="team-location team-district">{{teamInfo.district}}</span>
+          <div class="flex-row-x-between width-100 team-address">
+            <div class="flex-row-y-center">
+              <span class="team-address-title">活动区域</span>
+              <div class="flex-row">
+                <span
+                  class="team-location team-province"
+                  v-if="teamInfo.province != teamInfo.city"
+                >{{teamInfo.province}}</span>
+                <span class="team-location team-city">{{teamInfo.city}}</span>
+                <span class="team-location team-district">{{teamInfo.district}}</span>
+              </div>
+            </div> 
+            <div class="flex-row-center team-state" v-if="isTeamMember" @click="handleMemberBtn">
+              <img class="team-state-btn" :src="require('@/assets/already_icon.png')" alt="" />
+              已加入
+            </div>
+            <div class="flex-row-center team-state team-state-disable" v-else @click="handleMemberBtn">
+              <img class="team-state-btn" :src="require('@/assets/join_team.png')" alt="" />
+              加入球队
             </div>
           </div>
         </div>
@@ -83,7 +93,7 @@
         </div>
       </div>
     </div>
-    <div class="team-detail-member_list">
+    <div class="team-detail-member_list" style="padding-left: 20px; border-left: 1px solid #eeeeee;">
       <div class="nav-title">球队成员</div>
       <div class="flex-row member-list-header">
         <div class="member-list-item list-number">号码</div>
@@ -113,7 +123,10 @@
         </div>
       </div>
       <!-- 球队地图 -->
-      <div class="nav-title" style="margin-top: 5vh">活动位置</div>
+      <div class="flex-row-between nav-title" style="margin-top: 5vh">
+        活动位置
+        <div style="font-size: 12px;">球队地图</div>
+      </div>
       <div id="team-map"></div>
     </div>
   </div>
@@ -426,7 +439,6 @@ export default class TeamDetail extends Vue {
 .team-inform {
   &-container {
     margin: 20px 0;
-    box-shadow: $basic_shadow;
   }
   &-btn {
     width: 10%;
@@ -434,6 +446,7 @@ export default class TeamDetail extends Vue {
     padding: 5px 0;
     background-color: #67c23a;
     color: white;
+    box-shadow: $basic_shadow;
   }
   &-content {
     width: 90%;
@@ -441,6 +454,7 @@ export default class TeamDetail extends Vue {
     font-size: 14px;
     padding: 0 20px;
     overflow: hidden;
+    border-bottom: 1px solid #eeeeee;
     span {
       white-space: nowrap;
       display: inline-block;
@@ -471,6 +485,24 @@ export default class TeamDetail extends Vue {
   width: 100%;
   height: 400px;
   margin-top: 2vh;
+}
+.team-state {
+  width: 20%;
+  text-align: center;
+  padding: 8px 0;
+  background-color: $base-color;
+  color: white;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  &-btn {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+  }
+  &-disable {
+    background-color: #C0C0C0;
+  }
 }
 @keyframes wordLoop {
   0% {
