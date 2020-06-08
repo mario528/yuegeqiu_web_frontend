@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-08 16:28:35
+ * @LastEditTime: 2020-06-08 16:31:46
  * @Description: file content
  -->
 <template>
@@ -12,7 +12,7 @@
       <!-- 球队详情 -->
       <div class="width-100 flex-row team-info">
         <img
-          src="https://yuegeqiu-mario.oss-cn-beijing.aliyuncs.com/4fd3026cc54fe450787965c631f63c02.jpg"
+          :src="teamInfo.team_icon"
           class="team-info-icon"
         >
         <div class="flex-column-y-center width-100 team-info-detail">
