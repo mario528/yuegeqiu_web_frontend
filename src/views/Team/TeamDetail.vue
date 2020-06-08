@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-08 18:00:11
+ * @LastEditTime: 2020-06-08 21:40:40
  * @Description: file content
  -->
 <template>
@@ -49,8 +49,11 @@
     <div class="width-100 flex-column team-detail-content">
       <!-- 球队详情 -->
       <div class="width-100 flex-row team-info">
-        <img :src="teamInfo.team_icon" class="team-info-icon">
-        <div class="flex-column-y-center width-100 team-info-detail">
+        <div class="team-upload" v-if="[0,1].includes(teamRole)">
+          <mario-icon :iconPath="teamInfo.team_icon" :hoverModel="true" @uploadRequest="uploadRequest"></mario-icon>
+        </div>
+        <img :src="teamInfo.team_icon" class="team-info-icon" v-else>
+        <div class="flex-column-y-center team-info-detail">
           <div class="team-info-name">{{teamInfo.team_name}}</div>
           <div class="team-info-description">{{teamInfo.description}}</div>
           <div class="flex-row-x-between width-100 team-address">
@@ -87,7 +90,7 @@
       >
         <div class="team-inform-btn">通告</div>
         <div refs="teamInformContainer" class="flex-row-y-center team-inform-content">
-          <span ref="teamInform">{{teamInfo.team_inform}}</span>
+          <span ref="teamInform">{{teamInfo.team_inform || '暂无通告'}}</span>
         </div>
       </div>
       <!-- 编辑通告 -->
@@ -153,12 +156,12 @@
       </div>
       <div class="flex-column member-list-content">
         <div class="flex-row member-list-line" v-for="(item, index) in teamMember" :key="index">
-          <div class="member-list-item list-number flex-row-y-center">{{item.team_number}}</div>
+          <div class="member-list-item list-number flex-row-y-center">{{item.team_number ? item.team_number : '-'}}</div>
           <div class="member-list-item list-nick_name flex-row-y-center">
             <img :src="item.head_url" class="list-user_icon">
             <span style="margin-left: 5px;">{{item.nick_name}}</span>
           </div>
-          <div class="member-list-item list-position flex-row-y-center">{{item.team_position}}</div>
+          <div class="member-list-item list-position flex-row-y-center">{{item.team_position ? item.team_position : '-'}}</div>
           <div
             class="member-list-item list-role flex-row-y-center"
           >{{item.role == 0 ? '队长' : item.role == 1 ? '副队长' : '球员'}}</div>
@@ -220,7 +223,7 @@ export default class TeamDetail extends Vue {
   public calendar!: string[];
   public calendarList = [];
   public isTeamMember = false;
-  public teamRole!: null | number;
+  public teamRole = 2;
   public matchList = [];
   private positionType = 6;
   private disabledNumberList = [];
@@ -525,6 +528,7 @@ export default class TeamDetail extends Vue {
   border-bottom: 1px solid #eeeeee;
   &-detail {
     margin-left: 5%;
+    width: 70%;
   }
   &-icon {
     position: relative;
@@ -685,6 +689,11 @@ export default class TeamDetail extends Vue {
     background-color: #f56c6c;
     color: white;
   }
+}
+.team-upload {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
 }
 @keyframes wordLoop {
   0% {

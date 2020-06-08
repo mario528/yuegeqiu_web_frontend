@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-04-28 21:06:30
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-03 14:04:30
+ * @LastEditTime: 2020-06-08 21:36:43
  * @Description: file content
  -->
 <template>
@@ -15,8 +15,8 @@
         </div>
       </div>
       <!-- 球队列表 -->
-      <div class="flex-row width-100 user-team-container-line team-area">
-        <span class="user-team-container-line-title">我的球队</span>
+      <div class="width-100 user-team-container-line team-area">
+        <div class="flex-row-x-start user-team-container-line-title" style="margin-bottom: 10px;">我的球队</div>
         <div class="team-area-item" v-for="(item, index) in teamList" :key="index" @click="handleTeamDetail(item.id)">
           <img :src="item.team_icon" class="team-area-item-icon">
           <div class="team-area-item-team_name">{{item.team_name}}</div>

@@ -136,7 +136,7 @@ export default class UserCenter extends Vue {
   public token: string | undefined;
   public userInfo = {};
   public sexIcon = "";
-  private randomKey!: number;
+  private randomKey = 1;
   private friendShipDetail = {};
   @Getter("getScreenModel")
   private screenModel!: boolean;
