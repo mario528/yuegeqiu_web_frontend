@@ -2,19 +2,54 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-08 16:31:46
+ * @LastEditTime: 2020-06-08 18:00:11
  * @Description: file content
  -->
 <template>
   <div class="team-detail_container">
+    <el-dialog :showDialog="showEditDialog" @closeDialog="handleEditDialog(false)">
+      <div slot="dialog-content">
+        <div class="flex-row" @click.stop="handleSwitchTag">
+          <div :class="[tagIndex == 0 ? 'tag-item-activity' : 'tag-item']" data-tag="0">位置</div>
+          <div :class="[tagIndex == 1 ? 'tag-item-activity' : 'tag-item']" data-tag="1">号码</div>
+        </div>
+        <div class="tag-content">
+          <div v-show="tagIndex == 0">
+            <el-select v-model="positionType" placeholder="请选择">
+              <el-option
+                v-for="item in tagOptions"
+                :key="item.type"
+                :label="item.value"
+                :value="item.type"
+              ></el-option>
+            </el-select>
+          </div>
+          <div v-show="tagIndex == 1">
+            <div class="number-area" @click.stop="handleSelectNumber">
+              <div
+                :class="[!disabledNumberList.includes(item) ? 'number-area-item' : selectNumber == item ? 'number-area-item-selected' : 'number-area-item-disable']"
+                v-for="(item, index) in 50"
+                :key="index"
+                data-avaiable="!disabledNumberList.includes(item)"
+                :data-teamNumber="item"
+              >{{item}}</div>
+            </div>
+          </div>
+        </div>
+        <div class="width-100 flex-row-x-center">
+          <span
+            class="tag-content-btn"
+            @click="handleDialogBtn"
+          >修改{{(tagIndex == 1 && selectNumber != -1 ? '号码:' + selectNumber : '')}}</span>
+        </div>
+      </div>
+    </el-dialog>
     <up-arrow></up-arrow>
+    <!-- 左侧 -->
     <div class="width-100 flex-column team-detail-content">
       <!-- 球队详情 -->
       <div class="width-100 flex-row team-info">
-        <img
-          :src="teamInfo.team_icon"
-          class="team-info-icon"
-        >
+        <img :src="teamInfo.team_icon" class="team-info-icon">
         <div class="flex-column-y-center width-100 team-info-detail">
           <div class="team-info-name">{{teamInfo.team_name}}</div>
           <div class="team-info-description">{{teamInfo.description}}</div>
@@ -29,13 +64,17 @@
                 <span class="team-location team-city">{{teamInfo.city}}</span>
                 <span class="team-location team-district">{{teamInfo.district}}</span>
               </div>
-            </div> 
+            </div>
             <div class="flex-row-center team-state" v-if="isTeamMember" @click="handleMemberBtn">
-              <img class="team-state-btn" :src="require('@/assets/already_icon.png')" alt="" />
+              <img class="team-state-btn" :src="require('@/assets/already_icon.png')" alt="">
               已加入
             </div>
-            <div class="flex-row-center team-state team-state-disable" v-else @click="handleMemberBtn">
-              <img class="team-state-btn" :src="require('@/assets/join_team.png')" alt="" />
+            <div
+              class="flex-row-center team-state team-state-disable"
+              v-else
+              @click="handleMemberBtn"
+            >
+              <img class="team-state-btn" :src="require('@/assets/join_team.png')" alt="">
               加入球队
             </div>
           </div>
@@ -93,8 +132,15 @@
         </div>
       </div>
     </div>
-    <div class="team-detail-member_list" style="padding-left: 20px; border-left: 1px solid #eeeeee;">
-      <div class="nav-title">球队成员</div>
+    <!-- 右侧 -->
+    <div
+      class="team-detail-member_list"
+      style="padding-left: 20px; border-left: 1px solid #eeeeee;"
+    >
+      <div class="flex-row-between width-100 nav-title">
+        球队成员
+        <span v-if="isTeamMember" style="font-size: 12px;" @click="handleEditDialog(true)">编辑个人信息</span>
+      </div>
       <div class="flex-row member-list-header">
         <div class="member-list-item list-number">号码</div>
         <div class="member-list-item list-nick_name">用户名</div>
@@ -123,8 +169,7 @@
         </div>
       </div>
       <!-- 球队地图 -->
-      <div class="flex-row-between nav-title" style="margin-top: 5vh">
-        活动位置
+      <div class="flex-row-between nav-title" style="margin-top: 5vh">活动位置
         <div style="font-size: 12px;">球队地图</div>
       </div>
       <div id="team-map"></div>
@@ -132,7 +177,7 @@
   </div>
 </template>
 <script lang="ts">
-enum Positiontype {
+enum PositiontypeEnum {
   "门将",
   "边后卫",
   "中后卫",
@@ -154,12 +199,14 @@ import TeamShirt from "@/components/TeamShirt.vue";
 import TeamCenterInform from "@/components/TeamPageInform.vue";
 import TeamCalendar from "@/components/TeamCalendar.vue";
 import IconDIY from "@/components/IconDiy.vue";
+import Dialog from "@/components/Dialog/DialogComponent.vue";
 @Component({
   components: {
     "team-shirt": TeamShirt,
     "team-inform": TeamCenterInform,
     "team-calendar": TeamCalendar,
-    "mario-icon": IconDIY
+    "mario-icon": IconDIY,
+    "el-dialog": Dialog
   }
 })
 export default class TeamDetail extends Vue {
@@ -180,6 +227,43 @@ export default class TeamDetail extends Vue {
   private pageConfig = {
     _hideMatch: false
   };
+  private tagIndex = 0;
+  private tagOptions = [
+    {
+      value: "门将",
+      type: 0
+    },
+    {
+      value: "边后卫",
+      type: 1
+    },
+    {
+      value: "中后卫",
+      type: 2
+    },
+    {
+      value: "后腰",
+      type: 3
+    },
+    {
+      value: "前腰",
+      type: 4
+    },
+    {
+      value: "边锋",
+      type: 5
+    },
+    {
+      value: "前锋",
+      type: 6
+    },
+    {
+      value: "教练",
+      type: 7
+    }
+  ];
+  private selectNumber = -1;
+  private showEditDialog = false
   private downArrow: string = require("@/assets/user_arrow_black.png");
   mounted() {
     const that = this;
@@ -211,7 +295,7 @@ export default class TeamDetail extends Vue {
       team_member.forEach((item: any) => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
         // @ts-ignore
-        item.team_position = Positiontype[item.team_position];
+        item.team_position = PositiontypeEnum[item.team_position];
         if (item.team_number != null) {
           // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
           // @ts-ignore
@@ -257,7 +341,7 @@ export default class TeamDetail extends Vue {
         // @ts-ignore
         position: [this.teamInfo.longitude, this.teamInfo.latitude]
       });
-      this.map.add(marker)
+      this.map.add(marker);
     });
   }
   private uploadRequest(fileFormData: any) {
@@ -315,6 +399,55 @@ export default class TeamDetail extends Vue {
     // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
     this.pageConfig._hideMatch = !this.pageConfig._hideMatch;
+  }
+  private handleSwitchTag(event: any) {
+    const tagIndex = +event.target.dataset.tag;
+    this.tagIndex = tagIndex;
+    this.selectNumber = 0;
+    this.positionType = 6;
+  }
+  private handleEditDialog(state: boolean) {
+    this.showEditDialog = state;
+  }
+  private handleSelectNumber(event: any) {
+    const { avaiable, teamnumber } = event.target.dataset;
+    if (!avaiable) return;
+    this.selectNumber = +teamnumber;
+  }
+  private handleDialogBtn() {
+    if (this.tagIndex == 0) {
+      this.handleSwitchTeamPosition();
+    } else {
+      this.handleSwitchTeamNumber();
+    }
+  }
+  private handleSwitchTeamNumber() {
+    if (this.selectNumber == -1) return;
+    new TeamType().changeTeamMemberNumber
+      .call(this, {
+        user_id: this.userId || localStorage.getItem("User_ID"),
+        team_number: this.selectNumber,
+        team_id: this.teamId
+      })
+      .then((res: any) => {
+        Toast.showToastSuccess.call(this, "修改成功");
+        this.requestTeamDetail();
+        this.handleEditDialog(false);
+      });
+  }
+  private handleSwitchTeamPosition() {
+    if (!this.positionType) return;
+    new TeamType().changeTeamMemberPosition
+      .call(this, {
+        user_id: this.userId || localStorage.getItem("User_ID"),
+        team_position: +this.positionType,
+        team_id: this.teamId
+      })
+      .then((res: any) => {
+        Toast.showToastSuccess.call(this, "修改成功");
+        this.requestTeamDetail();
+        this.handleEditDialog(false);
+      });
   }
 }
 </script>
@@ -376,6 +509,7 @@ export default class TeamDetail extends Vue {
     width: 40px;
     height: 40px;
     border-radius: 50%;
+    border: 1px solid #a9a9a9;
   }
   &-position {
     flex: 1;
@@ -398,6 +532,7 @@ export default class TeamDetail extends Vue {
     height: 150px;
     border-radius: 50%;
     margin: 10px;
+    border: 1px solid #eeeeee;
   }
   &-name {
     font-size: 22px;
@@ -501,7 +636,54 @@ export default class TeamDetail extends Vue {
     margin-right: 5px;
   }
   &-disable {
-    background-color: #C0C0C0;
+    background-color: #c0c0c0;
+  }
+}
+.tag-item {
+  background-color: #c0c4cc;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-right: 10px;
+  &-activity {
+    @extend .tag-item;
+    background-color: #67c23a;
+  }
+}
+.tag-content {
+  margin-top: 4vh;
+  &-btn {
+    padding: 5px 20px;
+    background-color: #67c23a;
+    color: white;
+    font-weight: 500;
+    margin: 0 auto;
+    border-radius: 5px;
+    margin-top: 10vh;
+  }
+}
+.number-area-item {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  float: left;
+  background-color: #67c23a;
+  color: white;
+  font-weight: 500;
+  border: 1px solid #eeeeee;
+  z-index: 50;
+  &-disable {
+    @extend .number-area-item;
+    background-color: #c0c4cc;
+    color: white;
+  }
+  &-selected {
+    @extend .number-area-item;
+    background-color: #f56c6c;
+    color: white;
   }
 }
 @keyframes wordLoop {
