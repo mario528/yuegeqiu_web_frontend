@@ -65,6 +65,10 @@ const url = {
 
     CHANGE_TEAM_MEMBER_POSITION: '/api/v1/team/update/member/position',
 
-    UPLOAD_USER_ICON: '/api/v1/user/upload/icon'
+    UPLOAD_USER_ICON: '/api/v1/user/upload/icon',
+
+    GET_TEAM_CHAT: '/api/v1/team/chat',
+
+    SEND_TEAM_CHAT: '/api/v1/team/chat/send',
 }
 export default url

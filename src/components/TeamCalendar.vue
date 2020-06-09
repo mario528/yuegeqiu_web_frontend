@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-07 21:25:40
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-08 14:41:21
+ * @LastEditTime: 2020-06-09 14:44:37
  * @Description: file content
  -->
  <template>
@@ -111,7 +111,7 @@ export default class TeamCaleder extends Vue {
   @Getter('getUserId') private userId !: string
   @Inject('reload') private reload!: () => void
   private weekList = ['日','一','二','三','四','五','六']
-  private activityIcon = require('../assets/activity_icon.png')
+  private activityIcon = require('@/assets/activity_icon.png')
   private activityIndex = -1
   private showDialog = false
   private joinState = -1

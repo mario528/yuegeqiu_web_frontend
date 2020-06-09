@@ -116,9 +116,7 @@ export default class TeamMap extends Vue {
           teamDetail.description
         }</div>
         <div class="card-bottom" style="margin: 10px 0 5px 0">
-          <span @click="handleTeamDetail(${
-            teamDetail.id
-          })" style="float:right;font-size: 12px; background-color: #303F9F; color: white; padding: 5px; border-radius: 5px;">球队首页</span>
+          <a href='http://101.201.142.182/#/team/detail?td=${teamDetail.id}' style="text-decoration: none; z-index: 100; float:right;font-size: 12px; background-color: #303F9F; color: white; padding: 5px; border-radius: 5px;">球队首页</a>
         </div>
     </div>`;
     this.infoWindow = new AMap.InfoWindow({

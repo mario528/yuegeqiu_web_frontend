@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-04-30 22:08:23
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-03 16:59:20
+ * @LastEditTime: 2020-06-09 23:38:38
  * @Description: file content
  */
 import { Url } from '../../utils/index'
@@ -81,6 +81,15 @@ interface TeamMemberPosition {
     user_id: string | number | null;
     team_position: number;
     team_id: number | string;
+}
+interface TeamChat {
+    user_id: string | number | null;
+    team_id: number | string;
+}
+interface SendMessage {
+    user_id: string | number | null;
+    team_id: number | string;
+    content: string;
 }
 class Team {
     constructor() {}
@@ -228,6 +237,26 @@ class Team {
             this.$http.get(Url.CHANGE_TEAM_MEMBER_POSITION, {
                 params
             }).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
+    requestTeamChat (params: TeamChat) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.post(Url.GET_TEAM_CHAT, params).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
+    sendMessage (params: SendMessage) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.post(Url.SEND_TEAM_CHAT, params).then((res: any) => {
                 reslove(res)
             }).catch((err: any) => {
                 reject(err)

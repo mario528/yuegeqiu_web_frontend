@@ -2,11 +2,12 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-08 21:40:40
+ * @LastEditTime: 2020-06-09 21:34:57
  * @Description: file content
  -->
 <template>
   <div class="team-detail_container">
+    <chat-frame :title="teamInfo.team_name" :memberNumber="teamMember.length" :teamId="teamId"></chat-frame>
     <el-dialog :showDialog="showEditDialog" @closeDialog="handleEditDialog(false)">
       <div slot="dialog-content">
         <div class="flex-row" @click.stop="handleSwitchTag">
@@ -203,13 +204,15 @@ import TeamCenterInform from "@/components/TeamPageInform.vue";
 import TeamCalendar from "@/components/TeamCalendar.vue";
 import IconDIY from "@/components/IconDiy.vue";
 import Dialog from "@/components/Dialog/DialogComponent.vue";
+import ChatFrame from '@/components/ChatFrame.vue'
 @Component({
   components: {
     "team-shirt": TeamShirt,
     "team-inform": TeamCenterInform,
     "team-calendar": TeamCalendar,
     "mario-icon": IconDIY,
-    "el-dialog": Dialog
+    "el-dialog": Dialog,
+    "chat-frame": ChatFrame
   }
 })
 export default class TeamDetail extends Vue {
@@ -463,8 +466,9 @@ export default class TeamDetail extends Vue {
 .team-detail {
   &_container {
     width: 80vw;
+    min-width: 1000px;
     margin: 0px auto;
-    background-color: blue;
+    position: relative;
   }
   &-content {
     float: left;
