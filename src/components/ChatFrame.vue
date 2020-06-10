@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-06-09 00:01:14
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-09 23:36:26
+ * @LastEditTime: 2020-06-10 13:22:43
  * @Description: file content
 --> 
 <template>
@@ -14,10 +14,19 @@
           <div class="chat-frame-content-detail-tips" v-if="messageList.length == 0">
             暂无聊天记录
           </div>
+          <div class="width-100 message-line" v-for="(item, index) in messageList" :key="index">
+              <div class="width-100">
+                <img :src="item.publish_icon_url" class="publish-user-icon" :style="{'float': item.is_self ? 'right' : 'left'}">
+                <div class="message-content-area"  :style="{'float': item.is_self ? 'right' : 'left'}">
+                  <div class="publish-user-name" :style="{'text-align': item.is_self ? 'end' : 'start'}">{{item.publish_nick_name | standardNickName}}</div>
+                  <div :class="[item.is_self ? 'publish-content-self' : 'publish-content-self']">{{item.content}}</div>
+                </div>
+              </div>
+          </div>
         </div>
         <div class="flex-row chat-frame-content-publish">
           <textarea class="chat-frame-content-text_area" v-model="publishContext"></textarea>
-          <div class="chat-frame-content-send_btn">发送</div>
+          <div class="chat-frame-content-send_btn" @click="sendTeamMessage">发送</div>
         </div>
       </div>
       <div class="flex-row-between chat-frame-bar">
@@ -30,6 +39,7 @@
 <script lang="ts">
 import { Vue, Prop, Component } from "vue-property-decorator";
 import { Getter } from 'vuex-class' 
+import { Toast } from '@/utils/index'
 import TeamType from '@/model/Team/Team'
 @Component
 export default class ChatFrame extends Vue {
@@ -58,12 +68,17 @@ export default class ChatFrame extends Vue {
       this.messageList = res.message_list
     })
   }
-  private publishTeamMessage () {
-    new TeamType().requestTeamChat.call(this, {
+  private sendTeamMessage () {
+    if (!this.publishContext) {
+      Toast.showToastError.call(this, '发送内容不能为空')
+      return;
+    }
+    new TeamType().sendMessage.call(this, {
       user_id: this.userId || localStorage.getItem('User_ID') as string,
-      team_id: this.teamId
+      team_id: this.teamId,
+      content: this.publishContext
     }).then((res: any) => {
-      this.messageList = res.message_list
+      this.publishContext = ''
     })
   }
 }
@@ -102,8 +117,9 @@ export default class ChatFrame extends Vue {
     &-detail {
       width: 100%;
       height: calc(50vh - 45px);
-      background-color: rgba(#FFFAF0, .6);
+      background-color: rgba(#eeeeee, .6);
       position: relative;
+      overflow-y: scroll;
       &-tips {
         width: 100%;
         text-align: center;
@@ -141,9 +157,78 @@ export default class ChatFrame extends Vue {
       color: white;
       font-weight: 500;
       cursor: pointer;
+      user-select: none;
     }
   }
 }
+.message-line {
+  box-sizing: border-box;
+  padding: 10px;
+  overflow: hidden;
+}
+.publish-user {
+  &-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+  }
+  &-name {
+    width: 100%;
+    font-size: 12px;
+  }
+}
+.message-content-area {
+  margin: 0 10px;
+  max-width: 60%;
+}
+.publish-content {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #333333;
+  line-height: 20px;
+  letter-spacing: 1px;
+  word-break: break-all;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: #FFFFF0	;
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: -5px;
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-right: 10px solid #FFFFF0;
+    border-bottom: 5px solid transparent;
+    border-radius: 2px;
+  }
+}
+.publish-content-self {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #333333;
+    line-height: 20px;
+    letter-spacing: 1px;
+    word-break: break-all;
+    border-radius: 5px;
+    padding: 10px;
+    position: relative;
+    background-color: #90EE90;
+    &::after {
+      content: "";
+      position: absolute;
+      top: 2px;
+      right: -5px;
+      width: 0;
+      height: 0;
+      border-top: 5px solid transparent;
+      border-left: 10px solid #90EE90;
+      border-bottom: 5px solid transparent;
+      border-radius: 2px;
+  }
+  }
 .down-arrow {
     width: 25px;
     height: 25px;
