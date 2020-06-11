@@ -23,8 +23,8 @@
             <img class="eyes-icon" :src="eyesIcon" @click="handleSwitchPswType(2)">
           </div>
           <div class="verification-container width-100 flex-row">
-            <input v-model="verificationCode" class="user-input-verification" maxlength="4" placeholder="请输入验证码"/>
-            <div class="verification-btn-available" @click="handleSendMessage">发送验证码</div>
+            <input v-model="verificationCode" class="user-input-verification" maxlength="6" placeholder="请输入验证码"/>
+            <div :class="[verificationBtnAvaiable ? 'verification-btn-available' : 'verification-btn-available-disable']" @click="handleSendMessage">{{verificationBtnAvaiable ? '发送验证码' : verificationBtnCountDownNumber + '秒'}}</div>
           </div>
           <button class="login-btn" @click="handleRegister">注册</button>
         </div> 
@@ -48,10 +48,9 @@ export default class LoginOrRegister extends Vue {
   private registerTelNumber = ''
   private showRegisterPswStr = ''
   private registerPsw = ''
-  private countDown = 60
-  private countTimer = null
   private verificationCode = ''
-
+  private verificationBtnAvaiable = true
+  private verificationBtnCountDownNumber = 60
   @Getter('getLoginOrRegisterState')
   private dialogState !: number;
 
@@ -239,6 +238,8 @@ export default class LoginOrRegister extends Vue {
     })
   }
   private handleSendMessage () {
+    const that = this;
+    if (!this.verificationBtnAvaiable) return
     if (!this.registerTelNumber) {
       this.$notify.error({
         title: '错误',
@@ -251,7 +252,23 @@ export default class LoginOrRegister extends Vue {
       telephone: this.registerTelNumber
     }
     userType.getVerificationCode.call(this, params).then((res: any) => {
-      
+       this.$notify({
+        title: '成功',
+        message: '验证码发送成功',
+        type: 'success'
+      })   
+      this.verificationBtnAvaiable = false
+      const timer = setInterval(() => {
+        if (that.verificationBtnCountDownNumber == 1) {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+          // @ts-ignore
+          that.verificationBtnCountDownNumber = 60
+          that.verificationBtnAvaiable = true
+          clearInterval(timer)
+        }
+        that.verificationBtnCountDownNumber --
+      }, 1000)
+    }).catch((err: any) => {
     })
   }
 }
@@ -323,9 +340,14 @@ export default class LoginOrRegister extends Vue {
     color: $base_color;
     border-radius: 5px;
     &-available {
-      @extend .verification-btn ;
+      @extend .verification-btn;
       background-color: $base_color;
       color: white;
+      &-disable {
+        @extend .verification-btn;
+        background-color: #DCDCDC;
+        color: white;
+      }
     }
   }
 }

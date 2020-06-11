@@ -9,7 +9,7 @@ const url = {
 
     CHECK_TOKEN_AVAILABLE: '/api/v1/token/state',
 
-    VERIFICATION_CODE: '/api/v1/verification_message',
+    VERIFICATION_CODE: '/api/v1/sms',
 
     GET_USER_INFO: '/api/v1/user/info',
 
