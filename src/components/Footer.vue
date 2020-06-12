@@ -45,7 +45,6 @@ export default class Footer extends Vue {
         height: 20px;
     }
     a {
-        margin-left: 10px;
         text-decoration: none;
         font-size: 12px;
         color: white;

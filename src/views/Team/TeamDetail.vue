@@ -2,12 +2,12 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-09 21:34:57
+ * @LastEditTime: 2020-06-13 01:20:54
  * @Description: file content
  -->
 <template>
   <div class="team-detail_container">
-    <chat-frame :title="teamInfo.team_name" :memberNumber="teamMember.length" :teamId="teamId"></chat-frame>
+    <chat-frame :title="teamInfo.team_name" :memberNumber="teamMember.length" :teamId="teamId" :isTeamMember="isTeamMember"></chat-frame>
     <el-dialog :showDialog="showEditDialog" @closeDialog="handleEditDialog(false)">
       <div slot="dialog-content">
         <div class="flex-row" @click.stop="handleSwitchTag">
@@ -272,7 +272,6 @@ export default class TeamDetail extends Vue {
   private showEditDialog = false
   private downArrow: string = require("@/assets/user_arrow_black.png");
   mounted() {
-    const that = this;
     this.teamId = +this.$route.query.td;
     this.requestTeamDetail();
     this.map = new AMap.Map("team-map", {
@@ -283,6 +282,13 @@ export default class TeamDetail extends Vue {
     });
     this.map.setFeatures(["point", "road", "building", "bg"]);
   }
+  beforeDestroy() {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
+    this.$socket.emit('disconnectTeamChat', {
+      team_id: +this.teamId
+    }) 
+  } 
   private requestTeamDetail() {
     const teamType = new TeamType();
     const params = {

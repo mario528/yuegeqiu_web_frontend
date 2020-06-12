@@ -2,26 +2,36 @@
  * @Author: majiaao
  * @Date: 2020-06-09 00:01:14
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-10 13:22:43
+ * @LastEditTime: 2020-06-13 01:44:47
  * @Description: file content
 --> 
 <template>
   <div class="chat-frame-container">
     <div>
       <div class="chat-frame-content" v-if="showFrameContent" ref="frameContent">
-        <div class="chat-frame-content-title" v-if="title">{{title}}<span v-if="memberNumber">（{{memberNumber}}）</span></div>
-        <div class="chat-frame-content-detail">
-          <div class="chat-frame-content-detail-tips" v-if="messageList.length == 0">
-            暂无聊天记录
-          </div>
-          <div class="width-100 message-line" v-for="(item, index) in messageList" :key="index">
-              <div class="width-100">
-                <img :src="item.publish_icon_url" class="publish-user-icon" :style="{'float': item.is_self ? 'right' : 'left'}">
-                <div class="message-content-area"  :style="{'float': item.is_self ? 'right' : 'left'}">
-                  <div class="publish-user-name" :style="{'text-align': item.is_self ? 'end' : 'start'}">{{item.publish_nick_name | standardNickName}}</div>
-                  <div :class="[item.is_self ? 'publish-content-self' : 'publish-content-self']">{{item.content}}</div>
-                </div>
+        <div class="chat-frame-content-title" v-if="title">
+          {{title}}
+          <span v-if="memberNumber">（{{memberNumber}}）</span>
+        </div>
+        <div class="chat-frame-content-detail" ref="chatContent">
+          <div class="chat-frame-content-detail-tips" v-if="messageList.length == 0">暂无聊天记录</div>
+          <div class="width-100 message-line" v-for="(item, index) in messageList" :key="index" ref="frameContentLine">
+            <div class="width-100">
+              <img
+                :src="item.publish_icon_url"
+                class="publish-user-icon"
+                :style="{'float': item.is_self ? 'right' : 'left'}"
+              >
+              <div class="message-content-area" :style="{'float': item.is_self ? 'right' : 'left'}">
+                <div
+                  class="publish-user-name"
+                  :style="{'text-align': item.is_self ? 'end' : 'start'}"
+                >{{item.publish_nick_name | standardNickName}}</div>
+                <div
+                  :class="[item.is_self ? 'publish-content-self' : 'publish-content']"
+                >{{item.content}}</div>
               </div>
+            </div>
           </div>
         </div>
         <div class="flex-row chat-frame-content-publish">
@@ -31,55 +41,105 @@
       </div>
       <div class="flex-row-between chat-frame-bar">
         <div>球队聊天室</div>
-        <img @click="handleFrameContent" :class="[showFrameContent ? 'down-arrow' : 'down-arrow-up']" :src="downArrow" />
+        <img
+          @click="handleFrameContent"
+          :class="[showFrameContent ? 'down-arrow' : 'down-arrow-up']"
+          :src="downArrow"
+        >
       </div>
     </div>
   </div>
 </template>
 <script lang="ts">
 import { Vue, Prop, Component } from "vue-property-decorator";
-import { Getter } from 'vuex-class' 
-import { Toast } from '@/utils/index'
-import TeamType from '@/model/Team/Team'
+import { Getter } from "vuex-class";
+import { Toast } from "@/utils/index";
+import TeamType from "@/model/Team/Team";
 @Component
 export default class ChatFrame extends Vue {
-  @Prop({ default: '' }) title !: string
-  @Prop({ default: 0 }) memberNumber !: number
-  @Prop({ default: -1 }) teamId !: number
-  @Getter('getUserId') 
+  @Prop({ default: "" })
+  title!: string;
+  @Prop({ default: 0 })
+  memberNumber!: number;
+  @Prop({ default: -1 })
+  teamId!: number;
+  @Prop({ default: false })
+  isTeamMember!: boolean;
+  @Getter("getUserId")
   public userId!: string | number;
-  private downArrow: string = require('@/assets/user_arrow.png')
-  private messageList = []
+  private downArrow: string = require("@/assets/user_arrow.png");
+  private messageList = [];
   public showFrameContent = false;
-  private publishContext = ''
+  private publishContext = "";
   mounted() {
     this.$nextTick(() => {
-      this.requestTeamMessage()
-    })
+      this.requestTeamMessage();
+    });
   }
-  private handleFrameContent () {
-    this.showFrameContent = !this.showFrameContent
+  private handleFrameContent() {
+    this.showFrameContent = !this.showFrameContent;
   }
-  private requestTeamMessage () {
-    new TeamType().requestTeamChat.call(this, {
-      user_id: this.userId || localStorage.getItem('User_ID') as string,
-      team_id: this.teamId
-    }).then((res: any) => {
-      this.messageList = res.message_list
-    })
+  private requestTeamMessage() {
+    new TeamType().requestTeamChat
+      .call(this, {
+        user_id: this.userId || (localStorage.getItem("User_ID") as string),
+        team_id: this.teamId
+      })
+      .then((res: any) => {
+        this.messageList = res.message_list;
+        this.$nextTick(() => {
+          // 已登陆并且是当前球队成员
+          if (
+            (this.userId || localStorage.getItem("User_ID")) &&
+            this.isTeamMember
+          ) {
+            // 创建websocket
+            // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+            // @ts-ignore
+            this.$socket.emit("connectTeamChat", {
+              team_id: +this.teamId
+            });
+            // 监听聊天记录
+            // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+            // @ts-ignore
+            this.$socket.on("receiveMsg", (params: any) => {
+              // params.is_self =
+              //   +params.publish_id == +this.userId ||
+              //   params.publish_id_encode == localStorage.getItem("User_ID");
+              // debugger
+              if (this.userId) {
+                params.is_self = +params.publish_id == +this.userId
+              }else {
+                params.is_self = params.publish_id_encode == localStorage.getItem("User_ID");
+              }
+              // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+              // @ts-ignore
+              this.messageList.push(params);
+              this.$nextTick(() => {
+                // 视窗 scrollTap 滚动到底部
+                // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+                // @ts-ignore
+                this.$refs.chatContent.scrollTop = this.$refs.frameContentLine[0].clientHeight * this.messageList.length
+              })
+            });
+          }
+        });
+      });
   }
-  private sendTeamMessage () {
+  private sendTeamMessage() {
     if (!this.publishContext) {
-      Toast.showToastError.call(this, '发送内容不能为空')
+      Toast.showToastError.call(this, "发送内容不能为空");
       return;
     }
-    new TeamType().sendMessage.call(this, {
-      user_id: this.userId || localStorage.getItem('User_ID') as string,
-      team_id: this.teamId,
-      content: this.publishContext
-    }).then((res: any) => {
-      this.publishContext = ''
-    })
+    new TeamType().sendMessage
+      .call(this, {
+        user_id: this.userId || (localStorage.getItem("User_ID") as string),
+        team_id: this.teamId,
+        content: this.publishContext
+      })
+      .then((res: any) => {
+        this.publishContext = "";
+      });
   }
 }
 </script>
@@ -106,7 +166,7 @@ export default class ChatFrame extends Vue {
     height: 55vh;
     width: 100%;
     background-color: white;
-    animation: unfold .2s linear forwards;
+    animation: unfold 0.2s linear forwards;
     box-shadow: $basic_shadow;
     &-title {
       padding: 0px 20px;
@@ -117,7 +177,7 @@ export default class ChatFrame extends Vue {
     &-detail {
       width: 100%;
       height: calc(50vh - 45px);
-      background-color: rgba(#eeeeee, .6);
+      background-color: rgba(#eeeeee, 0.6);
       position: relative;
       overflow-y: scroll;
       &-tips {
@@ -190,7 +250,7 @@ export default class ChatFrame extends Vue {
   word-break: break-all;
   border-radius: 5px;
   padding: 10px;
-  background-color: #FFFFF0	;
+  background-color: #fffff0;
   position: relative;
   &::after {
     content: "";
@@ -200,44 +260,44 @@ export default class ChatFrame extends Vue {
     width: 0;
     height: 0;
     border-top: 5px solid transparent;
-    border-right: 10px solid #FFFFF0;
+    border-right: 10px solid #fffff0;
     border-bottom: 5px solid transparent;
     border-radius: 2px;
   }
 }
 .publish-content-self {
-    margin-top: 10px;
-    font-size: 14px;
-    color: #333333;
-    line-height: 20px;
-    letter-spacing: 1px;
-    word-break: break-all;
-    border-radius: 5px;
-    padding: 10px;
-    position: relative;
-    background-color: #90EE90;
-    &::after {
-      content: "";
-      position: absolute;
-      top: 2px;
-      right: -5px;
-      width: 0;
-      height: 0;
-      border-top: 5px solid transparent;
-      border-left: 10px solid #90EE90;
-      border-bottom: 5px solid transparent;
-      border-radius: 2px;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #333333;
+  line-height: 20px;
+  letter-spacing: 1px;
+  word-break: break-all;
+  border-radius: 5px;
+  padding: 10px;
+  position: relative;
+  background-color: #90ee90;
+  &::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    right: -5px;
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-left: 10px solid #90ee90;
+    border-bottom: 5px solid transparent;
+    border-radius: 2px;
   }
-  }
+}
 .down-arrow {
-    width: 25px;
-    height: 25px;
-    transition: all 0.3s ease;
-    color: white;
-    &-up {
-        @extend .down-arrow;
-        transform: rotate(180deg);
-    }
+  width: 25px;
+  height: 25px;
+  transition: all 0.3s ease;
+  color: white;
+  &-up {
+    @extend .down-arrow;
+    transform: rotate(180deg);
+  }
 }
 @keyframes unfold {
   0% {
