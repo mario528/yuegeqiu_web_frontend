@@ -71,6 +71,8 @@ const url = {
 
     SEND_TEAM_CHAT: '/api/v1/team/chat/send',
 
-    GET_TEAM_MESSAGE_BOARD: '/api/v1/team/board/get'
+    GET_TEAM_MESSAGE_BOARD: '/api/v1/team/board/get',
+
+    SEND_TEAM_MESSAGE_BOARD: '/api/v1/team/board/send'
 }
 export default url

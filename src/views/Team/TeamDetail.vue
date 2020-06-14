@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-14 23:09:44
+ * @LastEditTime: 2020-06-14 23:43:01
  * @Description: file content
  -->
 <template>
@@ -234,7 +234,7 @@
           </div>
           <div class="flex-row" style="margin-top: 10px; padding: 5px 10px;">
             <textarea class="message-board-content-text_area" v-model="messageBoardContent"></textarea>
-            <div class="flex-row-y-center message-board-content-send_btn">
+            <div class="flex-row-y-center message-board-content-send_btn" @click="handSendBoardMessage">
               <img class="message-board-content-send_btn_icon" :src="require('@/assets/send_msg_icon.png')" />
             </div>
           </div>
@@ -571,6 +571,20 @@ export default class TeamDetail extends Vue {
     this.pageConfig._pageCurrent = page
     this.requestTeamMessageBoard(page - 1)
   }
+  private handSendBoardMessage () {
+    if (!this.messageBoardContent) {
+      return
+    }
+    new TeamType().sendTeamMessageBoard.call(this, {
+      team_id: +this.teamId,
+      user_id: this.userId || (localStorage.getItem("User_ID") as string),
+      content: this.messageBoardContent
+    }).then((res: any) => {
+      Toast.showToastSuccess.call(this, '留言成功')
+      this.messageBoardContent = ''
+      this.handleCurrentChange(1)
+    })
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -866,6 +880,11 @@ export default class TeamDetail extends Vue {
       width: 90%;
       height: 40px;
       border: 1px solid #eeeeee;
+      outline: none;
+      padding: 10px;
+      font-size: 16px;
+      color: #a9a9a9;
+      font-weight: 500;
     }
     &-send_btn {
       width: 10%;
