@@ -72,7 +72,7 @@ import dynamicDirectives from './directive/dynamicDirective'
 dynamicDirectives(['inputFilterSpace','inputFocus'])
 // register custom vue-filter
 import dynamicFilter from './filter/dynamicFilter'
-dynamicFilter(['unitStandard', 'standardNickName'])
+dynamicFilter(['unitStandard', 'standardNickName', 'unitTime'])
 // attach fastclick
 // @ts-ignore
 fastClick.attach(document.body)

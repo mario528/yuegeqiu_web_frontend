@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-06-09 00:01:14
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-13 01:44:47
+ * @LastEditTime: 2020-06-13 13:48:35
  * @Description: file content
 --> 
 <template>
@@ -33,16 +33,18 @@
               </div>
             </div>
           </div>
+          <div class="width-100 loading-area" v-show="isEditIng">
+            <div class="loading-dot"></div>
+          </div>
         </div>
         <div class="flex-row chat-frame-content-publish">
-          <textarea class="chat-frame-content-text_area" v-model="publishContext"></textarea>
+          <textarea class="chat-frame-content-text_area" v-model="publishContext" @focus="handlePublishContext(true)" @blur="handlePublishContext(false)"></textarea>
           <div class="chat-frame-content-send_btn" @click="sendTeamMessage">发送</div>
         </div>
       </div>
-      <div class="flex-row-between chat-frame-bar">
+      <div class="flex-row-between chat-frame-bar" @click="handleFrameContent">
         <div>球队聊天室</div>
         <img
-          @click="handleFrameContent"
           :class="[showFrameContent ? 'down-arrow' : 'down-arrow-up']"
           :src="downArrow"
         >
@@ -51,7 +53,7 @@
   </div>
 </template>
 <script lang="ts">
-import { Vue, Prop, Component } from "vue-property-decorator";
+import { Vue, Prop, Component, Watch } from "vue-property-decorator";
 import { Getter } from "vuex-class";
 import { Toast } from "@/utils/index";
 import TeamType from "@/model/Team/Team";
@@ -69,8 +71,9 @@ export default class ChatFrame extends Vue {
   public userId!: string | number;
   private downArrow: string = require("@/assets/user_arrow.png");
   private messageList = [];
-  public showFrameContent = false;
+  private showFrameContent = false;
   private publishContext = "";
+  private isEditIng = false
   mounted() {
     this.$nextTick(() => {
       this.requestTeamMessage();
@@ -78,6 +81,14 @@ export default class ChatFrame extends Vue {
   }
   private handleFrameContent() {
     this.showFrameContent = !this.showFrameContent;
+    if (this.showFrameContent) {
+      this.$nextTick(() => {
+        // 视窗 scrollTap 滚动到底部
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // @ts-ignore
+        this.$refs.chatContent.scrollTop = this.$refs.frameContentLine[0].clientHeight * this.messageList.length
+      })
+    }
   }
   private requestTeamMessage() {
     new TeamType().requestTeamChat
@@ -141,6 +152,9 @@ export default class ChatFrame extends Vue {
         this.publishContext = "";
       });
   }
+  private handlePublishContext (state: boolean) {
+    this.isEditIng = state
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -154,6 +168,7 @@ export default class ChatFrame extends Vue {
   }
   &-bar {
     box-sizing: border-box;
+    box-shadow: $basic_shadow;
     padding: 0 10%;
     background-color: #ff5000;
     height: 50px;
@@ -297,6 +312,26 @@ export default class ChatFrame extends Vue {
   &-up {
     @extend .down-arrow;
     transform: rotate(180deg);
+  }
+}
+.loading-area {
+  position: relative;
+}
+.loading-dot {
+  width: 30px;
+  height: 5px;
+  border-radius: 20%;
+  background-color: $base_color;
+  position: relative;
+  margin-left: calc(100% - 10px);
+  animation: roll 2s ease infinite;
+}
+@keyframes roll {
+  0% {
+    margin-left: calc(100% - 10px);
+  }
+  100% {
+    margin-left: 0;
   }
 }
 @keyframes unfold {

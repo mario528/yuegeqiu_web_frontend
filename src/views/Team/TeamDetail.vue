@@ -2,12 +2,17 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-13 01:20:54
+ * @LastEditTime: 2020-06-14 23:09:44
  * @Description: file content
  -->
 <template>
   <div class="team-detail_container">
-    <chat-frame :title="teamInfo.team_name" :memberNumber="teamMember.length" :teamId="teamId" :isTeamMember="isTeamMember"></chat-frame>
+    <chat-frame
+      :title="teamInfo.team_name"
+      :memberNumber="teamMember.length"
+      :teamId="teamId"
+      :isTeamMember="isTeamMember"
+    ></chat-frame>
     <el-dialog :showDialog="showEditDialog" @closeDialog="handleEditDialog(false)">
       <div slot="dialog-content">
         <div class="flex-row" @click.stop="handleSwitchTag">
@@ -51,7 +56,11 @@
       <!-- 球队详情 -->
       <div class="width-100 flex-row team-info">
         <div class="team-upload" v-if="[0,1].includes(teamRole)">
-          <mario-icon :iconPath="teamInfo.team_icon" :hoverModel="true" @uploadRequest="uploadRequest"></mario-icon>
+          <mario-icon
+            :iconPath="teamInfo.team_icon"
+            :hoverModel="true"
+            @uploadRequest="uploadRequest"
+          ></mario-icon>
         </div>
         <img :src="teamInfo.team_icon" class="team-info-icon" v-else>
         <div class="flex-column-y-center team-info-detail">
@@ -143,7 +152,11 @@
     >
       <div class="flex-row-between width-100 nav-title">
         球队成员
-        <span v-if="isTeamMember" style="font-size: 12px;" @click="handleEditDialog(true)">编辑个人信息</span>
+        <span
+          v-if="isTeamMember"
+          style="font-size: 12px;"
+          @click="handleEditDialog(true)"
+        >编辑个人信息</span>
       </div>
       <div class="flex-row member-list-header">
         <div class="member-list-item list-number">号码</div>
@@ -157,12 +170,16 @@
       </div>
       <div class="flex-column member-list-content">
         <div class="flex-row member-list-line" v-for="(item, index) in teamMember" :key="index">
-          <div class="member-list-item list-number flex-row-y-center">{{item.team_number ? item.team_number : '-'}}</div>
+          <div
+            class="member-list-item list-number flex-row-y-center"
+          >{{item.team_number ? item.team_number : '-'}}</div>
           <div class="member-list-item list-nick_name flex-row-y-center">
             <img :src="item.head_url" class="list-user_icon">
             <span style="margin-left: 5px;">{{item.nick_name}}</span>
           </div>
-          <div class="member-list-item list-position flex-row-y-center">{{item.team_position ? item.team_position : '-'}}</div>
+          <div
+            class="member-list-item list-position flex-row-y-center"
+          >{{item.team_position ? item.team_position : '-'}}</div>
           <div
             class="member-list-item list-role flex-row-y-center"
           >{{item.role == 0 ? '队长' : item.role == 1 ? '副队长' : '球员'}}</div>
@@ -176,7 +193,53 @@
       <div class="flex-row-between nav-title" style="margin-top: 5vh">活动位置
         <div style="font-size: 12px;">球队地图</div>
       </div>
+      <!-- 球队地图 -->
       <div id="team-map"></div>
+      <!-- 球队留言板 -->
+      <div class="message-board-container">
+        <div class="flex-row-between width-100 nav-title" style="margin-top: 5vh">留言板</div>
+        <div class="message-board">
+          <div
+            class="message-board-content"
+            :style="{ 'animation':  scrollMode ? 'roll 10s linear;' : 'none'}"
+            ref="messageBoardContent"
+            @mouseover="handleRollStyle(true)"
+            @mouseleave="handleRollStyle(false)"
+          >
+            <div
+              class="flex-row message-board-content-line"
+              v-for="(item, index) in messageBoardList"
+              :key="index"
+            >
+              <div>
+                <img :src="item.user_info.head_url" class="message-board-content-head_url" />
+                <div class="message-board-content-nick_name">{{item.user_info.nick_name | standardNickName}}</div>
+              </div>
+              <div class="message-board-content-detail">
+                {{item.content}}
+                <div class="flex-row-y-center message-board-content-time">{{item.publish_date | unitTime}}</div>
+              </div>
+            </div>
+            <div class="empty-tips" v-if="messageBoardList.length == 0">暂无留言</div>
+          </div>
+          <div class="width-100 flex-row-x-end message-board-footer">
+            <el-pagination
+              background=""
+              :current-page="pageConfig._pageCurrent"
+              :page-size="pageConfig._pageSize"
+              layout="prev, pager, next"
+              :total="pageConfig._pageTotal"
+              @current-change="handleCurrentChange"
+            ></el-pagination>
+          </div>
+          <div class="flex-row" style="margin-top: 10px; padding: 5px 10px;">
+            <textarea class="message-board-content-text_area" v-model="messageBoardContent"></textarea>
+            <div class="flex-row-y-center message-board-content-send_btn">
+              <img class="message-board-content-send_btn_icon" :src="require('@/assets/send_msg_icon.png')" />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -204,7 +267,7 @@ import TeamCenterInform from "@/components/TeamPageInform.vue";
 import TeamCalendar from "@/components/TeamCalendar.vue";
 import IconDIY from "@/components/IconDiy.vue";
 import Dialog from "@/components/Dialog/DialogComponent.vue";
-import ChatFrame from '@/components/ChatFrame.vue'
+import ChatFrame from "@/components/ChatFrame.vue";
 @Component({
   components: {
     "team-shirt": TeamShirt,
@@ -231,7 +294,11 @@ export default class TeamDetail extends Vue {
   private positionType = 6;
   private disabledNumberList = [];
   private pageConfig = {
-    _hideMatch: false
+    _hideMatch: false,
+    _pageCurrent: 0,
+    _pageSize: 5,
+    _pageTotal: 0,
+    _messageBoardModel: 0 // 0 按时间正序 1 按时间倒叙
   };
   private tagIndex = 0;
   private tagOptions = [
@@ -269,8 +336,11 @@ export default class TeamDetail extends Vue {
     }
   ];
   private selectNumber = -1;
-  private showEditDialog = false
+  private showEditDialog = false;
   private downArrow: string = require("@/assets/user_arrow_black.png");
+  private messageBoardList = [];
+  private scrollMode = false;
+  private messageBoardContent = ''
   mounted() {
     this.teamId = +this.$route.query.td;
     this.requestTeamDetail();
@@ -281,14 +351,15 @@ export default class TeamDetail extends Vue {
       loadComplete: false
     });
     this.map.setFeatures(["point", "road", "building", "bg"]);
+    this.requestTeamMessageBoard();
   }
   beforeDestroy() {
     // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
-    this.$socket.emit('disconnectTeamChat', {
+    this.$socket.emit("disconnectTeamChat", {
       team_id: +this.teamId
-    }) 
-  } 
+    });
+  }
   private requestTeamDetail() {
     const teamType = new TeamType();
     const params = {
@@ -460,6 +531,45 @@ export default class TeamDetail extends Vue {
         this.requestTeamDetail();
         this.handleEditDialog(false);
       });
+  }
+  private handleRollStyle(state: boolean) {
+    if (state) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
+      this.$refs.messageBoardContent.style = "animation-play-state: paused";
+    } else {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
+      this.$refs.messageBoardContent.style = "animation-play-state: running";
+    }
+  }
+  private requestTeamMessageBoard(page = 0) {
+    new TeamType().getTeamMessageBoard
+      .call(this, {
+        team_id: +this.teamId,
+        user_id: this.userId || (localStorage.getItem("User_ID") as string),
+        sort_type: this.pageConfig._messageBoardModel,
+        page: page
+      })
+      .then((res: any) => {
+        const { list, count  } = res.message_board_info
+        this.pageConfig._pageTotal = count
+        this.messageBoardList = list
+        this.$nextTick(() => {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+          // @ts-ignore
+          const messageBoardContentHeight = this.$refs.messageBoardContent.clientHeight;
+          if (messageBoardContentHeight > 400) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+            // @ts-ignore
+            this.scrollMode = true;
+          }
+        });
+      });
+  }
+  private handleCurrentChange(page: any) {
+    this.pageConfig._pageCurrent = page
+    this.requestTeamMessageBoard(page - 1)
   }
 }
 </script>
@@ -704,6 +814,95 @@ export default class TeamDetail extends Vue {
   width: 150px;
   height: 150px;
   border-radius: 50%;
+}
+.message-board {
+  margin-top: 20px;
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid #eeeeee;
+  box-shadow: $basic_shadow;
+  margin-bottom: 2vh;
+  &-content {
+    width: 100%;
+    min-height: 50vh;
+    position: relative;
+    &-line {
+      padding: 10px 5px;
+      box-sizing: border-box;
+      border-bottom: 1px solid #eeeeee;
+    }
+    &-head_url {
+      width: 60px;
+      height: 60px;
+      display: block;
+      border-radius: 5px;
+    }
+    &-nick_name {
+      font-size: 12px;
+      margin-top: 5px;
+    }
+    &-detail {
+      margin-left: 20px;
+      width: 75%;
+      min-height: 100%;
+      padding: 10px 10px 40px 10px;
+      box-sizing: border-box;
+      word-break: break-all;
+      background-color: #F8F3F3;
+      border-radius: 10px;
+      position: relative;
+    }
+    &-time {
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      height: 20px;
+      line-height: 20px;
+      color: #a9a9a9;
+      font-size: 12px;
+    }
+    &-text_area {
+      resize: none;
+      width: 90%;
+      height: 40px;
+      border: 1px solid #eeeeee;
+    }
+    &-send_btn {
+      width: 10%;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+      &_icon {
+        width: 30px;
+        height: 30px;
+        margin: 5px auto;
+        box-shadow: $basic_shadow;
+      }
+    }
+  }
+  &-footer {
+    padding: 5px 0;
+    border-top: 1px solid #eeeeee;
+  }
+}
+.empty-tips {
+  width: 100%;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #a9a9a9;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+@keyframes roll {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
 }
 @keyframes wordLoop {
   0% {

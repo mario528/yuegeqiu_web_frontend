@@ -21,9 +21,13 @@ export default class Loading extends Vue {
 </script>
 <style lang="scss" scoped>
 .loading-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, .9)
+  background-color: rgba(0, 0, 0, .8);
+  z-index: 900;
 }
 .loading {
   height: 40px;

@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-04-30 22:08:23
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-09 23:38:38
+ * @LastEditTime: 2020-06-14 00:16:51
  * @Description: file content
  */
 import { Url } from '../../utils/index'
@@ -90,6 +90,12 @@ interface SendMessage {
     user_id: string | number | null;
     team_id: number | string;
     content: string;
+}
+interface GetTeamMessageBoard {
+    user_id: string | number | null;
+    team_id: number | string;
+    sort_type: number;
+    page: number;
 }
 class Team {
     constructor() {}
@@ -257,6 +263,16 @@ class Team {
         return new Promise((reslove, reject) => {
             // @ts-ignore
             this.$http.post(Url.SEND_TEAM_CHAT, params).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
+    getTeamMessageBoard (params: GetTeamMessageBoard) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.post(Url.GET_TEAM_MESSAGE_BOARD, params).then((res: any) => {
                 reslove(res)
             }).catch((err: any) => {
                 reject(err)
