@@ -23,9 +23,8 @@ module.exports = {
     hotOnly: false,
     proxy: {
       '/api': {
-        target: isProductionEnv ? 'https://101.201.142.182:3000' : 'https://localhost:3000',
         // 部署时切换
-        // target: 'http://101.201.142.182:3000',
+        target: isProductionEnv ? 'https://101.201.142.182:3000' : 'http://localhost:3000',
         changeOrigin: true,
         wx: false,
         pathRewrite: {
