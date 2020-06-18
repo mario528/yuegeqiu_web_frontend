@@ -70,7 +70,7 @@ Vue.mixin({
 })
 // register custom vue-directive
 import dynamicDirectives from './directive/dynamicDirective'
-dynamicDirectives(['inputFilterSpace','inputFocus'])
+dynamicDirectives(['inputFilterSpace','inputFocus', 'loginCheck'])
 // register custom vue-filter
 import dynamicFilter from './filter/dynamicFilter'
 dynamicFilter(['unitStandard', 'standardNickName', 'unitTime'])

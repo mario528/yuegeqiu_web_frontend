@@ -2,12 +2,19 @@
  * @Author: majiaao
  * @Date: 2020-06-09 00:01:14
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-13 13:48:35
+ * @LastEditTime: 2020-06-18 23:59:28
  * @Description: file content
 --> 
 <template>
   <div class="chat-frame-container">
     <div>
+      <div class="flex-row-between chat-frame-bar" @click="handleFrameContent">
+        <div>球队聊天室</div>
+        <img
+          :class="[showFrameContent ? 'down-arrow' : 'down-arrow-up']"
+          :src="downArrow"
+        >
+      </div>
       <div class="chat-frame-content" v-if="showFrameContent" ref="frameContent">
         <div class="chat-frame-content-title" v-if="title">
           {{title}}
@@ -42,13 +49,6 @@
           <div class="chat-frame-content-send_btn" @click="sendTeamMessage">发送</div>
         </div>
       </div>
-      <div class="flex-row-between chat-frame-bar" @click="handleFrameContent">
-        <div>球队聊天室</div>
-        <img
-          :class="[showFrameContent ? 'down-arrow' : 'down-arrow-up']"
-          :src="downArrow"
-        >
-      </div>
     </div>
   </div>
 </template>
@@ -57,8 +57,9 @@ import { Vue, Prop, Component, Watch } from "vue-property-decorator";
 import { Getter } from "vuex-class";
 import { Toast } from "@/utils/index";
 import TeamType from "@/model/Team/Team";
+import { LoginStateCheck } from '@/mixins/index'
 @Component
-export default class ChatFrame extends Vue {
+export default class ChatFrame extends LoginStateCheck {
   @Prop({ default: "" })
   title!: string;
   @Prop({ default: 0 })
@@ -138,6 +139,10 @@ export default class ChatFrame extends Vue {
       });
   }
   private sendTeamMessage() {
+    if (!this.checkLoginState()) {
+      Toast.showToastError.call(this, "请登录");
+      return
+    }
     if (!this.publishContext) {
       Toast.showToastError.call(this, "发送内容不能为空");
       return;
@@ -162,8 +167,8 @@ export default class ChatFrame extends Vue {
   &-container {
     width: 30vw;
     position: fixed;
-    right: 0;
-    bottom: 0vh;
+    right: 5px;
+    bottom: 5px;
     z-index: 500;
   }
   &-bar {
