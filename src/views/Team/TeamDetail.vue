@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-14 23:43:01
+ * @LastEditTime: 2020-06-19 17:07:39
  * @Description: file content
  -->
 <template>
@@ -194,7 +194,12 @@
         <div style="font-size: 12px;">球队地图</div>
       </div>
       <!-- 球队地图 -->
-      <div id="team-map"></div>
+      <div id="team-map">
+        <div class="flex-column-center team-map-loading" v-if="teamMapLoading">
+          <i class="el-icon-loading loading-icon"></i>
+          <div>加载中</div>
+        </div>
+      </div>
       <!-- 球队留言板 -->
       <div class="message-board-container">
         <div class="flex-row-between width-100 nav-title" style="margin-top: 5vh">留言板</div>
@@ -256,11 +261,12 @@ enum PositiontypeEnum {
 }
 /* eslint-disable @typescript-eslint/camelcase */
 import { Vue, Component } from "vue-property-decorator";
-import { State, Getter } from "vuex-class";
+import { State, Getter, Action } from "vuex-class";
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import AMap from "AMap";
 import { Toast, TimeFormate, MapUtils } from "@/utils/index";
+import { LoginStateCheck } from '@/mixins/index'
 import TeamType from "@/model/Team/Team";
 import TeamShirt from "@/components/TeamShirt.vue";
 import TeamCenterInform from "@/components/TeamPageInform.vue";
@@ -278,9 +284,11 @@ import ChatFrame from "@/components/ChatFrame.vue";
     "chat-frame": ChatFrame
   }
 })
-export default class TeamDetail extends Vue {
+export default class TeamDetail extends LoginStateCheck {
   @Getter("getUserId")
   public userId!: string | number;
+  @Action("handleLoginOrRegisterState")
+  public handleLoginOrRegisterState!: (state: number) => void
   public map!: any;
   public teamId!: string | number;
   public teamInfo: object = {};
@@ -341,6 +349,7 @@ export default class TeamDetail extends Vue {
   private messageBoardList = [];
   private scrollMode = false;
   private messageBoardContent = ''
+  private teamMapLoading = true
   mounted() {
     this.teamId = +this.$route.query.td;
     this.requestTeamDetail();
@@ -359,6 +368,12 @@ export default class TeamDetail extends Vue {
     this.$socket.emit("disconnectTeamChat", {
       team_id: +this.teamId
     });
+  }
+  private handleLogin () {
+    this.handleLoginOrRegisterState(Number(1))
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
+    this.$event.emit("changeLoginDialogState");
   }
   private requestTeamDetail() {
     const teamType = new TeamType();
@@ -444,6 +459,10 @@ export default class TeamDetail extends Vue {
       });
   }
   private handleMemberBtn() {
+    if (!this.checkLoginState()) {
+      this.handleLogin()
+      return
+    }
     if (this.isTeamMember) {
       this.$confirm("离队操作不可撤销，是否继续?", "离队", {
         confirmButtonText: "确定",
@@ -457,6 +476,10 @@ export default class TeamDetail extends Vue {
     }
   }
   private handleJoinTeam() {
+    if (!this.checkLoginState()) {
+      this.handleLogin()
+      return
+    }
     new TeamType().joinTeam
       .call(this, {
         team_id: +this.teamId,
@@ -498,6 +521,10 @@ export default class TeamDetail extends Vue {
     this.selectNumber = +teamnumber;
   }
   private handleDialogBtn() {
+    if (!this.checkLoginState()) {
+      this.handleLogin()
+      return
+    }
     if (this.tagIndex == 0) {
       this.handleSwitchTeamPosition();
     } else {
@@ -572,6 +599,10 @@ export default class TeamDetail extends Vue {
     this.requestTeamMessageBoard(page - 1)
   }
   private handSendBoardMessage () {
+    if (!this.checkLoginState()) {
+      this.handleLogin()
+      return
+    }
     if (!this.messageBoardContent) {
       return
     }
@@ -758,6 +789,16 @@ export default class TeamDetail extends Vue {
   width: 100%;
   height: 400px;
   margin-top: 2vh;
+  position: relative;
+}
+.team-map-loading {
+  position: absolute;
+  z-index: 20;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
 }
 .team-state {
   width: 20%;

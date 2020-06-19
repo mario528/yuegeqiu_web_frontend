@@ -2,24 +2,21 @@
  * @Author: majiaao
  * @Date: 2020-06-09 00:01:14
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-18 23:59:28
+ * @LastEditTime: 2020-06-19 17:06:20
  * @Description: file content
 --> 
 <template>
   <div class="chat-frame-container">
     <div>
       <div class="flex-row-between chat-frame-bar" @click="handleFrameContent">
-        <div>球队聊天室</div>
+        <div v-if="title">{{title}}（{{memberNumber}}）</div>
+        <div v-else>球队聊天室</div>
         <img
           :class="[showFrameContent ? 'down-arrow' : 'down-arrow-up']"
           :src="downArrow"
         >
       </div>
       <div class="chat-frame-content" v-if="showFrameContent" ref="frameContent">
-        <div class="chat-frame-content-title" v-if="title">
-          {{title}}
-          <span v-if="memberNumber">（{{memberNumber}}）</span>
-        </div>
         <div class="chat-frame-content-detail" ref="chatContent">
           <div class="chat-frame-content-detail-tips" v-if="messageList.length == 0">暂无聊天记录</div>
           <div class="width-100 message-line" v-for="(item, index) in messageList" :key="index" ref="frameContentLine">
@@ -54,7 +51,7 @@
 </template>
 <script lang="ts">
 import { Vue, Prop, Component, Watch } from "vue-property-decorator";
-import { Getter } from "vuex-class";
+import { Getter, Action } from "vuex-class";
 import { Toast } from "@/utils/index";
 import TeamType from "@/model/Team/Team";
 import { LoginStateCheck } from '@/mixins/index'
@@ -70,6 +67,8 @@ export default class ChatFrame extends LoginStateCheck {
   isTeamMember!: boolean;
   @Getter("getUserId")
   public userId!: string | number;
+  @Action("handleLoginOrRegisterState")
+  public handleLoginOrRegisterState!: (state: number) => void
   private downArrow: string = require("@/assets/user_arrow.png");
   private messageList = [];
   private showFrameContent = false;
@@ -140,8 +139,12 @@ export default class ChatFrame extends LoginStateCheck {
   }
   private sendTeamMessage() {
     if (!this.checkLoginState()) {
-      Toast.showToastError.call(this, "请登录");
-      return
+      this.showFrameContent = false
+      this.handleLoginOrRegisterState(Number(1))
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
+      this.$event.emit("changeLoginDialogState");
+        return
     }
     if (!this.publishContext) {
       Toast.showToastError.call(this, "发送内容不能为空");
@@ -167,8 +170,8 @@ export default class ChatFrame extends LoginStateCheck {
   &-container {
     width: 30vw;
     position: fixed;
-    right: 5px;
-    bottom: 5px;
+    right: 0px;
+    bottom: 0px;
     z-index: 500;
   }
   &-bar {
@@ -188,15 +191,9 @@ export default class ChatFrame extends LoginStateCheck {
     background-color: white;
     animation: unfold 0.2s linear forwards;
     box-shadow: $basic_shadow;
-    &-title {
-      padding: 0px 20px;
-      height: 45px;
-      line-height: 45px;
-      border-bottom: 1px solid #eeeeee;
-    }
     &-detail {
       width: 100%;
-      height: calc(50vh - 45px);
+      height: calc(50vh);
       background-color: rgba(#eeeeee, 0.6);
       position: relative;
       overflow-y: scroll;
