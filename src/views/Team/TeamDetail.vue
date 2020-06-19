@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-19 17:07:39
+ * @LastEditTime: 2020-06-19 23:15:55
  * @Description: file content
  -->
 <template>
@@ -110,7 +110,6 @@
             :showInfromValue="teamInfo.team_inform"
             :teamId="teamId"
             :canEdit="teamRole == 0 || teamRole == 1"
-            :baseColor="'#303F9F'"
           ></team-inform>
         </div>
       </div>
@@ -119,12 +118,16 @@
         <team-calendar :dateArray="calendar" :calendarList="calendarList" :teamId="teamId"></team-calendar>
       </div>
       <!-- 球队赛事 -->
-      <div class="team-line width-100" style="padding-bottom: 20px;">
+      <div class="team-line width-100" style="padding-bottom: 80px;">
         <div class="flex-row-between content-title">球队赛事</div>
         <div class="width-100 match-content" v-show="!pageConfig._hideMatch">
           <el-table :data="matchList" style="width: 100%">
             <div slot="empty">
-              <div>您的球队暂未参加赛事</div>
+              <div>{{isTeamMember ? '您的' : '该'}}球队暂未参加赛事</div>
+              <div class="flex-row" @click.stop="handleMatchEvent">
+                <div class="match-btn" data-type="join">参加赛事</div>
+                <div class="match-btn" data-type="create">发起赛事</div>
+              </div>
             </div>
             <el-table-column label="赛事名" prop="match_name"></el-table-column>
             <el-table-column label="比赛类型" prop="match_property"></el-table-column>
@@ -290,11 +293,11 @@ export default class TeamDetail extends LoginStateCheck {
   @Action("handleLoginOrRegisterState")
   public handleLoginOrRegisterState!: (state: number) => void
   public map!: any;
-  public teamId!: string | number;
+  public teamId = -1;
   public teamInfo: object = {};
   public teamMember: object = {};
   public showMoreInfo = false;
-  public calendar!: string[];
+  public calendar: string[] = [];
   public calendarList = [];
   public isTeamMember = false;
   public teamRole = 2;
@@ -352,7 +355,6 @@ export default class TeamDetail extends LoginStateCheck {
   private teamMapLoading = true
   mounted() {
     this.teamId = +this.$route.query.td;
-    this.requestTeamDetail();
     this.map = new AMap.Map("team-map", {
       resizeEnable: true,
       mapStyle: "amap://styles/fresh",
@@ -360,6 +362,10 @@ export default class TeamDetail extends LoginStateCheck {
       loadComplete: false
     });
     this.map.setFeatures(["point", "road", "building", "bg"]);
+    this.map.on("complete", () => {
+      this.teamMapLoading = false
+    })
+    this.requestTeamDetail();
     this.requestTeamMessageBoard();
   }
   beforeDestroy() {
@@ -402,7 +408,7 @@ export default class TeamDetail extends LoginStateCheck {
       });
       this.teamInfo = team_info;
       this.teamMember = team_member;
-      this.isTeamMember = is_member;
+      this.isTeamMember = Boolean(is_member);
       this.teamRole = team_role;
       this.calendar = [calendar["start_at"], calendar["end_at"]];
       this.calendarList = calendar.calendar_list.map((item: any) => {
@@ -487,7 +493,10 @@ export default class TeamDetail extends LoginStateCheck {
       })
       .then((res: any) => {
         Toast.showToastSuccess.call(this, "加入球队成功", "成功");
-        this.requestTeamDetail();
+        // TODO 服务端问题
+        setTimeout(() => {
+          this.requestTeamDetail();
+        }, 500)
       });
   }
   private handleLeaveTeam() {
@@ -498,7 +507,10 @@ export default class TeamDetail extends LoginStateCheck {
       })
       .then((res: any) => {
         Toast.showToastSuccess.call(this, "离队成功", "成功");
-        this.requestTeamDetail();
+        // TODO 服务端问题
+        setTimeout(() => {
+          this.requestTeamDetail();
+        }, 500)
       });
   }
   private handleContentVisibleByType(type: any) {
@@ -615,6 +627,24 @@ export default class TeamDetail extends LoginStateCheck {
       this.messageBoardContent = ''
       this.handleCurrentChange(1)
     })
+  }
+  private handleMatchEvent (event: any) {
+    if (!this.checkLoginState()) {
+      this.handleLogin()
+      return
+    }
+    const type = event.target.dataset.type
+    if (type == 'create') {
+      this.$router.push({
+        path: '/match/create',
+        name: 'createMatch'
+      })
+    }else {
+      // this.$router.push({
+      //   path: '/match/create',
+      //   name: 'createMatch'
+      // })
+    }
   }
 }
 </script>
@@ -798,7 +828,13 @@ export default class TeamDetail extends LoginStateCheck {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.2); 
+  color: white;
+}
+.loading-icon {
+  font-size: 30px;
+  font-weight: 500;
+  margin-bottom: 10px;
 }
 .team-state {
   width: 20%;
@@ -955,6 +991,17 @@ export default class TeamDetail extends LoginStateCheck {
   color: #a9a9a9;
   font-weight: 500;
   letter-spacing: 1px;
+}
+.match-btn {
+  background-color: $base-color;
+  color: white;
+  margin: 0 auto;
+  width: 25%;
+  height: 30px;
+  line-height: 30px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  cursor: pointer;
 }
 @keyframes roll {
   0% {

@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-07 21:25:40
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-09 14:44:37
+ * @LastEditTime: 2020-06-19 23:14:38
  * @Description: file content
  -->
  <template>
@@ -52,7 +52,7 @@
             <img v-if="showHideModel" :class="[hideContent ? 'down-arrow' : 'down-arrow-up']" :src="downArrow" />
         </div>
         <div class="calendar-week-title" v-if="!isMobile && (showHideModel && !hideContent) || !showHideModel">
-            <div :style="{'background-color': baseColor}" class="calendar-week-title-item" v-for="(item, index) in weekList" :key="index">
+            <div class="calendar-week-title-item" v-for="(item, index) in weekList" :key="index">
                 {{item}}
             </div>
         </div>
@@ -209,7 +209,7 @@ export default class TeamCaleder extends Vue {
     margin-bottom: 10px;
     &-item {
         padding: 20px 10px;
-        background-color: $side-color;
+        background-color: $base_color;
         font-weight: 500;
         color: $base_font_color;
     }
@@ -231,14 +231,16 @@ export default class TeamCaleder extends Vue {
         padding: 5px 5px;
         box-sizing: border-box;
         &:hover {
-            background-color: rgba(22,177,58,.5);
+            // background-color: rgba(22,177,58,.5);
+            background-color: rgba(0, 0, 0, 0.05); 
             color: $header_font_color_activity;
             font-weight: 600;
             cursor: pointer;
         }
         &-hover {
             @extend .calendar-area-item ;
-            background-color: rgba(22,177,58,.5);
+            // background-color: rgba(22,177,58,.5);
+            background-color: rgba(0, 0, 0, 0.1); 
             color: $header_font_color_activity;
             font-weight: 600;
             cursor: pointer;
@@ -271,7 +273,7 @@ export default class TeamCaleder extends Vue {
             &-today {
                 @extend .calendar-area-item-strong ;
                 font-weight: 700;
-                color: $side-color;
+                color: $base-color;
             }
         }
         &-pop-dialog {
@@ -282,7 +284,8 @@ export default class TeamCaleder extends Vue {
         }
         &-weekend {
             @extend .calendar-area-item ;
-            background-color: rgba(99,197,101, .2);
+            // background-color: rgba(99,197,101, .2);
+            background-color: rgba($base_color, .05);
         }
     }
 }
@@ -320,7 +323,7 @@ export default class TeamCaleder extends Vue {
         font-size: 14px;
         width: auto;
         padding: 2px 6px;
-        background-color: $side-color;
+        background-color: $base-color;
         color: white;
         font-weight: 500;
         border-radius: 5px;
