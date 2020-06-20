@@ -73,6 +73,10 @@ const url = {
 
     GET_TEAM_MESSAGE_BOARD: '/api/v1/team/board/get',
 
-    SEND_TEAM_MESSAGE_BOARD: '/api/v1/team/board/send'
+    SEND_TEAM_MESSAGE_BOARD: '/api/v1/team/board/send',
+
+    GET_USER_TEAM_LIST: '/api/v1/team/user/list',
+
+    CREATE_CHALLENGE: '/api/v1/team/challenge/create'
 }
 export default url

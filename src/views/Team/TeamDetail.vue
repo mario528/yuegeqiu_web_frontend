@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-19 23:15:55
+ * @LastEditTime: 2020-06-21 01:31:29
  * @Description: file content
  -->
 <template>
@@ -13,8 +13,8 @@
       :teamId="teamId"
       :isTeamMember="isTeamMember"
     ></chat-frame>
-    <el-dialog :showDialog="showEditDialog" @closeDialog="handleEditDialog(false)">
-      <div slot="dialog-content">
+    <el-dialog :showDialog="showEditDialog || showChallengeDialog" @closeDialog="handleEditDialog(false)">
+      <div slot="dialog-content" v-if="showEditDialog">
         <div class="flex-row" @click.stop="handleSwitchTag">
           <div :class="[tagIndex == 0 ? 'tag-item-activity' : 'tag-item']" data-tag="0">位置</div>
           <div :class="[tagIndex == 1 ? 'tag-item-activity' : 'tag-item']" data-tag="1">号码</div>
@@ -36,7 +36,7 @@
                 :class="[!disabledNumberList.includes(item) ? 'number-area-item' : selectNumber == item ? 'number-area-item-selected' : 'number-area-item-disable']"
                 v-for="(item, index) in 50"
                 :key="index"
-                data-avaiable="!disabledNumberList.includes(item)"
+                :data-avaiable="!disabledNumberList.includes(item)"
                 :data-teamNumber="item"
               >{{item}}</div>
             </div>
@@ -47,6 +47,47 @@
             class="tag-content-btn"
             @click="handleDialogBtn"
           >修改{{(tagIndex == 1 && selectNumber != -1 ? '号码:' + selectNumber : '')}}</span>
+        </div>
+      </div>
+      <div slot="dialog-header" class="dialog-header" v-if="showChallengeDialog">
+        约个球
+      </div>
+      <div slot="dialog-content" v-if="showChallengeDialog">
+        <div class="flex-row-y-center challeng-line">
+          <div class="challeng-line-title">比赛类型</div>
+          <div class="challeng-line-content">
+            <el-select v-model="matchConfig._matchType" placeholder="比赛类型" class="challeng-line-content-select">
+              <el-option v-for="item in matchTypeList" :key="item.type" :label="item.value" :value="item.type"></el-option>
+            </el-select>
+          </div>
+        </div>
+        <div class="flex-row-y-center challeng-line">
+          <div class="challeng-line-title">比赛时间</div>
+          <div class="challeng-line-content">
+            <el-date-picker v-model="matchConfig._matchTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="比赛时间"></el-date-picker>
+          </div>
+        </div>
+        <div class="flex-row-y-center challeng-line">
+          <div class="challeng-line-title">地点</div>
+          <div class="challeng-line-content">
+            <input class="challeng-line-input" id="tipinput" placeholder="比赛位置" type="text" v-model="matchConfig._positionDetail">
+          </div>
+        </div>
+        <div class="flex-row-y-center challeng-line">
+          <div class="challeng-line-title">更多</div>
+          <div class="challeng-line-content">
+            <div class="challeng-line-text_content">
+              <textarea class="challeng-line-text_area"
+                      :maxlength="textareaConfig.maxlength"
+                      placeholder="联系方式/介绍" 
+                      v-model="matchConfig._moreDetail">
+              </textarea>
+              <a class="count-down">{{matchConfig._moreDetail.length}}/100</a>
+            </div>
+          </div>
+        </div>
+        <div class="flex-row-center">
+          <div class="challeng-line-btn" @click="handleCreateChallenge">去约球！</div>
         </div>
       </div>
     </el-dialog>
@@ -64,8 +105,13 @@
         </div>
         <img :src="teamInfo.team_icon" class="team-info-icon" v-else>
         <div class="flex-column-y-center team-info-detail">
-          <div class="team-info-name">{{teamInfo.team_name}}</div>
-          <div class="team-info-description">{{teamInfo.description}}</div>
+          <div class="width-100 flex-row-between">
+            <div>
+              <div class="team-info-name">{{teamInfo.team_name}}</div>
+              <div class="team-info-description">{{teamInfo.description}}</div>
+            </div>
+            <div class="invite-game" v-if="!isTeamMember" @click="handleChallenge">约个球</div>
+          </div>
           <div class="flex-row-x-between width-100 team-address">
             <div class="flex-row-y-center">
               <span class="team-address-title">活动区域</span>
@@ -171,8 +217,8 @@
           v-if="isTeamMember && teamRole && [0,1].includes(teamRole)"
         >编辑</div>
       </div>
-      <div class="flex-column member-list-content">
-        <div class="flex-row member-list-line" v-for="(item, index) in teamMember" :key="index">
+      <div class="flex-column member-list-content" @click.stop="handleUserCenter">
+        <div class="flex-row member-list-line" v-for="(item, index) in teamMember" :key="index" data-id="item">
           <div
             class="member-list-item list-number flex-row-y-center"
           >{{item.team_number ? item.team_number : '-'}}</div>
@@ -304,6 +350,9 @@ export default class TeamDetail extends LoginStateCheck {
   public matchList = [];
   private positionType = 6;
   private disabledNumberList = [];
+  private textareaConfig = {
+    maxlength: 100
+  }
   private pageConfig = {
     _hideMatch: false,
     _pageCurrent: 0,
@@ -346,6 +395,16 @@ export default class TeamDetail extends LoginStateCheck {
       type: 7
     }
   ];
+  private matchTypeList = [{
+    value: '五人制',
+    type: 0
+  },{
+    value: '七人制',
+    type: 1
+  },{
+    value: '十一人制',
+    type: 2
+  }]
   private selectNumber = -1;
   private showEditDialog = false;
   private downArrow: string = require("@/assets/user_arrow_black.png");
@@ -353,8 +412,37 @@ export default class TeamDetail extends LoginStateCheck {
   private scrollMode = false;
   private messageBoardContent = ''
   private teamMapLoading = true
+  private showChallengeDialog = false
+  private matchConfig = {
+    _matchType: 0,
+    _matchTime: '',
+    _positionDetail: '',
+    _locationDetail: {
+      longitude: undefined,
+      latitude: undefined
+    },
+    _moreDetail: ''
+  }
   mounted() {
+    const that = this
     this.teamId = +this.$route.query.td;
+    AMap.plugin(["AMap.Autocomplete", "AMap.PlaceSearch"], function() {
+      const autoOptions = {
+        city: "北京", //城市，默认全国
+        input: "tipinput" //使用联想输入的input的id
+      };
+      const autocomplete = new AMap.Autocomplete(autoOptions);
+      const placeSearch = new AMap.PlaceSearch({
+        city: "北京"
+      });
+      AMap.event.addListener(autocomplete, "select", (event: any) => {
+        const { lat, lng } = event.poi.location;
+        that.matchConfig._locationDetail = {
+          longitude: lng,
+          latitude: lat
+        };
+      });
+    });
     this.map = new AMap.Map("team-map", {
       resizeEnable: true,
       mapStyle: "amap://styles/fresh",
@@ -526,6 +614,7 @@ export default class TeamDetail extends LoginStateCheck {
   }
   private handleEditDialog(state: boolean) {
     this.showEditDialog = state;
+    this.showChallengeDialog = state;
   }
   private handleSelectNumber(event: any) {
     const { avaiable, teamnumber } = event.target.dataset;
@@ -645,6 +734,42 @@ export default class TeamDetail extends LoginStateCheck {
       //   name: 'createMatch'
       // })
     }
+  }
+  private handleUserCenter (event: any) {
+    const visit_id = event.target.dataset.id
+    debugger
+  }
+  private handleChallenge () {
+    if (!this.checkLoginState()) {
+      this.handleLogin()
+      return
+    }
+    new TeamType().getUserTeamList.call(this, {
+      user_id: this.userId || (localStorage.getItem("User_ID") as string)
+    }).then((res: any) => {
+      const teamNumber = res.team_list.length
+      if (teamNumber == 0) {
+        Toast.showToastError.call(this, '您暂无加盟球队')
+      }else if (teamNumber == 1) {
+        this.showChallengeDialog = true
+      }else {
+        // 
+      }
+    });
+  }
+  private handleCreateChallenge () {
+    new TeamType().createChallenge.call(this, {
+      user_id: this.userId || (localStorage.getItem("User_ID") as string)
+    }).then((res: any) => {
+      const teamNumber = res.team_list.length
+      if (teamNumber == 0) {
+        Toast.showToastError.call(this, '您暂无加盟球队')
+      }else if (teamNumber == 1) {
+        this.showChallengeDialog = true
+      }else {
+        // 
+      }
+    });
   }
 }
 </script>
@@ -1002,6 +1127,92 @@ export default class TeamDetail extends LoginStateCheck {
   border-radius: 5px;
   margin-bottom: 20px;
   cursor: pointer;
+}
+.invite-game {
+  background-color: $side_color;
+  height: 30px;
+  line-height: 30px;
+  padding: 0 15px;
+  border-radius: 20px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  color: white;
+  font-weight: 500;
+  position: relative;
+  cursor: pointer;
+}
+.dialog-header {
+  font-size: 18px;
+  font-weight: 500;
+  padding: 2px 15px;
+  box-sizing: border-box;
+  position: relative;
+  &::before {
+    content: '';
+    background-color: $side_color;
+    width: 8px;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+  }
+}
+.challeng-line {
+  padding: 10px 0;
+  position: relative;
+  &-title {
+    font-size: 14px;
+    font-weight: 500;
+    width: 20%;
+  }
+  &-content {
+    width: 60%;
+    margin-left: 20%;
+  }
+  &-input {
+    height: 40px;
+    width: 85%;
+    padding: 0 5px;
+    border: 1px solid rgba(#b4bccc, .7);
+    border-radius: 5px;
+  }
+  &-text_content {
+    width: 85%;
+    height: 120px;
+    position: relative;
+    border: 1px solid rgba(#b4bccc, .7);
+    border-radius: 5px;
+  }
+  &-text_area {
+    width: 100%;
+    height: 100px;
+    resize: none;
+    padding: 5px 10px 20px 10px;
+    font-size: 14px;
+    color: #333;
+    outline: none;
+    border: none;
+  }
+  &-btn {
+    background-color: $side_color;
+    color: white;
+    font-weight: 500;
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-top: 5vh;
+    cursor: pointer;
+  }
+}
+.count-down {
+  color: #a9a9a9;
+  font-size: 12px;
+  position: absolute;
+  bottom: 0px;
+  right: 5%;
+  z-index: 50;
+}
+.challeng-line-content ::v-deep .challeng-line-content-select {
+  width: 85%;
 }
 @keyframes roll {
   0% {

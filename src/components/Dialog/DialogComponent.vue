@@ -2,12 +2,13 @@
  * @Author: majiaao
  * @Date: 2020-05-11 15:56:06
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-03 15:23:54
+ * @LastEditTime: 2020-06-20 21:56:17
  * @Description: file content
  -->
 <template>
     <div class="flex-column-center dialog-box" v-if="showDialog" @click="handleDialog(false)">
         <div class="dialog-content" @click.stop="stop">
+          <slot name="dialog-header"></slot>
           <slot name="dialog-content"></slot>
           <div class="dialog-footer">
             <slot name="dialog-footer"></slot>

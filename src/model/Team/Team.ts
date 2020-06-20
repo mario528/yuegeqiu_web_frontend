@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-04-30 22:08:23
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-14 23:31:14
+ * @LastEditTime: 2020-06-21 01:33:21
  * @Description: file content
  */
 import { Url } from '../../utils/index'
@@ -101,6 +101,17 @@ interface SendTeamMessageBoard {
     user_id: string | number | null;
     team_id: number | string;
     content: string;
+}
+interface GetUserTeamList {
+    user_id: string | number | null;
+}
+interface CreateChallenge {
+    user_id: string | number | null;
+    team_id: number | string;
+    time: string;
+    location: Location;
+    type: number;
+    detail: string;
 }
 class Team {
     constructor() {}
@@ -288,6 +299,28 @@ class Team {
         return new Promise((reslove, reject) => {
             // @ts-ignore
             this.$http.post(Url.SEND_TEAM_MESSAGE_BOARD, params).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
+    getUserTeamList (params: GetUserTeamList) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.get(Url.GET_USER_TEAM_LIST, {
+                params
+            }).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
+    createChallenge (params: CreateChallenge) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.post(Url.CREATE_CHALLENGE,params).then((res: any) => {
                 reslove(res)
             }).catch((err: any) => {
                 reject(err)
