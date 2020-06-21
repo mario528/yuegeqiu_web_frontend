@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-21 01:31:29
+ * @LastEditTime: 2020-06-21 23:10:34
  * @Description: file content
  -->
 <template>
@@ -13,7 +13,7 @@
       :teamId="teamId"
       :isTeamMember="isTeamMember"
     ></chat-frame>
-    <el-dialog :showDialog="showEditDialog || showChallengeDialog" @closeDialog="handleEditDialog(false)">
+    <el-dialog :showDialog="showEditDialog" @closeDialog="handleEditDialog(false)">
       <div slot="dialog-content" v-if="showEditDialog">
         <div class="flex-row" @click.stop="handleSwitchTag">
           <div :class="[tagIndex == 0 ? 'tag-item-activity' : 'tag-item']" data-tag="0">位置</div>
@@ -47,47 +47,6 @@
             class="tag-content-btn"
             @click="handleDialogBtn"
           >修改{{(tagIndex == 1 && selectNumber != -1 ? '号码:' + selectNumber : '')}}</span>
-        </div>
-      </div>
-      <div slot="dialog-header" class="dialog-header" v-if="showChallengeDialog">
-        约个球
-      </div>
-      <div slot="dialog-content" v-if="showChallengeDialog">
-        <div class="flex-row-y-center challeng-line">
-          <div class="challeng-line-title">比赛类型</div>
-          <div class="challeng-line-content">
-            <el-select v-model="matchConfig._matchType" placeholder="比赛类型" class="challeng-line-content-select">
-              <el-option v-for="item in matchTypeList" :key="item.type" :label="item.value" :value="item.type"></el-option>
-            </el-select>
-          </div>
-        </div>
-        <div class="flex-row-y-center challeng-line">
-          <div class="challeng-line-title">比赛时间</div>
-          <div class="challeng-line-content">
-            <el-date-picker v-model="matchConfig._matchTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="比赛时间"></el-date-picker>
-          </div>
-        </div>
-        <div class="flex-row-y-center challeng-line">
-          <div class="challeng-line-title">地点</div>
-          <div class="challeng-line-content">
-            <input class="challeng-line-input" id="tipinput" placeholder="比赛位置" type="text" v-model="matchConfig._positionDetail">
-          </div>
-        </div>
-        <div class="flex-row-y-center challeng-line">
-          <div class="challeng-line-title">更多</div>
-          <div class="challeng-line-content">
-            <div class="challeng-line-text_content">
-              <textarea class="challeng-line-text_area"
-                      :maxlength="textareaConfig.maxlength"
-                      placeholder="联系方式/介绍" 
-                      v-model="matchConfig._moreDetail">
-              </textarea>
-              <a class="count-down">{{matchConfig._moreDetail.length}}/100</a>
-            </div>
-          </div>
-        </div>
-        <div class="flex-row-center">
-          <div class="challeng-line-btn" @click="handleCreateChallenge">去约球！</div>
         </div>
       </div>
     </el-dialog>
@@ -137,6 +96,45 @@
               加入球队
             </div>
           </div>
+        </div>
+      </div>
+      <!-- 挑战 -->
+      <div class="width-100" v-if="showChallengeDialog">
+        <div class="flex-row-y-center challeng-line">
+          <div class="challeng-line-title">比赛类型</div>
+          <div class="challeng-line-content">
+            <el-select v-model="matchConfig._matchType" placeholder="比赛类型" class="challeng-line-content-select">
+              <el-option v-for="item in matchTypeList" :key="item.type" :label="item.value" :value="item.type"></el-option>
+            </el-select>
+          </div>
+        </div>
+        <div class="flex-row-y-center challeng-line">
+          <div class="challeng-line-title">比赛时间</div>
+          <div class="challeng-line-content">
+            <el-date-picker v-model="matchConfig._matchTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="比赛时间"></el-date-picker>
+          </div>
+        </div>
+        <div class="flex-row-y-center challeng-line">
+          <div class="challeng-line-title">地点</div>
+          <div class="challeng-line-content">
+            <input class="challeng-line-input" id="tipinput" placeholder="比赛位置" type="text" v-model="matchConfig._positionDetail">
+          </div>
+        </div>
+        <div class="flex-row-y-center challeng-line">
+          <div class="challeng-line-title">更多</div>
+          <div class="challeng-line-content">
+            <div class="challeng-line-text_content">
+              <textarea class="challeng-line-text_area"
+                      :maxlength="textareaConfig.maxlength"
+                      placeholder="联系方式/介绍" 
+                      v-model="matchConfig._moreDetail">
+              </textarea>
+              <a class="count-down">{{matchConfig._moreDetail.length}}/100</a>
+            </div>
+          </div>
+        </div>
+        <div class="flex-row-center">
+          <div class="challeng-line-btn" @click="handleCreateChallenge">去约球！</div>
         </div>
       </div>
       <!-- 通告 -->
@@ -421,11 +419,24 @@ export default class TeamDetail extends LoginStateCheck {
       longitude: undefined,
       latitude: undefined
     },
+    _teamId: -1,
     _moreDetail: ''
   }
   mounted() {
     const that = this
     this.teamId = +this.$route.query.td;
+    this.map = new AMap.Map("team-map", {
+      resizeEnable: true,
+      mapStyle: "amap://styles/fresh",
+      zooms: [10, 16],
+      loadComplete: false
+    });
+    this.map.setFeatures(["point", "road", "building", "bg"]);
+    this.map.on("complete", () => {
+      this.teamMapLoading = false
+    })
+    this.requestTeamDetail();
+    this.requestTeamMessageBoard();
     AMap.plugin(["AMap.Autocomplete", "AMap.PlaceSearch"], function() {
       const autoOptions = {
         city: "北京", //城市，默认全国
@@ -443,18 +454,6 @@ export default class TeamDetail extends LoginStateCheck {
         };
       });
     });
-    this.map = new AMap.Map("team-map", {
-      resizeEnable: true,
-      mapStyle: "amap://styles/fresh",
-      zooms: [10, 16],
-      loadComplete: false
-    });
-    this.map.setFeatures(["point", "road", "building", "bg"]);
-    this.map.on("complete", () => {
-      this.teamMapLoading = false
-    })
-    this.requestTeamDetail();
-    this.requestTeamMessageBoard();
   }
   beforeDestroy() {
     // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
@@ -737,7 +736,6 @@ export default class TeamDetail extends LoginStateCheck {
   }
   private handleUserCenter (event: any) {
     const visit_id = event.target.dataset.id
-    debugger
   }
   private handleChallenge () {
     if (!this.checkLoginState()) {
@@ -752,6 +750,7 @@ export default class TeamDetail extends LoginStateCheck {
         Toast.showToastError.call(this, '您暂无加盟球队')
       }else if (teamNumber == 1) {
         this.showChallengeDialog = true
+        this.matchConfig._teamId = res.team_list[0].id
       }else {
         // 
       }
@@ -759,7 +758,12 @@ export default class TeamDetail extends LoginStateCheck {
   }
   private handleCreateChallenge () {
     new TeamType().createChallenge.call(this, {
-      user_id: this.userId || (localStorage.getItem("User_ID") as string)
+      user_id: this.userId || (localStorage.getItem("User_ID") as string),
+      team_id: this.matchConfig._teamId,
+      time: this.matchConfig._matchTime,
+      location: this.matchConfig._positionDetail,
+      type: this.matchConfig._matchType,
+      detail: this.matchConfig._moreDetail
     }).then((res: any) => {
       const teamNumber = res.team_list.length
       if (teamNumber == 0) {
@@ -1159,7 +1163,6 @@ export default class TeamDetail extends LoginStateCheck {
 }
 .challeng-line {
   padding: 10px 0;
-  position: relative;
   &-title {
     font-size: 14px;
     font-weight: 500;
@@ -1210,6 +1213,10 @@ export default class TeamDetail extends LoginStateCheck {
   bottom: 0px;
   right: 5%;
   z-index: 50;
+}
+#tipinput {
+  border: 1px solid rgba(#b4bccc, .7);
+  outline: none;
 }
 .challeng-line-content ::v-deep .challeng-line-content-select {
   width: 85%;

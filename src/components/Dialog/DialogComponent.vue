@@ -2,19 +2,19 @@
  * @Author: majiaao
  * @Date: 2020-05-11 15:56:06
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-20 21:56:17
+ * @LastEditTime: 2020-06-21 19:51:39
  * @Description: file content
  -->
 <template>
-    <div class="flex-column-center dialog-box" v-if="showDialog" @click="handleDialog(false)">
-        <div class="dialog-content" @click.stop="stop">
-          <slot name="dialog-header"></slot>
-          <slot name="dialog-content"></slot>
-          <div class="dialog-footer">
-            <slot name="dialog-footer"></slot>
-          </div>
-        </div>
+  <div class="flex-column-center dialog-box" v-if="showDialog" @click="handleDialog(false)">
+    <div class="dialog-content" @click.stop="stop">
+      <slot name="dialog-header"></slot>
+      <slot name="dialog-content"></slot>
+      <div class="dialog-footer">
+        <slot name="dialog-footer"></slot>
+      </div>
     </div>
+  </div>
 </template>
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
@@ -37,16 +37,16 @@ export default class Dialog extends Vue {
     position: fixed;
     top: 0;
     left: 0;
-    background-color: rgba(0,0,0,.2)
+    background-color: rgba(0, 0, 0, 0.2);
   }
   &-content {
-      padding: 20px;
-      width: 30vw;
-      min-height: 30vh;
-      min-width: 200px;
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0px 5px 10px #eeeeee;
+    padding: 20px;
+    width: 30vw;
+    min-height: 30vh;
+    min-width: 200px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 5px 10px #eeeeee;
   }
   &-footer {
     text-align: end;
