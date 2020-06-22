@@ -13,6 +13,9 @@ interface CreateMatch {
     max_team_number: number;
     location_info: Location;
     team_id: number | null;
+    longitude: number;
+    latitude: number;
+    match_address: string;
 }
 interface CreateMatchDetail {
     user_id: string;

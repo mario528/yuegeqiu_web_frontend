@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-04-30 22:08:23
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-21 01:33:21
+ * @LastEditTime: 2020-06-22 01:08:05
  * @Description: file content
  */
 import { Url } from '../../utils/index'
@@ -109,9 +109,11 @@ interface CreateChallenge {
     user_id: string | number | null;
     team_id: number | string;
     time: string;
-    location: Location;
+    longitude: number;
+    latitude: number;
     type: number;
     detail: string;
+    be_challenged_team_id: number | string;
 }
 class Team {
     constructor() {}

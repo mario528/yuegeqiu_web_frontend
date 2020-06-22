@@ -77,6 +77,6 @@ const url = {
 
     GET_USER_TEAM_LIST: '/api/v1/team/user/list',
 
-    CREATE_CHALLENGE: '/api/v1/team/challenge/create'
+    CREATE_CHALLENGE: '/api/v1/match/challenge/create'
 }
 export default url

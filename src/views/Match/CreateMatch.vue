@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-21 15:54:19
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-23 00:06:49
+ * @LastEditTime: 2020-06-22 20:59:58
  * @Description: file content
 --> 
 <template>
@@ -60,9 +60,7 @@
                 <div class="content-line">
                     <div class="content-line-title">比赛场地</div>
                     <div class="content-line-content">
-                        <div class="map-container">
-                          <basic-map></basic-map>
-                        </div>
+                        <input class="location-input" id="tipinput" placeholder="比赛位置" type="text" v-model="matchConfig._matchAddress">
                     </div>
                 </div>
                 <div class="content-line">
@@ -99,6 +97,9 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 import { Getter } from 'vuex-class'
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// @ts-ignore
+import AMap from "AMap";
 import LocationSelect from '@/components/LocationSelect.vue'
 import BasicMap from '@/components/Map/BasicMap.vue'
 import Match from '@/model/Match/Match'
@@ -139,6 +140,9 @@ export default class CreateMatch extends Vue {
       city: '',
       district: ''
     },
+    longitude: -1,
+    latitude: -1,
+    _matchAddress: '',
     _matchType: null,
     _matchDetail: null,
     _joinTeamId: -1
@@ -172,7 +176,23 @@ export default class CreateMatch extends Vue {
     newValue = new TimeFormate(newValue).formateTime('YYYY-MM-DD')
   }
   mounted () {
+    const that = this
     this.getCreateMatchDetail()
+    AMap.plugin(["AMap.Autocomplete", "AMap.PlaceSearch"], function() {
+      const autoOptions = {
+        city: "北京", //城市，默认全国
+        input: "tipinput" //使用联想输入的input的id
+      };
+      const autocomplete = new AMap.Autocomplete(autoOptions);
+      const placeSearch = new AMap.PlaceSearch({
+        city: "北京"
+      });
+      AMap.event.addListener(autocomplete, "select", (event: any) => {
+        const { lat, lng } = event.poi.location;
+        that.matchConfig.longitude = lng
+        that.matchConfig.latitude = lat
+      });
+    });
   }
   private _testTimeAvaibalbe (type: number, time: Date) {
     const timeFormate = new Date(new TimeFormate(time).formateTime('YYYY-MM-DD')).valueOf()
@@ -193,7 +213,7 @@ export default class CreateMatch extends Vue {
     this.matchConfig._locationInfo = locationInfo
   }
   private handleCreateMatch() {
-    const  { _matchName, _matchProperty, _startTime, _endTime, _maxTeamNumber, _locationInfo, _matchType, _matchDetail, _joinTeamId } = this.matchConfig
+    const  { _matchName, _matchProperty, _startTime, _endTime, _maxTeamNumber, _locationInfo, _matchType, longitude, latitude, _matchAddress, _matchDetail, _joinTeamId } = this.matchConfig
     if ( !_matchName || !_startTime || !_endTime || !_maxTeamNumber || _locationInfo == null ) {
       return
     }
@@ -207,6 +227,9 @@ export default class CreateMatch extends Vue {
       location_info: _locationInfo,
       match_detail: _matchDetail,
       match_type: _matchType,
+      match_address: _matchAddress,
+      longitude: longitude,
+      latitude: latitude,
       team_id: _joinTeamId == -1 ? null : _joinTeamId
     }).then((res: any) => {
       Toast.showToastSuccess.call(this, '赛事创建成功', '成功');
@@ -221,6 +244,9 @@ export default class CreateMatch extends Vue {
           city: '',
           district: ''
         },
+        _matchAddress: '',
+        longitude: -1,
+        latitude: -1,
         _matchType: null,
         _matchDetail: null,
         _joinTeamId: -1
@@ -339,6 +365,14 @@ export default class CreateMatch extends Vue {
     background-color: $light_green;
     border-radius: 50%;
   }
+}
+.location-input {
+  height: 40px;
+  width: 70%;
+  padding: 0 5px;
+  border: 1px solid rgba(#b4bccc, .7);
+  border-radius: 5px;
+  outline: none;
 }
 @media screen and (max-width: 450px) {
   .match-container {
