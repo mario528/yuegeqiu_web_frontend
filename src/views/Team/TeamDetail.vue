@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-22 23:32:15
+ * @LastEditTime: 2020-06-23 00:46:32
  * @Description: file content
  -->
 <template>
@@ -423,6 +423,7 @@ export default class TeamDetail extends LoginStateCheck {
   private teamMapLoading = true
   private showChallengeDialog = false
   private challengeSuccess = false
+  private showTeamSelect = false
   private matchConfig = {
     _matchType: 0,
     _matchTime: '',
@@ -765,7 +766,8 @@ export default class TeamDetail extends LoginStateCheck {
         this.showChallengeDialog = true
         this.matchConfig._teamId = res.team_list[0].id
       }else {
-        // 
+        // 用户同时在多个球队中
+        this.showTeamSelect = true
       }
     });
   }
