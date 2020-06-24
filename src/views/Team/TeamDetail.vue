@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-23 00:46:32
+ * @LastEditTime: 2020-06-24 23:23:03
  * @Description: file content
  -->
 <template>
@@ -53,7 +53,18 @@
     <up-arrow></up-arrow>
     <!-- 挑战 -->
     <div class="flex-column-center challeng-mask" v-show="showChallengeDialog" @click="handleEditDialog(false)">
-      <div class="challeng-content" @click.stop="">
+      <div class="flex-column-y-center challeng-content" @click.stop="" v-if="showTeamSelect">
+        <div class="dialog-header">选择哪只球队约球</div>
+        <div class="flex-row-between select-team-item" v-for="(item, index) in teamSelectList" :key="index" @click="handleSelectTeam(item.id)">
+          <div class="flex-row-y-center">
+            <img :src="item.team_icon" class="select-team-icon" />
+            <span class="select-team-name">{{item.team_name}}</span>
+          </div>
+          <div :class="item.id == matchConfig._teamId ? 'select-circle-selected' : 'select-circle'"></div>
+        </div>
+        <div class="next-btn" @click="handleNext">下一步</div>
+      </div>
+      <div class="challeng-content" @click.stop="" v-show="!showTeamSelect">
         <div class="dialog-header" v-show="!challengeSuccess">约个球</div>
         <div class="flex-row-y-center challeng-line" v-show="!challengeSuccess">
           <div class="challeng-line-title">比赛类型</div>
@@ -435,6 +446,7 @@ export default class TeamDetail extends LoginStateCheck {
     _moreDetail: '',
     _address: ''
   }
+  private teamSelectList = []
   mounted() {
     const that = this
     this.teamId = +this.$route.query.td;
@@ -761,13 +773,15 @@ export default class TeamDetail extends LoginStateCheck {
     }).then((res: any) => {
       const teamNumber = res.team_list.length
       if (teamNumber == 0) {
-        Toast.showToastError.call(this, '您暂无加盟球队')
+        Toast.showToastError.call(this, '您暂无加盟球队或不是球队管理员')
       }else if (teamNumber == 1) {
         this.showChallengeDialog = true
         this.matchConfig._teamId = res.team_list[0].id
       }else {
         // 用户同时在多个球队中
+        this.showChallengeDialog = true
         this.showTeamSelect = true
+        this.teamSelectList = res.team_list
       }
     });
   }
@@ -801,6 +815,13 @@ export default class TeamDetail extends LoginStateCheck {
   private closeChallengDialog () {
     this.challengeSuccess = false
     this.showChallengeDialog = false
+  }
+  private handleSelectTeam (id: number) {
+    this.matchConfig._teamId = id
+  }
+  private handleNext () {
+    if (this.matchConfig._teamId == -1) return
+    this.showTeamSelect = false
   }
 }
 </script>
@@ -1292,6 +1313,59 @@ export default class TeamDetail extends LoginStateCheck {
   border-radius: 5px;
   cursor: pointer;
   margin: 5vh auto 0vh auto;
+}
+.select-team {
+  &-item {
+    padding: 15px 0;
+    border-bottom: 1px solid #eeeeee;
+    cursor: pointer;
+    &:hover {
+      background-color: rgba(#1e90ff, .05);
+    }
+  }
+  &-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%; 
+  }
+  &-name {
+    font-size: 16px;
+    font-weight: 500;
+    margin-left: 20px;
+  }
+}
+.select-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid #a9a9a9;
+  &-selected {
+    @extend .select-circle;
+    background-color: #1e90ff;
+    position: relative;
+    &::after {
+      content: '';
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      background-color: white;
+    }
+  }
+}
+.next-btn {
+  width: 150px;
+  background-color: $side_color;
+  color: white;
+  font-weight: 500;
+  font-size: 16px;
+  text-align: center;
+  padding: 10px 0;
+  margin: 30px auto 0 auto;
+  border-radius: 5px;
+  cursor: pointer;
 }
 @keyframes roll {
   0% {
