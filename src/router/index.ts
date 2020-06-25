@@ -133,6 +133,11 @@ const routes = [
     }
   },
   {
+    path: '/team/formation',
+    name: 'teamFormation',
+    component: () => import('@/views/Team/formation/TeamFormation.vue')
+  },
+  {
     path: '/match/create',
     name: 'createMatch',
     component: () => import('@/views/Match/CreateMatch.vue'),
