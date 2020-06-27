@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-04-30 22:08:23
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-22 01:08:05
+ * @LastEditTime: 2020-06-26 00:10:07
  * @Description: file content
  */
 import { Url } from '../../utils/index'
@@ -114,6 +114,10 @@ interface CreateChallenge {
     type: number;
     detail: string;
     be_challenged_team_id: number | string;
+}
+interface GetTeamFormationInfo {
+    user_id: string | number | null;
+    team_id: number | string;
 }
 class Team {
     constructor() {}
@@ -323,6 +327,16 @@ class Team {
         return new Promise((reslove, reject) => {
             // @ts-ignore
             this.$http.post(Url.CREATE_CHALLENGE,params).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
+    getTeamFormationInfo (params: GetTeamFormationInfo) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.post(Url.GET_TEAM_FORMATION_INFO,params).then((res: any) => {
                 reslove(res)
             }).catch((err: any) => {
                 reject(err)
