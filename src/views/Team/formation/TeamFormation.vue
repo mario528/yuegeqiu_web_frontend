@@ -2,17 +2,18 @@
  * @Author: majiaao
  * @Date: 2020-06-25 00:39:46
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-27 23:27:46
+ * @LastEditTime: 2020-06-29 00:45:58
  * @Description: file content
 --> 
 <template>
     <div class=" team-formation-container">
-        <div class="container">
-            {{teamId}}
+        <div class="flex-row container">
             <canvas id="team-formation" ref="teamFormation">
                 <div>您的浏览器暂不支持该功能</div>
             </canvas>
+            <canvas id="team-formation-hide" ref="teamFormationHide"></canvas>
         </div>
+        
     </div>    
 </template>
 <script lang="ts">
@@ -34,107 +35,155 @@ import { Vue, Component } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import TeamType from "@/model/Team/Team";
 @Component
-export default class TeamFormation extends Vue {
-    private context: any = undefined;
+export default class TeamFormation extends Vue {  
+    private teamId = -1
     private canvasWidth = 0
     private canvasHeight = 0
-    private teamId !: number
+    private context: any = undefined
+    private contextByHide: any = undefined
     private teamInfo = {}
     private teamMemberList = []
+    private activityMateIndex = -1
     private canvasTeamList: any[] = []
+    private coordinate = {
+        x: 0,
+        y: 0
+    }
     private canvasDown = false
     @Getter('getUserId')
     public userId: string | undefined
-
     mounted() {
-        this.teamId = +this.$route.query.td;
+        this.teamId = +this.$route.query.td;   
         this.requestTeamDetail()
         const canvasElement = this.$refs.teamFormation as any
         canvasElement.onmousedown = (event: any) => {
-            this.canvasDown = true
-            canvasElement.onmousemove = (event: any) => {
-                if (!this.canvasDown) return 
-                const x = event.offsetX
-                const y = event.offsetY
-                this.context.clearRect(0,0,this.canvasWidth + 150, this.canvasHeight)
-                this.drawCanvasUtil('image', {
-                    img_url: 'https://yuegeqiu-mario.oss-cn-beijing.aliyuncs.com/assets/football_bg.png',
-                    start_x: 0,
-                    start_y: 0,
-                    end_x: this.canvasWidth,
-                    end_y: this.canvasHeight
-                })
-                this.canvasTeamList.forEach(((item: any) => {
-                    const image = new Image
-                    image.src = item.src
-                    image.onload = () => {
-                        this.context.save()
-                        this.context.beginPath()
-                        this.context.arc(item.left + 30, item.top + 30, 30, 0, Math.PI * 2)
-                        this.context.clip()
-                        this.context.drawImage(image, item.left, item.top, 60, 60)
-                        this.context.restore()   
-                    }
-                }))
-             }   
+            const x = event.offsetX
+            const y = event.offsetY
+            this.canvasTeamList.forEach((item: any, index: number) => {
+                const itemX = [item.left, item.left +  item.width]
+                const itemY = [item.top, item.top + item.height]
+                if (x >= itemX[0] && x <= itemX[1] && y >= itemY[0] && y <= itemY[1] ) {
+                    this.canvasDown = true
+                    this.activityMateIndex = index
+                }
+            })
+        }
+        canvasElement.onmousemove = (event: any) => {
+            if (!this.canvasDown) return 
+            const x = event.offsetX
+            const y = event.offsetY
+            this.coordinate = {
+                x: x,
+                y: y
+            }
+            this._movementCanvas()
         }
         canvasElement.onmouseup = () => {
             this.canvasDown = false
+            this.coordinate = {
+                x: 0,
+                y: 0
+            }
         }
     }
-    private _initCanvas () {
+    // init canvas context
+    _initCanvas () {
         const clientWidth = document.documentElement.clientWidth;
         const clientHeight = document.documentElement.clientHeight;
         this.canvasWidth = Math.floor(clientWidth / 3)
         this.canvasHeight = Math.floor(clientHeight * 0.82 * 0.9)
         const canvasElement = this.$refs.teamFormation as any
+        const canvasHideElement = this.$refs.teamFormationHide as any
         canvasElement.width = this.canvasWidth + 150
         canvasElement.height = this.canvasHeight
+        canvasHideElement.width = this.canvasWidth + 150
+        canvasHideElement.height = this.canvasHeight
         this.context = canvasElement.getContext('2d')
-        this.drawCanvasUtil('image', {
-            img_url: 'https://yuegeqiu-mario.oss-cn-beijing.aliyuncs.com/assets/football_bg.png',
-            start_x: 0,
-            start_y: 0,
-            end_x: this.canvasWidth,
-            end_y: this.canvasHeight
+        this.contextByHide = canvasHideElement.getContext('2d')
+    }
+    // 拖动函数
+    private _movementCanvas () {
+        const img = new Image()
+        img.src = 'https://yuegeqiu-mario.oss-cn-beijing.aliyuncs.com/assets/football_bg.png'
+        img.onload = () => {
+            this.contextByHide.clearRect(0,0,this.canvasWidth + 150, this.canvasHeight)
+            this.contextByHide.drawImage(img, 0, 0, this.canvasWidth, this.canvasHeight)
+            this.canvasTeamList.forEach((item: any, index: number) => {
+                const image = new Image
+                image.src = item.src
+                image.onload = () => {
+                    if (index == this.activityMateIndex) {
+                        const leftExcursion = this.coordinate.x - 30
+                        const topExcursion = this.coordinate.y - 30
+                        this.contextByHide.save()
+                        this.contextByHide.beginPath()
+                        this.contextByHide.arc(leftExcursion, topExcursion, 30, 0, Math.PI * 2)
+                        this.contextByHide.clip()
+                        this.contextByHide.drawImage(image, leftExcursion - 30, topExcursion - 30 , 60, 60)
+                        this.contextByHide.restore()
+                    }else {
+                        const leftExcursion = item.left + 30
+                        const topExcursion = item.top + 30
+                        this.contextByHide.save()
+                        this.contextByHide.beginPath()
+                        this.contextByHide.arc(leftExcursion, topExcursion, 30, 0, Math.PI * 2)
+                        this.contextByHide.clip()
+                        this.contextByHide.drawImage(image, leftExcursion - 30, topExcursion - 30 , 60, 60)
+                        this.contextByHide.restore()
+                        this.contextByHide.save()
+                    }
+                    this.copyHideCanvas()
+                }
+            })
+        }
+    }
+    // 复制离屏canvas至屏幕显示canvas
+    copyHideCanvas () {
+        const canvasHideElement = this.$refs.teamFormationHide as any
+        this.context.drawImage(canvasHideElement, 0, 0, this.canvasWidth + 150, this.canvasHeight)
+    }
+    // 请求球队数据
+    requestTeamDetail () {
+        new TeamType().getTeamFormationInfo.call(this, {
+            user_id: this.userId || localStorage.getItem('User_ID'),
+            team_id: this.teamId
+        }).then((res: any) => {
+            const { team_info, team_list } = res
+            this.teamInfo = team_info
+            this.teamMemberList = team_list
+            this._initCanvas()
+            this.initTeamMate()
+            this.drawCanvasBg()
         })
     }
-    private drawImageUtil (options: CanvasByImage) {
-        const image = new Image()
-        image.src = options.img_url
-        image.onload = () => {
-            this.context.drawImage(image, options.start_x, options.start_y, options.end_x, options.end_y)
-            this.context.strokeStyle = '#63c565'
-            this.context.moveTo(this.canvasWidth + 10, 0)
-            this.context.lineTo(this.canvasWidth + 10, this.canvasHeight)
-            this.context.stroke()
-            this.context.moveTo(this.canvasWidth + 150, 0)
-            this.context.lineTo(this.canvasWidth + 150, this.canvasHeight)
-            this.context.stroke()
-            this.context.moveTo(this.canvasWidth + 10, this.canvasHeight)
-            this.context.lineTo(this.canvasWidth + 150, this.canvasHeight)
-            this.context.stroke()
-            this.context.moveTo(this.canvasWidth + 10, 0)
-            this.context.lineTo(this.canvasWidth + 150, 0)
-            this.context.stroke()
+    drawTeamMateLine () {
+        this.contextByHide.strokeStyle = '#63c565'
+        this.contextByHide.moveTo(this.canvasWidth + 10, 0)
+        this.contextByHide.lineTo(this.canvasWidth + 10, this.canvasHeight)
+        this.contextByHide.stroke()
+        this.contextByHide.moveTo(this.canvasWidth + 150, 0)
+        this.contextByHide.lineTo(this.canvasWidth + 150, this.canvasHeight)
+        this.contextByHide.stroke()
+        this.contextByHide.moveTo(this.canvasWidth + 10, this.canvasHeight)
+        this.contextByHide.lineTo(this.canvasWidth + 150, this.canvasHeight)
+        this.contextByHide.stroke()
+        this.contextByHide.moveTo(this.canvasWidth + 10, 0)
+        this.contextByHide.lineTo(this.canvasWidth + 150, 0)
+        this.contextByHide.stroke()
+    }
+    drawCanvasBg () {
+        const img = new Image()
+        img.src = 'https://yuegeqiu-mario.oss-cn-beijing.aliyuncs.com/assets/football_bg.png'
+        img.onload = () => {
+            this.contextByHide.drawImage(img, 0, 0, this.canvasWidth, this.canvasHeight)
+            this.drawTeamMateLine()
+            this.copyHideCanvas()
         }
     }
-    private drawCircleUtil (options: CanvasByCircle) {
-        this.context.beginPath()
-        this.context.arc(options.x, options.y, options.r, options.start_angle, options.end_angle)
-        this.context.stroke()
-        this.context.save()
-    }
-    private drawCanvasUtil (type?: string, options?: any) {
-        if (type == 'image') {
-            // 绘制图片
-            this.drawImageUtil(options)
-        } else if (type == 'circle') {
-            this.drawCircleUtil(options)
-        }
-    }
-    privateDrawTeamMate (teamList: []) {
-        teamList.map((item: any, index: number) => {
+    initTeamMate () {
+        this.teamMemberList.forEach((item: any, index: number) => {
+            // 当前拖拽不进行渲染
+            if (this.activityMateIndex == index) return
             const leftExcursion = this.canvasWidth + 10 + (index < 8  ? 30 : 110)
             let topExcursion = 0
             if (index == 0 || index == 8) {
@@ -147,12 +196,12 @@ export default class TeamFormation extends Vue {
             const image = new Image()
             image.src = item.head_url
             image.onload = () => {
-                this.context.save()
-                this.context.beginPath()
-                this.context.arc(leftExcursion, topExcursion, 30, 0, Math.PI * 2)
-                this.context.clip()
-                this.context.drawImage(image, leftExcursion - 30, topExcursion - 30 , 60, 60)
-                this.context.restore()
+                this.contextByHide.save()
+                this.contextByHide.beginPath()
+                this.contextByHide.arc(leftExcursion, topExcursion, 30, 0, Math.PI * 2)
+                this.contextByHide.clip()
+                this.contextByHide.drawImage(image, leftExcursion - 30, topExcursion - 30 , 60, 60)
+                this.contextByHide.restore()
                 this.canvasTeamList.push({
                     top: topExcursion - 30,
                     left: leftExcursion - 30,
@@ -161,21 +210,7 @@ export default class TeamFormation extends Vue {
                     height: 60
                 })
             }
-        })
-    }
-    private drawFormation(formationType: string) {
 
-    }
-    private requestTeamDetail () {
-        new TeamType().getTeamFormationInfo.call(this, {
-            user_id: this.userId || localStorage.getItem('User_ID'),
-            team_id: this.teamId
-        }).then((res: any) => {
-            const { team_info, team_list } = res
-            this.teamInfo = team_info
-            this.teamMemberList = team_list
-            this._initCanvas()
-            this.privateDrawTeamMate(team_list)
         })
     }
 }
@@ -193,6 +228,9 @@ export default class TeamFormation extends Vue {
     padding: 4vh 0;
 }
 #team-formation {
+}
+#team-formation-hide {
+    display: none;
 }
 </style>
 
