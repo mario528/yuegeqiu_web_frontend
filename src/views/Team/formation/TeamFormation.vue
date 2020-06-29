@@ -2,18 +2,23 @@
  * @Author: majiaao
  * @Date: 2020-06-25 00:39:46
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-29 00:45:58
+ * @LastEditTime: 2020-06-29 17:09:54
  * @Description: file content
 --> 
 <template>
-    <div class=" team-formation-container">
+    <div class="team-formation-container">
+         <div class="team-info">
+            <div class="width-80 flex-row-y-center" style="align-items: center;">
+                <img class="team-icon" :src="teamInfo.team_icon" alt="">
+                <div class="team-name">{{teamInfo.team_name}}</div>
+            </div>
+        </div>
         <div class="flex-row container">
             <canvas id="team-formation" ref="teamFormation">
                 <div>您的浏览器暂不支持该功能</div>
             </canvas>
             <canvas id="team-formation-hide" ref="teamFormationHide"></canvas>
         </div>
-        
     </div>    
 </template>
 <script lang="ts">
@@ -34,6 +39,7 @@ interface CanvasByCircle {
 import { Vue, Component } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import TeamType from "@/model/Team/Team";
+import { Toast } from '@/utils/index'
 @Component
 export default class TeamFormation extends Vue {  
     private teamId = -1
@@ -43,6 +49,7 @@ export default class TeamFormation extends Vue {
     private contextByHide: any = undefined
     private teamInfo = {}
     private teamMemberList = []
+    private isTeamMember = false
     private activityMateIndex = -1
     private canvasTeamList: any[] = []
     private coordinate = {
@@ -57,6 +64,10 @@ export default class TeamFormation extends Vue {
         this.requestTeamDetail()
         const canvasElement = this.$refs.teamFormation as any
         canvasElement.onmousedown = (event: any) => {
+            if (!this.isTeamMember) {
+                Toast.showToastError.call(this, '您不是该球队成员', '操作失败')
+                return
+            }
             const x = event.offsetX
             const y = event.offsetY
             this.canvasTeamList.forEach((item: any, index: number) => {
@@ -107,14 +118,15 @@ export default class TeamFormation extends Vue {
         img.src = 'https://yuegeqiu-mario.oss-cn-beijing.aliyuncs.com/assets/football_bg.png'
         img.onload = () => {
             this.contextByHide.clearRect(0,0,this.canvasWidth + 150, this.canvasHeight)
+            this.context.clearRect(this.canvasWidth,0, 150, this.canvasHeight)
             this.contextByHide.drawImage(img, 0, 0, this.canvasWidth, this.canvasHeight)
             this.canvasTeamList.forEach((item: any, index: number) => {
                 const image = new Image
                 image.src = item.src
                 image.onload = () => {
                     if (index == this.activityMateIndex) {
-                        const leftExcursion = this.coordinate.x - 30
-                        const topExcursion = this.coordinate.y - 30
+                        const leftExcursion = this.coordinate.x
+                        const topExcursion = this.coordinate.y
                         this.contextByHide.save()
                         this.contextByHide.beginPath()
                         this.contextByHide.arc(leftExcursion, topExcursion, 30, 0, Math.PI * 2)
@@ -148,9 +160,10 @@ export default class TeamFormation extends Vue {
             user_id: this.userId || localStorage.getItem('User_ID'),
             team_id: this.teamId
         }).then((res: any) => {
-            const { team_info, team_list } = res
+            const { team_info, team_list, is_member } = res
             this.teamInfo = team_info
             this.teamMemberList = team_list
+            this.isTeamMember = is_member
             this._initCanvas()
             this.initTeamMate()
             this.drawCanvasBg()
@@ -231,6 +244,28 @@ export default class TeamFormation extends Vue {
 }
 #team-formation-hide {
     display: none;
+    position: absolute;
+    bottom: -1000px;
+    left: -1000px;
+}
+.team {
+    &-info {
+        width: 80vw;
+        margin-left: 10vw;
+    }
+    &-icon {
+        float: right;
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        border: 3px solid white;       
+    }
+    &-name {
+        font-weight: 500;
+        color: white;
+        font-size: 16px;
+        margin-left: 2vw;
+    }
 }
 </style>
 
