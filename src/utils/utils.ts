@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-04-26 14:27:15
  * @LastEditors: majiaao
- * @LastEditTime: 2020-05-20 02:36:46
+ * @LastEditTime: 2020-06-29 20:59:23
  * @Description: file content
  */
 const Utils = {
@@ -36,6 +36,26 @@ const Utils = {
             }
         })
         return bool
+    },
+    isObject (obj: any): boolean {
+        return Object.prototype.toString.call(obj) === '[object Object]'
+    },
+    objDelayering (obj: any): any {
+        const delayerObj: any = {}
+        if (!Utils.isObject(obj)) {
+            throw new Error('输入参数类型有误')
+            return
+        }else {
+            const keys = Object.keys(obj)
+            keys.forEach(((item: any) => {
+                if (Utils.isObject(obj[item])) {
+                    
+                }else {
+                    delayerObj[item] = obj[item]
+                }
+            }))
+            return delayerObj
+        }
     }
 } 
 export default Utils

@@ -2,13 +2,13 @@
  * @Author: majiaao
  * @Date: 2020-06-25 00:39:46
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-29 17:09:54
+ * @LastEditTime: 2020-06-29 23:52:42
  * @Description: file content
 --> 
 <template>
     <div class="team-formation-container">
          <div class="team-info">
-            <div class="width-80 flex-row-y-center" style="align-items: center;">
+            <div class="flex-row-y-center" style="align-items: center;">
                 <img class="team-icon" :src="teamInfo.team_icon" alt="">
                 <div class="team-name">{{teamInfo.team_name}}</div>
             </div>
@@ -18,6 +18,16 @@
                 <div>您的浏览器暂不支持该功能</div>
             </canvas>
             <canvas id="team-formation-hide" ref="teamFormationHide"></canvas>
+            <!-- setting -->
+            <div class="setting-area">
+                <div class="setting-title">设置阵容</div>
+                <el-cascader
+                    class="cascader"
+                    v-model="value"
+                    :options="options"
+                    @change="handleChange">
+                </el-cascader>
+            </div>
         </div>
     </div>    
 </template>
@@ -40,6 +50,7 @@ import { Vue, Component } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import TeamType from "@/model/Team/Team";
 import { Toast } from '@/utils/index'
+import FormationOptions from './formationConf'
 @Component
 export default class TeamFormation extends Vue {  
     private teamId = -1
@@ -57,6 +68,11 @@ export default class TeamFormation extends Vue {
         y: 0
     }
     private canvasDown = false
+    private options = []
+    private formationOptions = {
+        width: 50,
+        height: 50
+    }
     @Getter('getUserId')
     public userId: string | undefined
     mounted() {
@@ -160,10 +176,11 @@ export default class TeamFormation extends Vue {
             user_id: this.userId || localStorage.getItem('User_ID'),
             team_id: this.teamId
         }).then((res: any) => {
-            const { team_info, team_list, is_member } = res
+            const { team_info, team_list, is_member, team_formation_setting } = res
             this.teamInfo = team_info
             this.teamMemberList = team_list
             this.isTeamMember = is_member
+            this.options = team_formation_setting
             this._initCanvas()
             this.initTeamMate()
             this.drawCanvasBg()
@@ -188,6 +205,7 @@ export default class TeamFormation extends Vue {
         const img = new Image()
         img.src = 'https://yuegeqiu-mario.oss-cn-beijing.aliyuncs.com/assets/football_bg.png'
         img.onload = () => {
+            // this.contextByHide.arc( this.canvasWidth / 4 * 3, this.canvasHeight / 4 * 1.2, 30, 0, Math.PI * 2)
             this.contextByHide.drawImage(img, 0, 0, this.canvasWidth, this.canvasHeight)
             this.drawTeamMateLine()
             this.copyHideCanvas()
@@ -226,6 +244,32 @@ export default class TeamFormation extends Vue {
 
         })
     }
+    private handleChange (detail: any) {
+        const obj = {
+            mode: '',
+            type: ''
+        }
+        this.options.forEach((item: any) => {
+            if (item.value == detail[0]) {
+                obj.mode = item.label
+                item.children.forEach((elItem: any) => {
+                    if (elItem.value == detail[1]) {
+                        obj.type = elItem.label
+                    }
+                })
+            }            
+        })
+        this._drawTeamFormation(obj.mode, obj.type)
+    }
+    _drawTeamFormation (mode: any, type: any) {
+        const optionsList = new FormationOptions(this.canvasWidth, this.canvasHeight).getFormationOptions(mode, type)
+        optionsList.forEach((item: any) => {
+            this.contextByHide.beginPath();
+            this.contextByHide.arc(item.left, item.top, 30, 0, Math.PI * 2)
+            this.contextByHide.stroke();
+        })
+        this.copyHideCanvas()
+    }
 }
 </script>
 <style lang="scss" scoped>
@@ -250,8 +294,9 @@ export default class TeamFormation extends Vue {
 }
 .team {
     &-info {
-        width: 80vw;
-        margin-left: 10vw;
+        margin: 0 10vw;
+        border-bottom: 1px solid $high_light_color;
+        padding-bottom: 5px;
     }
     &-icon {
         float: right;
@@ -266,6 +311,19 @@ export default class TeamFormation extends Vue {
         font-size: 16px;
         margin-left: 2vw;
     }
+}
+.setting {
+    &-area {
+        margin-left: 5vw;
+    }
+    &-title {
+        font-weight: 500;
+        font-size: 18px;
+        color: white;
+    }
+}
+.setting-area ::v-deep .cascader {
+    margin-top: 30px;
 }
 </style>
 

@@ -42,7 +42,8 @@ import {
   Table,
   TableColumn,
   Tabs,
-  TabPane
+  TabPane,
+  Cascader
 } from 'element-ui'
 import Loading from './components/Loading/libs/loading'
 import Dialog from './components/Dialog/libs/dialog'
@@ -106,6 +107,7 @@ Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(Tabs)
 Vue.use(TabPane)
+Vue.use(Cascader)
 // 自定义插件
 Vue.use(Loading)
 Vue.use(Dialog)
