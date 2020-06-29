@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-06-25 00:39:46
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-29 23:52:42
+ * @LastEditTime: 2020-06-30 01:36:22
  * @Description: file content
 --> 
 <template>
@@ -205,7 +205,6 @@ export default class TeamFormation extends Vue {
         const img = new Image()
         img.src = 'https://yuegeqiu-mario.oss-cn-beijing.aliyuncs.com/assets/football_bg.png'
         img.onload = () => {
-            // this.contextByHide.arc( this.canvasWidth / 4 * 3, this.canvasHeight / 4 * 1.2, 30, 0, Math.PI * 2)
             this.contextByHide.drawImage(img, 0, 0, this.canvasWidth, this.canvasHeight)
             this.drawTeamMateLine()
             this.copyHideCanvas()
@@ -259,14 +258,23 @@ export default class TeamFormation extends Vue {
                 })
             }            
         })
-        this._drawTeamFormation(obj.mode, obj.type)
+        this.context.clearRect(0,0, 150,this.canvasWidth, this.canvasHeight)
+        const img = new Image()
+        img.src = 'https://yuegeqiu-mario.oss-cn-beijing.aliyuncs.com/assets/football_bg.png'
+        img.onload = () => {
+            this.contextByHide.drawImage(img, 0, 0, this.canvasWidth, this.canvasHeight)
+            this._drawTeamFormation(obj.mode, obj.type)
+        }
     }
     _drawTeamFormation (mode: any, type: any) {
         const optionsList = new FormationOptions(this.canvasWidth, this.canvasHeight).getFormationOptions(mode, type)
         optionsList.forEach((item: any) => {
+            this.contextByHide.strokeStyle = '#ffffff'
+            this.contextByHide.fillStyle = 'rgba(99,197,101, .5)'
             this.contextByHide.beginPath();
             this.contextByHide.arc(item.left, item.top, 30, 0, Math.PI * 2)
             this.contextByHide.stroke();
+            this.contextByHide.fill()
         })
         this.copyHideCanvas()
     }
