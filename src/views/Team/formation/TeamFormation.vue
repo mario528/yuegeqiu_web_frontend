@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-06-25 00:39:46
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-30 18:52:01
+ * @LastEditTime: 2020-06-30 23:41:36
  * @Description: file content
 --> 
 <template>
@@ -10,7 +10,13 @@
          <div class="team-info">
             <div class="flex-row-y-center" style="align-items: center;">
                 <img class="team-icon" :src="teamInfo.team_icon" alt="">
-                <div class="team-name">{{teamInfo.team_name}}</div>
+                <div class="flex-column">
+                    <div class="team-name">{{teamInfo.team_name}}</div>
+                    <div class="team-setting" v-if="formationModeType.mode && formationModeType.type">
+                        <span>{{formationModeType.mode}}</span>
+                        <span>{{formationModeType.type}}</span>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="flex-row container">
@@ -27,6 +33,7 @@
                     :options="options"
                     @change="handleChange">
                 </el-cascader>
+                <div class="setting-btn" v-if="formationModeType.mode && formationModeType.type">设置</div>
             </div>
         </div>
     </div>    
@@ -224,6 +231,7 @@ export default class TeamFormation extends Vue {
         img.onload = () => {
             this.contextByHide.drawImage(img, 0, 0, this.canvasWidth, this.canvasHeight)
             this.drawTeamMateLine()
+            this._addArrow()
             this.copyHideCanvas()
         }
     }
@@ -296,6 +304,7 @@ export default class TeamFormation extends Vue {
                 const image = new Image()
                 image.src = item.head_url
                 image.onload = () => {
+                    this.contextByHide.fillStyle = 'transparent'
                     this.contextByHide.beginPath()
                     this.contextByHide.arc(item.left, item.top, 30, 0, Math.PI * 2)
                     this.contextByHide.clip()
@@ -336,6 +345,21 @@ export default class TeamFormation extends Vue {
             this._drawTeamFormation(this.formationModeType.mode, this.formationModeType.type, true)
         }
     }
+    private _addArrow () {
+        this.contextByHide.strokeStyle = '#ffffff'
+        this.contextByHide.fillStyle = 'rgba(255,255,255, .3)'
+        this.contextByHide.moveTo(this.canvasWidth / 2 + 50, this.canvasHeight * 0.7)
+        this.contextByHide.lineTo(this.canvasWidth / 2 - 50, this.canvasHeight * 0.7)
+        this.contextByHide.lineTo(this.canvasWidth / 2 - 50, this.canvasHeight * 0.4)
+        this.contextByHide.lineTo(this.canvasWidth / 2 - 90, this.canvasHeight * 0.4)
+        this.contextByHide.lineTo(this.canvasWidth / 2, this.canvasHeight * 0.25)
+        this.contextByHide.moveTo(this.canvasWidth / 2 + 50, this.canvasHeight * 0.7)
+        this.contextByHide.lineTo(this.canvasWidth / 2 + 50, this.canvasHeight * 0.4)
+        this.contextByHide.lineTo(this.canvasWidth / 2 + 90, this.canvasHeight * 0.4)
+        this.contextByHide.lineTo(this.canvasWidth / 2, this.canvasHeight * 0.25)
+        this.contextByHide.stroke();
+        this.contextByHide.fill()
+    }
 }
 </script>
 <style lang="scss" scoped>
@@ -363,6 +387,7 @@ export default class TeamFormation extends Vue {
         margin: 0 10vw;
         border-bottom: 1px solid $high_light_color;
         padding-bottom: 5px;
+        user-select: none;
     }
     &-icon {
         float: right;
@@ -376,6 +401,18 @@ export default class TeamFormation extends Vue {
         color: white;
         font-size: 16px;
         margin-left: 2vw;
+        user-select: none;
+    }
+    &-setting {
+        font-weight: 500;
+        color: white;
+        font-size: 14px;
+        margin-left: 2vw;
+        user-select: none;
+        margin-top: 15px;
+        span {
+            margin-right: 20px;
+        }
     }
 }
 .setting {
@@ -386,12 +423,23 @@ export default class TeamFormation extends Vue {
         font-weight: 500;
         font-size: 18px;
         color: white;
+        user-select: none;
     }
 }
 .setting-area ::v-deep .cascader {
     margin-top: 30px;
 }
+.setting-btn {
+    width: 8vw;
+    text-align: center;
+    margin: 10vh 0 5vh 3vw;
+    background-color: $high_light_color;
+    color: white;
+    font-weight: 500;
+    font-size: 14px;
+    padding: 10px 0px;
+    border-radius: 5px;
+    box-shadow: $basic_shadow;
+    cursor: pointer;
+}
 </style>
-
-
-

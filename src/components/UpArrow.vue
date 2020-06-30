@@ -1,7 +1,8 @@
 <template>
   <div class="page">
-    <div class="flex-column-center up-arrow-container">
-      <img class="up-arrow" :src="iconUrl" @click="backToTop">
+    <div class="flex-column-center up-arrow-container" @mouseover="isHover = true" @mouseout="isHover = false">
+      <img class="up-arrow" :src="iconUrl" @click="backToTop" v-show="!isHover">
+      <span class="back_to_top" v-show="isHover" @click="backToTop">回到<br/>顶部</span>
     </div>
   </div>
 </template>
@@ -11,6 +12,7 @@ import { Getter, Action, State } from "vuex-class";
 @Component({})
 export default class UpArrow extends Vue {
   public iconUrl: string = require("../assets/up_arrow.png");
+  public isHover = false
   private backToTop() {
     const timer = setInterval(() => {
       const top = document.documentElement.scrollTop
@@ -42,6 +44,9 @@ export default class UpArrow extends Vue {
     width: 25px;
     height: 25px;
   }
+  .back_to_top {
+    font-size: 14px;
+  }
 }
 @media screen and (min-width: 451px) {
   .up-arrow-container {
@@ -52,6 +57,7 @@ export default class UpArrow extends Vue {
     bottom: 20vh;
     border-radius: 50%;
     background-color: $base_color;
+    cursor: pointer;
     &:hover {
       box-shadow: 0px 0px 2px 2px $base_color;
     }
@@ -60,6 +66,11 @@ export default class UpArrow extends Vue {
     cursor: pointer;
     width: 30px;
     height: 30px;
+  }
+  .back_to_top {
+    font-size: 14px;
+    font-weight: 500;
+    color: white;
   }
 }
 </style>

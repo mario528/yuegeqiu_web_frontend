@@ -135,7 +135,10 @@ const routes = [
   {
     path: '/team/formation',
     name: 'teamFormation',
-    component: () => import('@/views/Team/formation/TeamFormation.vue')
+    component: () => import('@/views/Team/formation/TeamFormation.vue'),
+    meta: {
+      title: '战术板'
+    }
   },
   {
     path: '/match/create',
