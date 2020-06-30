@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-06-25 00:39:46
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-30 01:36:22
+ * @LastEditTime: 2020-06-30 18:52:01
  * @Description: file content
 --> 
 <template>
@@ -69,9 +69,14 @@ export default class TeamFormation extends Vue {
     }
     private canvasDown = false
     private options = []
+    private optionsList: any = []
     private formationOptions = {
         width: 50,
         height: 50
+    }
+    private formationModeType = {
+        mode: '',
+        type: ''
     }
     @Getter('getUserId')
     public userId: string | undefined
@@ -90,6 +95,10 @@ export default class TeamFormation extends Vue {
                 const itemX = [item.left, item.left +  item.width]
                 const itemY = [item.top, item.top + item.height]
                 if (x >= itemX[0] && x <= itemX[1] && y >= itemY[0] && y <= itemY[1] ) {
+                    if (this.formationModeType.mode == '' || this.formationModeType.type == '') {
+                        Toast.showToastError.call(this, '请选择球队阵型', '操作失败')
+                        return
+                    }
                     this.canvasDown = true
                     this.activityMateIndex = index
                 }
@@ -106,10 +115,17 @@ export default class TeamFormation extends Vue {
             this._movementCanvas()
         }
         canvasElement.onmouseup = () => {
-            this.canvasDown = false
-            this.coordinate = {
-                x: 0,
-                y: 0
+            if (this.canvasDown) {
+                // 鼠标抬起后判断是否在阵容范围内
+                const isAvailable = this._checkIsInFormationItem()
+                if (isAvailable) {
+                    this._repaintFormation()
+                }
+                this.canvasDown = false
+                this.coordinate = {
+                    x: 0,
+                    y: 0
+                }   
             }
         }
     }
@@ -136,6 +152,7 @@ export default class TeamFormation extends Vue {
             this.contextByHide.clearRect(0,0,this.canvasWidth + 150, this.canvasHeight)
             this.context.clearRect(this.canvasWidth,0, 150, this.canvasHeight)
             this.contextByHide.drawImage(img, 0, 0, this.canvasWidth, this.canvasHeight)
+            this._drawTeamFormation(this.formationModeType.mode, this.formationModeType.type)
             this.canvasTeamList.forEach((item: any, index: number) => {
                 const image = new Image
                 image.src = item.src
@@ -244,16 +261,12 @@ export default class TeamFormation extends Vue {
         })
     }
     private handleChange (detail: any) {
-        const obj = {
-            mode: '',
-            type: ''
-        }
         this.options.forEach((item: any) => {
             if (item.value == detail[0]) {
-                obj.mode = item.label
+                this.formationModeType.mode = item.label
                 item.children.forEach((elItem: any) => {
                     if (elItem.value == detail[1]) {
-                        obj.type = elItem.label
+                        this.formationModeType.type = elItem.label
                     }
                 })
             }            
@@ -263,20 +276,65 @@ export default class TeamFormation extends Vue {
         img.src = 'https://yuegeqiu-mario.oss-cn-beijing.aliyuncs.com/assets/football_bg.png'
         img.onload = () => {
             this.contextByHide.drawImage(img, 0, 0, this.canvasWidth, this.canvasHeight)
-            this._drawTeamFormation(obj.mode, obj.type)
+            this._drawTeamFormation(this.formationModeType.mode, this.formationModeType.type)
         }
     }
-    _drawTeamFormation (mode: any, type: any) {
-        const optionsList = new FormationOptions(this.canvasWidth, this.canvasHeight).getFormationOptions(mode, type)
-        optionsList.forEach((item: any) => {
-            this.contextByHide.strokeStyle = '#ffffff'
-            this.contextByHide.fillStyle = 'rgba(99,197,101, .5)'
-            this.contextByHide.beginPath();
-            this.contextByHide.arc(item.left, item.top, 30, 0, Math.PI * 2)
-            this.contextByHide.stroke();
-            this.contextByHide.fill()
+    _drawTeamFormation (mode: any, type: any, flag = false) {
+        if (mode == '' || type == '') return
+        if (!flag) {
+            this.optionsList = new FormationOptions(this.canvasWidth, this.canvasHeight).getFormationOptions(mode, type)
+        }
+        this.optionsList.forEach((item: any) => {
+            if (!item.head_url) {
+                this.contextByHide.strokeStyle = '#ffffff'
+                this.contextByHide.fillStyle = 'rgba(99,197,101, .5)'
+                this.contextByHide.beginPath();
+                this.contextByHide.arc(item.left, item.top, 30, 0, Math.PI * 2)
+                this.contextByHide.stroke();
+                this.contextByHide.fill()
+            }else {
+                const image = new Image()
+                image.src = item.head_url
+                image.onload = () => {
+                    this.contextByHide.beginPath()
+                    this.contextByHide.arc(item.left, item.top, 30, 0, Math.PI * 2)
+                    this.contextByHide.clip()
+                    this.contextByHide.drawImage(image, item.left - 30, item.top - 30 , 60, 60)
+                    this.contextByHide.restore()
+                    this.contextByHide.save()
+                    this.copyHideCanvas()   
+                }
+            }
         })
-        this.copyHideCanvas()
+        this.copyHideCanvas()   
+    }
+    _checkIsInFormationItem (): boolean {
+        const { x, y } = this.coordinate
+        let flag = false
+        this.optionsList.forEach((item: any, index: number) => {
+            const areaX = [item.left - 30, item.left + 30]
+            const areaY = [item.top - 30, item.top + 30]
+            if ( (x >= areaX[0] && x <= areaX[1]) && (y >= areaY[0] && y <= areaY[1]) ) {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+                // @ts-ignore
+                this.optionsList[index].id = this.teamMemberList[this.activityMateIndex].id
+                // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+                // @ts-ignore
+                this.optionsList[index].head_url = this.teamMemberList[this.activityMateIndex].head_url
+                flag = true
+            } 
+        })
+        return flag
+    }
+    private _repaintFormation () {
+        const img = new Image()
+        img.src = 'https://yuegeqiu-mario.oss-cn-beijing.aliyuncs.com/assets/football_bg.png'
+        img.onload = () => {
+            this.contextByHide.clearRect(0,0,this.canvasWidth + 150, this.canvasHeight)
+            this.contextByHide.drawImage(img, 0, 0, this.canvasWidth, this.canvasHeight)
+            this.initTeamMate()
+            this._drawTeamFormation(this.formationModeType.mode, this.formationModeType.type, true)
+        }
     }
 }
 </script>

@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-06-29 22:40:37
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-30 02:44:24
+ * @LastEditTime: 2020-06-30 13:52:18
  * @Description: file content
  */ 
 class FormationOptions {
@@ -248,8 +248,7 @@ class FormationOptions {
                 {
                     left: this.canvasWidth / 2 * 1.4,
                     top: this.canvasHeight / 4 * 2.9
-                },
-                
+                },                
                 {
                     left: this.canvasWidth / 2 * 0.6,
                     top: this.canvasHeight / 2 * 0.9
@@ -261,9 +260,7 @@ class FormationOptions {
                 {
                     left: this.canvasWidth / 2,
                     top: this.canvasHeight / 2 * 1.15
-                },
-                
-                
+                },                       
                 {
                     left: this.canvasWidth / 5 * 0.7,
                     top: this.canvasHeight / 3
@@ -287,6 +284,46 @@ class FormationOptions {
                     left: this.canvasWidth / 2,
                     top: this.canvasHeight - 60
                 },
+                {
+                    left: this.canvasWidth / 5 * 0.8,
+                    top: this.canvasHeight / 4 * 3
+                },
+                {
+                    left: this.canvasWidth / 5 * 2,
+                    top: this.canvasHeight / 4 * 3
+                },
+                {
+                    left: this.canvasWidth / 5 * 3,
+                    top: this.canvasHeight / 4 * 3
+                },
+                {
+                    left: this.canvasWidth / 5 * 4.2,
+                    top: this.canvasHeight / 4 * 3
+                },
+                {
+                    left: this.canvasWidth / 5 * 0.8,
+                    top: this.canvasHeight / 2
+                },
+                {
+                    left: this.canvasWidth / 5 * 2,
+                    top: this.canvasHeight / 2
+                },
+                {
+                    left: this.canvasWidth / 5 * 3,
+                    top: this.canvasHeight / 2
+                },
+                {
+                    left: this.canvasWidth / 5 * 4.2,
+                    top: this.canvasHeight / 2
+                },
+                {
+                    left: this.canvasHeight / 3 * 0.9,
+                    top: this.canvasHeight / 4.5
+                },
+                {
+                    left: this.canvasHeight / 3 * 1.5,
+                    top: this.canvasHeight / 4.5
+                }
             ]
         }else if (type == '5-4-1') {
             return [
@@ -294,6 +331,46 @@ class FormationOptions {
                     left: this.canvasWidth / 2,
                     top: this.canvasHeight - 60
                 },
+                {
+                    left: this.canvasWidth / 2 * 0.6,
+                    top: this.canvasHeight / 4 * 3
+                },
+                {
+                    left: this.canvasWidth / 2 * 1.4,
+                    top: this.canvasHeight / 4 * 3
+                },
+                {
+                    left: this.canvasWidth / 2,
+                    top: this.canvasHeight / 4 * 3
+                },                
+                {
+                    left: this.canvasWidth / 5 * 0.7,
+                    top: this.canvasHeight / 4 * 3
+                },
+                {
+                    left: this.canvasWidth / 5 * 4 + ( this.canvasWidth / 5 * 0.3),
+                    top: this.canvasHeight / 4 * 3
+                },
+                {
+                    left: this.canvasWidth / 5 * 0.8,
+                    top: this.canvasHeight / 2
+                },
+                {
+                    left: this.canvasWidth / 5 * 2,
+                    top: this.canvasHeight / 2
+                },
+                {
+                    left: this.canvasWidth / 5 * 3,
+                    top: this.canvasHeight / 2
+                },
+                {
+                    left: this.canvasWidth / 5 * 4.2,
+                    top: this.canvasHeight / 2
+                },
+                {
+                    left: this.canvasWidth / 2,
+                    top: this.canvasHeight / 4
+                }
             ]
         }else {
             return []
