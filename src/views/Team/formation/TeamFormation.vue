@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-06-25 00:39:46
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-30 23:41:36
+ * @LastEditTime: 2020-07-01 16:17:30
  * @Description: file content
 --> 
 <template>
@@ -77,6 +77,7 @@ export default class TeamFormation extends Vue {
     private canvasDown = false
     private options = []
     private optionsList: any = []
+    private selectUserIdList: any = []
     private formationOptions = {
         width: 50,
         height: 50
@@ -85,12 +86,14 @@ export default class TeamFormation extends Vue {
         mode: '',
         type: ''
     }
+    private isChoosedTeamMember: any = []
     @Getter('getUserId')
     public userId: string | undefined
     mounted() {
         this.teamId = +this.$route.query.td;   
         this.requestTeamDetail()
         const canvasElement = this.$refs.teamFormation as any
+        // 鼠标按下
         canvasElement.onmousedown = (event: any) => {
             if (!this.isTeamMember) {
                 Toast.showToastError.call(this, '您不是该球队成员', '操作失败')
@@ -101,6 +104,7 @@ export default class TeamFormation extends Vue {
             this.canvasTeamList.forEach((item: any, index: number) => {
                 const itemX = [item.left, item.left +  item.width]
                 const itemY = [item.top, item.top + item.height]
+                // 判断鼠标按下位置是否在球员
                 if (x >= itemX[0] && x <= itemX[1] && y >= itemY[0] && y <= itemY[1] ) {
                     if (this.formationModeType.mode == '' || this.formationModeType.type == '') {
                         Toast.showToastError.call(this, '请选择球队阵型', '操作失败')
@@ -126,7 +130,22 @@ export default class TeamFormation extends Vue {
                 // 鼠标抬起后判断是否在阵容范围内
                 const isAvailable = this._checkIsInFormationItem()
                 if (isAvailable) {
+                    this.isChoosedTeamMember.push(this.activityMateIndex)
                     this._repaintFormation()
+                    setTimeout(()=> {
+                        this.activityMateIndex = -1
+                    })
+                }else {
+                    this.context.clearRect(0,0,this.canvasWidth + 150, this.canvasHeight)
+                    const img = new Image()
+                    img.src = 'https://yuegeqiu-mario.oss-cn-beijing.aliyuncs.com/assets/football_bg.png'
+                    img.onload = () => {
+                        this.contextByHide.drawImage(img, 0, 0, this.canvasWidth, this.canvasHeight)
+                        this._drawTeamFormation(this.formationModeType.mode, this.formationModeType.type)
+                        this.initTeamMate()
+                        this.copyHideCanvas()
+                        this.activityMateIndex = -1
+                    }       
                 }
                 this.canvasDown = false
                 this.coordinate = {
@@ -159,7 +178,7 @@ export default class TeamFormation extends Vue {
             this.contextByHide.clearRect(0,0,this.canvasWidth + 150, this.canvasHeight)
             this.context.clearRect(this.canvasWidth,0, 150, this.canvasHeight)
             this.contextByHide.drawImage(img, 0, 0, this.canvasWidth, this.canvasHeight)
-            this._drawTeamFormation(this.formationModeType.mode, this.formationModeType.type)
+            this._drawTeamFormation(this.formationModeType.mode, this.formationModeType.type, true)
             this.canvasTeamList.forEach((item: any, index: number) => {
                 const image = new Image
                 image.src = item.src
@@ -210,6 +229,7 @@ export default class TeamFormation extends Vue {
             this.drawCanvasBg()
         })
     }
+    // 绘制球员线
     drawTeamMateLine () {
         this.contextByHide.strokeStyle = '#63c565'
         this.contextByHide.moveTo(this.canvasWidth + 10, 0)
@@ -236,9 +256,12 @@ export default class TeamFormation extends Vue {
         }
     }
     initTeamMate () {
+        this.canvasTeamList = []
         this.teamMemberList.forEach((item: any, index: number) => {
             // 当前拖拽不进行渲染
-            if (this.activityMateIndex == index) return
+            if (this.activityMateIndex == index) {
+                return
+            }
             const leftExcursion = this.canvasWidth + 10 + (index < 8  ? 30 : 110)
             let topExcursion = 0
             if (index == 0 || index == 8) {
@@ -262,7 +285,8 @@ export default class TeamFormation extends Vue {
                     left: leftExcursion - 30,
                     src: item.head_url,
                     width: 60,
-                    height: 60
+                    height: 60,
+                    user_id: item.id
                 })
             }
 
