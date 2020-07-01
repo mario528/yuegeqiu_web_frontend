@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-06-25 00:39:46
  * @LastEditors: majiaao
- * @LastEditTime: 2020-07-01 16:17:30
+ * @LastEditTime: 2020-07-01 21:11:38
  * @Description: file content
 --> 
 <template>
@@ -29,6 +29,7 @@
                 <div class="setting-title">设置阵容</div>
                 <el-cascader
                     class="cascader"
+                    ref="cascader"
                     v-model="value"
                     :options="options"
                     @change="handleChange">
@@ -65,7 +66,7 @@ export default class TeamFormation extends Vue {
     private canvasHeight = 0
     private context: any = undefined
     private contextByHide: any = undefined
-    private teamInfo = {}
+    private teamInfo = {}                           // 球队信息
     private teamMemberList = []
     private isTeamMember = false
     private activityMateIndex = -1
@@ -106,15 +107,17 @@ export default class TeamFormation extends Vue {
                 const itemY = [item.top, item.top + item.height]
                 // 判断鼠标按下位置是否在球员
                 if (x >= itemX[0] && x <= itemX[1] && y >= itemY[0] && y <= itemY[1] ) {
+                    const idx = this.canvasTeamList.findIndex((elItem: any) => elItem.user_id == item.user_id)
                     if (this.formationModeType.mode == '' || this.formationModeType.type == '') {
                         Toast.showToastError.call(this, '请选择球队阵型', '操作失败')
                         return
                     }
                     this.canvasDown = true
-                    this.activityMateIndex = index
+                    this.activityMateIndex = idx
                 }
             })
         }
+        // 拖拽事件
         canvasElement.onmousemove = (event: any) => {
             if (!this.canvasDown) return 
             const x = event.offsetX
@@ -125,13 +128,13 @@ export default class TeamFormation extends Vue {
             }
             this._movementCanvas()
         }
-        canvasElement.onmouseup = () => {
+        // 鼠标释放
+        canvasElement.onmouseup = async () => {
             if (this.canvasDown) {
                 // 鼠标抬起后判断是否在阵容范围内
                 const isAvailable = this._checkIsInFormationItem()
                 if (isAvailable) {
-                    this.isChoosedTeamMember.push(this.activityMateIndex)
-                    this._repaintFormation()
+                    await this._repaintFormation()
                     setTimeout(()=> {
                         this.activityMateIndex = -1
                     })
@@ -259,9 +262,9 @@ export default class TeamFormation extends Vue {
         this.canvasTeamList = []
         this.teamMemberList.forEach((item: any, index: number) => {
             // 当前拖拽不进行渲染
-            if (this.activityMateIndex == index) {
-                return
-            }
+            // if (this.activityMateIndex == index) {
+            //     return
+            // }
             const leftExcursion = this.canvasWidth + 10 + (index < 8  ? 30 : 110)
             let topExcursion = 0
             if (index == 0 || index == 8) {
@@ -286,11 +289,13 @@ export default class TeamFormation extends Vue {
                     src: item.head_url,
                     width: 60,
                     height: 60,
-                    user_id: item.id
+                    user_id: item.id,
+                    user_name: item.nick_name
                 })
             }
 
         })
+        this.canvasTeamList = this.canvasTeamList.reverse()
     }
     private handleChange (detail: any) {
         this.options.forEach((item: any) => {
@@ -369,6 +374,7 @@ export default class TeamFormation extends Vue {
             this._drawTeamFormation(this.formationModeType.mode, this.formationModeType.type, true)
         }
     }
+    // 进攻箭头
     private _addArrow () {
         this.contextByHide.strokeStyle = '#ffffff'
         this.contextByHide.fillStyle = 'rgba(255,255,255, .3)'

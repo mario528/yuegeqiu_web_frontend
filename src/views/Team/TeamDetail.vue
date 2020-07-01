@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-24 23:23:03
+ * @LastEditTime: 2020-07-01 16:53:35
  * @Description: file content
  -->
 <template>
@@ -52,7 +52,7 @@
     </el-dialog>
     <up-arrow></up-arrow>
     <!-- 挑战 -->
-    <div class="flex-column-center challeng-mask" v-show="showChallengeDialog" @click="handleEditDialog(false)">
+    <div class="flex-column-center challeng-mask" v-show="showChallengeDialog" @click="handleChallengeDialog(false)">
       <div class="flex-column-y-center challeng-content" @click.stop="" v-if="showTeamSelect">
         <div class="dialog-header">选择哪只球队约球</div>
         <div class="flex-row-between select-team-item" v-for="(item, index) in teamSelectList" :key="index" @click="handleSelectTeam(item.id)">
@@ -639,6 +639,8 @@ export default class TeamDetail extends LoginStateCheck {
   }
   private handleEditDialog(state: boolean) {
     this.showEditDialog = state;
+  }
+  private handleChallengeDialog (state: boolean) {
     this.showChallengeDialog = state;
   }
   private handleSelectNumber(event: any) {
