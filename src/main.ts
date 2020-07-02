@@ -49,10 +49,7 @@ import Loading from './components/Loading/libs/loading'
 import Dialog from './components/Dialog/libs/dialog'
 const isProductionEnv = process.env.NODE_ENV == 'production'
 // add websocket
-// const io = isProductionEnv ? socketio('www.yuegeqiu.club/yq') : socketio('http://localhost:3000')
 const io = isProductionEnv ? socketio('www.yuegeqiu.club') : socketio('http://localhost:3000')
-// const io = socketio('http://101.201.142.182:3000')
-
 Vue.config.productionTip = false
 Vue.prototype.$http = http
 Vue.prototype.$notify = Notification
@@ -71,7 +68,7 @@ Vue.mixin({
 })
 // register custom vue-directive
 import dynamicDirectives from './directive/dynamicDirective'
-dynamicDirectives(['inputFilterSpace','inputFocus', 'loginCheck'])
+dynamicDirectives(['inputFilterSpace','inputFocus'])
 // register custom vue-filter
 import dynamicFilter from './filter/dynamicFilter'
 dynamicFilter(['unitStandard', 'standardNickName', 'unitTime'])

@@ -46,11 +46,11 @@
         <el-dropdown trigger="click" size="medium" @command="handleSelectDropDownItem" @visible-change="handleVisibleChange">
           <div class="flex-row-y-center">
             <img class="user-img" :src="userInfo.head_url" /> 
-            <div class="user-name">{{userInfo.nick_name.length > 7 ? userInfo.nick_name.slice(0,7) + '...' : userInfo.nick_name || userInfo.telephone}}</div>
+            <div class="user-name" v-if="userInfo.nick_name">{{userInfo.nick_name.length > 7 ? userInfo.nick_name.slice(0,7) + '...' : userInfo.nick_name || userInfo.telephone}}</div>
             <img :src="downArrow" :class="[dropDownVisible ? 'user-arrow-up' : 'user-arrow']">
           </div>
           <el-dropdown-menu slot="dropdown" class="dropdown-menu">
-            <div class="dropdown-menu-item">{{userInfo.nick_name.length > 7 ? userInfo.nick_name.slice(0,7) + '...' : userInfo.nick_name || userInfo.telephone}}</div>
+            <div class="dropdown-menu-item" v-if="userInfo.nick_name">{{userInfo.nick_name.length > 7 ? userInfo.nick_name.slice(0,7) + '...' : userInfo.nick_name || userInfo.telephone}}</div>
             <el-dropdown-item command="userCenter" icon="el-icon-user" class="dropdown-menu-item">个人中心</el-dropdown-item>
             <el-dropdown-item command="message" icon="el-icon-chat-dot-round" class="dropdown-menu-item">消息</el-dropdown-item>
             <el-dropdown-item command="logout" icon="el-icon-switch-button" class="dropdown-menu-item">退出</el-dropdown-item>
