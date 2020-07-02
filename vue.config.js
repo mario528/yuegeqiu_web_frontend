@@ -1,6 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require('path')
 const isProductionEnv = process.env.NODE_ENV == 'production'
+const UglifyPlugin = require('uglifyjs-webpack-plugin')
 module.exports = {
   publicPath: '',
   outputDir: 'dist',
@@ -45,9 +46,28 @@ module.exports = {
         return options;
       });
   },
-  configureWebpack: {
-    externals: {
+  // configureWebpack: {
+  //   externals: {
+  //     "AMap": "AMap"
+  //   }
+  // },
+  configureWebpack: config => {
+    config.externals = {
       "AMap": "AMap"
+    }
+    if (isProductionEnv) {
+      // 生产环境下
+      config.plugins = config.plugins.concat([
+        new UglifyPlugin({
+          uglifyOptions: {
+            compress: {
+                warnings: false,
+                drop_debugger: true,
+                drop_console: true,
+            },
+          }
+        })
+      ])
     }
   },
   pluginOptions: {

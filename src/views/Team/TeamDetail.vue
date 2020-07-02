@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-05-05 16:56:29
  * @LastEditors: majiaao
- * @LastEditTime: 2020-07-01 16:53:35
+ * @LastEditTime: 2020-07-01 21:28:04
  * @Description: file content
  -->
 <template>
@@ -558,6 +558,18 @@ export default class TeamDetail extends LoginStateCheck {
         // @ts-ignore
         position: [this.teamInfo.longitude, this.teamInfo.latitude]
       });
+      const circle = new AMap.Circle({
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // @ts-ignore
+        center: new AMap.LngLat(this.teamInfo.longitude, this.teamInfo.latitude), // 圆心位置
+        radius: 5000, // 圆半径
+        fillColor: "#1791fc", // 圆形填充颜色
+        strokeColor: "#fff", // 描边颜色
+        strokeWeight: 2, // 描边宽度
+        strokeOpacity: 0.2,
+        fillOpacity: 0.4
+      });
+      this.map.add(circle);
       this.map.add(marker);
     });
   }
