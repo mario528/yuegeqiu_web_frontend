@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-04-28 21:06:30
  * @LastEditors: majiaao
- * @LastEditTime: 2020-06-08 21:36:43
+ * @LastEditTime: 2020-07-04 00:38:16
  * @Description: file content
  -->
 <template>
@@ -149,6 +149,7 @@ export default class UserCenterTeam extends Vue {
     border-radius: 10px;
     cursor: pointer;
     overflow: hidden;
+    display: inline-block;
     &-icon {
       width: 100px;
       height: 100px;
