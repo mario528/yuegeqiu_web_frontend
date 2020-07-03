@@ -52,7 +52,9 @@
           <el-dropdown-menu slot="dropdown" class="dropdown-menu">
             <div class="dropdown-menu-item" v-if="userInfo.nick_name">{{userInfo.nick_name.length > 7 ? userInfo.nick_name.slice(0,7) + '...' : userInfo.nick_name || userInfo.telephone}}</div>
             <el-dropdown-item command="userCenter" icon="el-icon-user" class="dropdown-menu-item">个人中心</el-dropdown-item>
-            <el-dropdown-item command="message" icon="el-icon-chat-dot-round" class="dropdown-menu-item">消息</el-dropdown-item>
+            <el-dropdown-item command="message" icon="el-icon-chat-dot-round" class="dropdown-menu-item">消息
+              <div class="inform-number" v-if="informCount != 0">{{informCount > 9 ? '9+' : informCount}}</div>
+            </el-dropdown-item>
             <el-dropdown-item command="logout" icon="el-icon-switch-button" class="dropdown-menu-item">退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -112,6 +114,7 @@ export default class Header extends Vue {
   public userInfo = {}
   public isLogin = false
   public dropDownVisible = false
+  public informCount = 0
 
   @Watch("clientWindowWidth")
   onWindowWidthChange(newValue: number, oldValue: number): void {
@@ -189,6 +192,7 @@ export default class Header extends Vue {
           res.user_info.head_url = productionConf.basicIconUrl
         }
         this.userInfo = res.user_info
+        this.informCount = res.inform_count
       }).catch((err: any) => {
         this.isLogin = false
       })
@@ -371,6 +375,19 @@ export default class Header extends Vue {
       border-bottom: none;
     }
   }
+}
+.inform-number {
+  float: right;
+  width: 15px;
+  height: 15px;
+  line-height: 15px;
+  text-align: center;
+  background-color: #ff5000;
+  font-weight: 500;
+  color: white;
+  font-size: 14px;
+  border-radius: 50%;
+  margin-top: 8px;
 }
 .slogan {
   color: white;

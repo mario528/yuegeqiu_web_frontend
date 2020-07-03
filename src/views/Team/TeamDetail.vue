@@ -469,8 +469,8 @@ export default class TeamDetail extends LoginStateCheck {
           city: "北京"
         });
         AMap.event.addListener(autocomplete, "select", (event: any) => {
-          const { lat, lng, name } = event.poi.location;
-          that.matchConfig._address = name
+          const { lat, lng } = event.poi.location;
+          that.matchConfig._address = event.poi.name
           that.matchConfig._locationDetail = {
             longitude: lng,
             latitude: lat
