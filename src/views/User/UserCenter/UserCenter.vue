@@ -234,7 +234,7 @@ export default class UserCenter extends Vue {
 }
 .container {
   width: 100%;
-  min-height: 82vh;
+  min-height: $basic_height;
   margin-top: -2vh;
   background-color: $shallow_grey_color;
 }

@@ -266,7 +266,7 @@ export default class CreateMatch extends Vue {
 <style lang="scss" scoped>
 .match-container {
   width: 100vw;
-  min-height: 82vh;
+  min-height: $basic_height;
   margin-top: -2vh;
   position: relative;
   &-content {

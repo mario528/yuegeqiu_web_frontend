@@ -187,7 +187,7 @@ export default class UserUpdateInfo extends Vue {
 <style lang="scss" scoped>
 .update-info-container {
   margin-top: -2vh;
-  min-height: 82vh;
+  min-height: $basic_height;
   background-color: rgba(169, 169, 169, 0.2);
 }
 .content {

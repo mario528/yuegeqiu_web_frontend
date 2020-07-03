@@ -237,9 +237,9 @@ export default class Header extends Vue {
 <style scoped lang="scss">
 .header {
   box-sizing: border-box;
-  height: 10vh;
+  height: 8vh;
   width: 100%;
-  padding: 5px 0%;
+  padding: 3px 0%;
   background-color: $base_color;
   position: relative;
   top: 0;
@@ -250,20 +250,20 @@ export default class Header extends Vue {
   user-select: none;
   // box-shadow: 0 15px 10px #e3f2fd;
   &-slider-icon {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
   }
 }
 .brand {
   &-icon {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     background-color: transparent;
     padding: 5px;
   }
   &-name {
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 500;
     margin-right: 15px;
     font-weight: 500;
@@ -281,7 +281,7 @@ export default class Header extends Vue {
     padding: 10px 30px;
     color: $header_font_color_common;
     font-weight: 500;
-    font-size: 16px;
+    font-size: 14px;
     margin-right: 40px;
     border-radius: 5px;
     text-decoration: none;
@@ -307,8 +307,8 @@ export default class Header extends Vue {
     justify-content: flex-end;
   }
   &-icon {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     position: relative;
     margin-right: 20px;
@@ -317,8 +317,8 @@ export default class Header extends Vue {
       transform: scale3d(1.1, 1.1, 1.1);
     }
     &-small {
-      width: 30px;
-      height: 30px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
       background-color: transparent;
       padding: 5px;
@@ -349,8 +349,8 @@ export default class Header extends Vue {
     margin-right: 10px;
   }
   &-arrow {
-    width: 2vw;
-    height: 2vw;
+    width: 1.5vw;
+    height: 1.5vw;
     min-width: 15px;
     min-height: 15px;
     transition: all 0.3s ease;
@@ -392,5 +392,9 @@ export default class Header extends Vue {
 .slogan {
   color: white;
   font-size: 8px;
+  // 对齐
+  transform-origin: 0 0;
+  transform: scale(.8);
+  margin-top: 3px;
 }
 </style>

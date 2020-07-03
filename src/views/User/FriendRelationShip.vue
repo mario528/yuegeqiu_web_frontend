@@ -96,7 +96,7 @@ export default class FriendRelationShip extends Vue {
 </script>
 <style lang="scss" scoped>
 .container {
-  min-height: 82vh;
+  min-height: $basic_height;
   margin: -2vh auto 0 auto;
 }
 .user-info-container {

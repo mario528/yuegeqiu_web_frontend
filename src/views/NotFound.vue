@@ -46,7 +46,7 @@ export default class NotFound extends Vue {
   box-sizing: border-box;
   margin-top: -2vh;
   width: 100vw;
-  min-height: 82vh;
+  min-height: $basic_height;
   background-color: $base_color;
   color: #63c565;
   font-size: 16px;

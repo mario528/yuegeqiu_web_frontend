@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-06-25 00:39:46
  * @LastEditors: majiaao
- * @LastEditTime: 2020-07-01 21:11:38
+ * @LastEditTime: 2020-07-04 01:17:16
  * @Description: file content
 --> 
 <template>
@@ -395,7 +395,7 @@ export default class TeamFormation extends Vue {
 <style lang="scss" scoped>
 .team-formation-container {
     width: 100%;
-    min-height: 82vh;
+    min-height: $basic_height;
     margin-top: -2vh;
     background-color: $base_color;
 }

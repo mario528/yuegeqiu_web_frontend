@@ -170,7 +170,7 @@ export default class TeamMap extends Vue {
 $loading_color: #000080;
 .team-map-container {
   width: 100vw;
-  height: 82vh;
+  height: $basic_height;
   margin-top: -2vh;
   position: relative;
 }

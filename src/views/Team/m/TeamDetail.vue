@@ -406,7 +406,7 @@ export default class MTeamDetail extends Vue {
 .container {
   width: 100vw;
   overflow-x: hidden;
-  min-height: 82vh;
+  min-height: $basic_height;
   margin-top: -2vh;
 }
 .team-info {

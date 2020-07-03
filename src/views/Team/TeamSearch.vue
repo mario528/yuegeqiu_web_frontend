@@ -174,7 +174,7 @@ export default class TeamSearch extends Vue {
 <style lang="scss" scoped>
 $search_height: 50px;
 .search-container {
-  height: 82vh;
+  height: $basic_height;
   width: 100vw;
   margin-top: -2vh;
   background-size: 100%;

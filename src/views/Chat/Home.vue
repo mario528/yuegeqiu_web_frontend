@@ -19,11 +19,11 @@ export default class ChatHome extends Vue {
 }
 .chat-container {
   width: 100vw;
-  min-height: 82vh;
+  min-height: $basic_height;
 }
 .no-open {
   width: 100vw;
-  height: 82vh;
+  height: $basic_height;
   margin-top: -2vh;
   background-color: $base_color;
   color: $high_light_color;

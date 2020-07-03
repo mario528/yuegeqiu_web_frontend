@@ -116,7 +116,7 @@ export default class Team extends Vue {
 }
 .container {
   margin-top: -2vh;
-  min-height: 82vh;
+  min-height: $basic_height;
 }
 .search-item {
   margin-top: 2vh;
