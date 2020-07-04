@@ -17,7 +17,7 @@ const getters: GetterTree<any, any> = {
     return state.token
   },
   getUserId (state): string | undefined {
-    return state.userId
+    return state.userId || localStorage.getItem('User_ID')
   },
   getLoginOrRegisterState (state): number {
     return state.loginOrRegisterState

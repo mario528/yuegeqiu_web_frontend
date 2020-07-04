@@ -212,7 +212,13 @@ export default class Header extends Vue {
   private handleSelectDropDownItem(type: string) {
     switch (type) {
       case 'message':
-        
+        this.$router.push({
+          path: '/user/center/message',
+          name: 'UserCenterDynamic',
+          query: {
+            tab: 'message'
+          }
+        })
         break;
       case 'userCenter':
         this.$router.push({
@@ -248,7 +254,7 @@ export default class Header extends Vue {
   flex-direction: row;
   justify-content: space-around;
   user-select: none;
-  // box-shadow: 0 15px 10px #e3f2fd;
+  box-shadow: $basic_shadow;
   &-slider-icon {
     width: 30px;
     height: 30px;
@@ -325,6 +331,7 @@ export default class Header extends Vue {
     }
   }
   &-text {
+    font-size: 14px;
     color: white;
     &:hover {
       cursor: pointer;

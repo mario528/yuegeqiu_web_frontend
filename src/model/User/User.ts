@@ -52,6 +52,9 @@ interface UploadUserIcon {
     user_id: string | undefined | null;
     form_data: any;
 }
+interface GetUserMessage {
+    user_id: string | undefined | null;
+}
 class User {
     constructor() {
 
@@ -192,6 +195,16 @@ class User {
         return new Promise((reslove, reject) => {
             // @ts-ignore
             this.$http.post(Url.UPLOAD_USER_ICON, params).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
+    getUserMessage (params: GetUserMessage) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.get(Url.GET_USER_MESSAGE, params).then((res: any) => {
                 reslove(res)
             }).catch((err: any) => {
                 reject(err)

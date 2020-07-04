@@ -489,6 +489,7 @@ export default class Home extends Vue {
   &-content {
     @extend .team-suggest-content;
     background-color: white;
+    overflow: hidden;
     &-btn {
       position: relative;
       color: white;
@@ -498,6 +499,7 @@ export default class Home extends Vue {
       background-color: rgba(48, 63, 159, 0.8);
       text-align: center;
       border-radius: 10px;
+      cursor: pointer;
       &:nth-of-type(2) {
         margin-top: 20px;
       }
@@ -517,6 +519,11 @@ export default class Home extends Vue {
     position: absolute;
     top: 0;
     left: 0;
+    transition: 1.2s;
+    cursor: pointer;
+    &:hover {
+      transform: scale(1.3);
+    }
   }
   &-content {
     width: 100%;
