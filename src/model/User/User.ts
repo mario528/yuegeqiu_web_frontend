@@ -54,6 +54,7 @@ interface UploadUserIcon {
 }
 interface GetUserMessage {
     user_id: string | undefined | null;
+    page: number;
 }
 class User {
     constructor() {
@@ -204,7 +205,9 @@ class User {
     getUserMessage (params: GetUserMessage) {
         return new Promise((reslove, reject) => {
             // @ts-ignore
-            this.$http.get(Url.GET_USER_MESSAGE, params).then((res: any) => {
+            this.$http.get(Url.GET_USER_MESSAGE, {
+                params
+            }).then((res: any) => {
                 reslove(res)
             }).catch((err: any) => {
                 reject(err)
