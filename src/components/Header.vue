@@ -46,7 +46,7 @@
         <el-dropdown trigger="click" size="medium" @command="handleSelectDropDownItem" @visible-change="handleVisibleChange">
           <div class="flex-row-y-center">
             <img class="user-img" :src="userInfo.head_url" /> 
-            <div class="user-name" v-if="userInfo.nick_name">{{userInfo.nick_name.length > 7 ? userInfo.nick_name.slice(0,7) + '...' : userInfo.nick_name || userInfo.telephone}}</div>
+            <div :class="[ informCount == 0 ? 'user-name' : 'user-name-dot']" v-if="userInfo.nick_name">{{userInfo.nick_name.length > 7 ? userInfo.nick_name.slice(0,7) + '...' : userInfo.nick_name || userInfo.telephone}}</div>
             <img :src="downArrow" :class="[dropDownVisible ? 'user-arrow-up' : 'user-arrow']">
           </div>
           <el-dropdown-menu slot="dropdown" class="dropdown-menu">
@@ -349,11 +349,25 @@ export default class Header extends Vue {
     border-radius: 50%; 
   }
   &-name {
+    position: relative;
     margin-left: 10px;
     color: $base_font_color;
     font-size: 14px;
     font-weight: 500;
     margin-right: 10px;
+    &-dot {
+      @extend .user-name;
+      &::after {
+        content: ' ';
+        position: absolute;
+        top: -2px;
+        right: -7px;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: red;
+      }
+    }
   }
   &-arrow {
     width: 1.5vw;

@@ -56,6 +56,10 @@ interface GetUserMessage {
     user_id: string | undefined | null;
     page: number;
 }
+interface GetInformDetail {
+    user_id: string | undefined | null;
+    inform_id: string | number;
+}
 class User {
     constructor() {
 
@@ -206,6 +210,18 @@ class User {
         return new Promise((reslove, reject) => {
             // @ts-ignore
             this.$http.get(Url.GET_USER_MESSAGE, {
+                params
+            }).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
+    getInformDetail (params: GetInformDetail) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.get(Url.GET_INFORM_DETAIL, {
                 params
             }).then((res: any) => {
                 reslove(res)

@@ -81,6 +81,8 @@ const url = {
 
     GET_TEAM_FORMATION_INFO: '/api/v1/team/formation/info',
 
-    GET_USER_MESSAGE: '/api/v1/user/message'
+    GET_USER_MESSAGE: '/api/v1/user/message',
+
+    GET_INFORM_DETAIL: '/api/v1/user/inform/detail'
 }
 export default url
