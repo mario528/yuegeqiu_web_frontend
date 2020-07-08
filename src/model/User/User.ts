@@ -60,6 +60,11 @@ interface GetInformDetail {
     user_id: string | undefined | null;
     inform_id: string | number;
 }
+interface UpdateInformState {
+    user_id: string | undefined | null;
+    inform_id: string | number;
+    state: boolean;
+}
 class User {
     constructor() {
 
@@ -222,6 +227,18 @@ class User {
         return new Promise((reslove, reject) => {
             // @ts-ignore
             this.$http.get(Url.GET_INFORM_DETAIL, {
+                params
+            }).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
+    updateInformState (params: UpdateInformState) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.get(Url.UPDATE_INFORM_STATE, {
                 params
             }).then((res: any) => {
                 reslove(res)

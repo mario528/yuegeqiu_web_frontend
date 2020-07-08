@@ -83,6 +83,8 @@ const url = {
 
     GET_USER_MESSAGE: '/api/v1/user/message',
 
-    GET_INFORM_DETAIL: '/api/v1/user/inform/detail'
+    GET_INFORM_DETAIL: '/api/v1/user/inform/detail',
+
+    UPDATE_INFORM_STATE: '/api/v1/user/inform/update'
 }
 export default url

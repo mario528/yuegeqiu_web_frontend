@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-04-28 21:06:48
  * @LastEditors: majiaao
- * @LastEditTime: 2020-07-07 23:47:29
+ * @LastEditTime: 2020-07-08 22:23:04
  * @Description: file content
  -->
 <template>
@@ -12,17 +12,21 @@
                 {{ informDetail.inform_type == 1 ? '约球' : '' }}
             </div>
             <div class="dialog-content-container" slot="dialog-content">
-                <div class="team-inform-content">{{informDetail.inform_content}}</div>
-                <div class="flex-row-center">
-                    <div v-for="(item, index) in informTeamDetail" :key="index" class="flex-column-x-center team-item">
-                        <img :src="item.team_icon" class="team-icon">
-                        <div class="team-name">{{item.team_name}}</div>
+               <div v-if="informDetail.inform_type == 1">
+                    <div class="team-inform-content">{{informDetail.inform_content}}</div>
+                    <div class="flex-row-center">
+                        <div v-for="(item, index) in informTeamDetail" :key="index" class="flex-column-x-center team-item">
+                            <img :src="item.team_icon" class="team-icon">
+                            <div class="team-name">{{item.team_name}}</div>
+                        </div>
                     </div>
-                </div>
+               </div>
             </div>
             <div class="dialog-footer-content" slot="dialog-footer">
-                <span class="footer-btn-grey">拒绝</span>
-                <span class="footer-btn">接受</span>
+                <div v-if="informDetail.inform_type == 1">
+                    <span class="footer-btn-grey" @click="handleInform(false)">拒绝</span>
+                    <span class="footer-btn" @click="handleInform(true)">接受</span>
+                </div>
             </div>
         </yueqiu-dialog>
         <div class="flex-row-between title">
@@ -109,6 +113,23 @@ export default class UserCenterDynamic extends Vue {
     }
     private handleCloseDialog () {
         this.pageConfig._showDialog = false
+    }
+    private handleInform (state: boolean) {
+        new UserType().updateInformState.call(this, {
+            user_id: this.userId,
+            inform_id: this.informDetail.id,
+            state: state
+        }).then((res: any) => {
+            this.pageConfig._showDialog = false
+        })
+    }
+    _initPage () {
+        this.pageConfig = {
+            _pageSize: 10,
+            _pageTotal: 0,
+            _pageIndex: 0,
+            _showDialog: false
+        }
     }
 }
 </script>
