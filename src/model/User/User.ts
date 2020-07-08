@@ -65,6 +65,9 @@ interface UpdateInformState {
     inform_id: string | number;
     state: boolean;
 }
+interface ReadAllInform {
+    user_id: string | undefined | null;
+}
 class User {
     constructor() {
 
@@ -239,6 +242,18 @@ class User {
         return new Promise((reslove, reject) => {
             // @ts-ignore
             this.$http.get(Url.UPDATE_INFORM_STATE, {
+                params
+            }).then((res: any) => {
+                reslove(res)
+            }).catch((err: any) => {
+                reject(err)
+            })
+        })
+    }
+    readAllInform (params: ReadAllInform) {
+        return new Promise((reslove, reject) => {
+            // @ts-ignore
+            this.$http.get(Url.READ_ALL_INFORM, {
                 params
             }).then((res: any) => {
                 reslove(res)

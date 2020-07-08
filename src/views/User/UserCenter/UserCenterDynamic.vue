@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2020-04-28 21:06:48
  * @LastEditors: majiaao
- * @LastEditTime: 2020-07-08 22:23:04
+ * @LastEditTime: 2020-07-08 23:41:55
  * @Description: file content
  -->
 <template>
@@ -31,7 +31,7 @@
         </yueqiu-dialog>
         <div class="flex-row-between title">
             <div>我的消息 ({{pageConfig._pageTotal}})</div>
-            <div class="one_key_read" v-if="messageList.length != 0">一键已读</div>
+            <div class="one_key_read" v-if="messageList.length != 0" @click="handleReadAll">一键已读</div>
         </div>
         <div class="flex-column-x-center" v-if="messageList.length == 0">
             <img class="empty-icon" :src="require('@/assets/inform_empty_icon.png')" />
@@ -130,6 +130,14 @@ export default class UserCenterDynamic extends Vue {
             _pageIndex: 0,
             _showDialog: false
         }
+    }
+    handleReadAll () {
+        new UserType().readAllInform.call(this, {
+            user_id: this.userId
+        }).then((res: any) => {
+            this._initPage()
+            this.requestUserMessage()
+        })
     }
 }
 </script>

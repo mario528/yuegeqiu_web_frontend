@@ -85,6 +85,8 @@ const url = {
 
     GET_INFORM_DETAIL: '/api/v1/user/inform/detail',
 
-    UPDATE_INFORM_STATE: '/api/v1/user/inform/update'
+    UPDATE_INFORM_STATE: '/api/v1/user/inform/update',
+
+    READ_ALL_INFORM: '/api/v1/user/inform/read/all'
 }
 export default url
