@@ -119,8 +119,7 @@ router.beforeEach((to, from, next) => {
   console.log("路由开始载入")
   // @ts-ignore
   Vue.$selfLoading.show()
-  if (to.meta.title) document.title = to.meta.title
-  else document.title = '约个球'
+  document.title = '页面加载中...'
   if (to.meta.requireAuth && !localStorage.getItem('Authorization')) {
     Vue.nextTick(() => {
       Vue.prototype.$notify.error({
@@ -166,6 +165,8 @@ router.beforeEach((to, from, next) => {
 })
 router.afterEach((to, from) => {
   console.log("路由载入完成")
+  if (to.meta.title) document.title = to.meta.title
+  else document.title = '约个球'
   // @ts-ignore
   Vue.$selfLoading.hide()
 })

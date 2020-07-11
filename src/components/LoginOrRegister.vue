@@ -2,18 +2,18 @@
   <transition name="fade">
     <div class="flex-column-center dialog-mask" @click.self="handleMaskState" v-if="showDialog">
       <div class="dialog-main">
-        <div class="flex-row">
+        <div class="flex-row-y-center">
           <div :class="[dialogState == 1 ? 'type-item-activity' : 'type-item']" @click="swithType(1)">登陆</div>
-          <div class="separator">/</div>
+          <div class="separator">|</div>
           <div :class="[dialogState == 2 ? 'type-item-activity' : 'type-item']" @click="swithType(2)">注册</div>
         </div>
-        <div v-if="dialogState == 1" class="flex-column-center content ">
+        <div v-if="dialogState == 1" class="flex-column-center content">
           <input class="user-input" v-model="loginTelNumber" placeholder="手机号" maxlength="11" />
           <div class="width-100" style="position: relative;">
             <input class="user-input-psw" @input="handleInputPsw($event.target.value, 1)" placeholder="密码" :value="showLoginPswStr" />
             <img class="eyes-icon" :src="eyesIcon" @click="handleSwitchPswType(1)">
           </div>
-          <div class="width-100 flex-row-x-end grey-color">忘记密码</div>
+          <div class="width-100 flex-row-x-end grey-color" @click="handleForgetPassword">忘记密码</div>
           <button class="login-btn" @click="handleLogin">登陆</button>
         </div>
         <div v-if="dialogState == 2" class="flex-column-x-center content">
@@ -271,6 +271,11 @@ export default class LoginOrRegister extends Vue {
     }).catch((err: any) => {
     })
   }
+  private handleForgetPassword () {
+    this.$router.push({
+      
+    })
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -286,10 +291,10 @@ export default class LoginOrRegister extends Vue {
 .dialog-main {
   background-color: white;
   box-sizing: border-box;
-  min-width: 300px;
   width: 40vw;
-  padding: 40px 5vw 3vw 5vw;
+  padding: 40px 5vw 10px 5vw;
   border-radius: 10px;
+  box-shadow: $basic_shadow;
 }
 .separator {
   color: $base_color;
@@ -312,7 +317,7 @@ export default class LoginOrRegister extends Vue {
   width: 100%;
   margin: 20px 0;
   border: none;
-  border-bottom: 1px solid #A9A9A9;
+  border-bottom: 1px solid #eeeeee;
   border-radius: 5px 5px 0 0;
   padding: 15px 10px;
   font-size: 16px;
@@ -328,13 +333,13 @@ export default class LoginOrRegister extends Vue {
 .verification {
   &-btn {
     cursor: pointer;
-    width: 30%;
+    width: 25%;
     height: 50px;
     margin: 20px 0;
     text-align: center;
     line-height: 50px;
     border: 1px solid #eeeeee;
-    margin-left: 20%;
+    margin-left: 25%;
     font-size: 14px;
     font-weight: 500;
     color: $base_color;
@@ -386,6 +391,11 @@ export default class LoginOrRegister extends Vue {
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
+}
+@media screen and (max-width: 450px){
+  .dialog-main {
+    width: 85vw;
+  }
 }
 </style>
 

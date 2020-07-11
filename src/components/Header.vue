@@ -342,17 +342,17 @@ export default class Header extends Vue {
     }
   }
   &-img {
-    width: 3vw;
-    height: 3vw;
-    min-width: 40px;
-    min-height: 40px;
+    width: 2.5vw;
+    height: 2.5vw;
+    min-width: 35px;
+    min-height: 35px;
     border-radius: 50%; 
   }
   &-name {
     position: relative;
     margin-left: 10px;
     color: $base_font_color;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
     margin-right: 10px;
     &-dot {
@@ -370,8 +370,8 @@ export default class Header extends Vue {
     }
   }
   &-arrow {
-    width: 1.5vw;
-    height: 1.5vw;
+    width: 1.2vw;
+    height: 1.2vw;
     min-width: 15px;
     min-height: 15px;
     transition: all 0.3s ease;
@@ -383,14 +383,14 @@ export default class Header extends Vue {
 }
 .dropdown-menu {
   width: 10vw;
-  min-width: 150px;
+  min-width: 130px;
   cursor: pointer;
   &-item {
     width: 100%;
     box-sizing: border-box;
     padding: 5px 5%;
     border-bottom: 1px solid #eeeeee;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
     &:last-of-type {
       border-bottom: none;
@@ -406,7 +406,7 @@ export default class Header extends Vue {
   background-color: #ff5000;
   font-weight: 500;
   color: white;
-  font-size: 14px;
+  font-size: 12px;
   border-radius: 50%;
   margin-top: 8px;
 }

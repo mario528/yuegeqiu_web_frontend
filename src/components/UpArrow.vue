@@ -1,8 +1,8 @@
 <template>
   <div class="page">
     <div class="flex-column-center up-arrow-container" @mouseover="isHover = true" @mouseout="isHover = false">
-      <img class="up-arrow" :src="iconUrl" @click="backToTop" v-show="!isHover">
-      <span class="back_to_top" v-show="isHover" @click="backToTop">回到<br/>顶部</span>
+      <img class="up-arrow" :src="iconUrl" @click="backToTop" v-show="!isHover || smallScreenModel">
+      <span class="back_to_top" v-show="isHover && !smallScreenModel" @click="backToTop">回到<br/>顶部</span>
     </div>
   </div>
 </template>
@@ -11,6 +11,9 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { Getter, Action, State } from "vuex-class";
 @Component({})
 export default class UpArrow extends Vue {
+  @Getter("getScreenModel")
+  public smallScreenModel!: boolean;
+
   public iconUrl: string = require("../assets/up_arrow.png");
   public isHover = false
   private backToTop() {
@@ -31,13 +34,15 @@ export default class UpArrow extends Vue {
 <style lang="scss" scoped>
 @media screen and (max-width: 450px) {
   .up-arrow-container {
-    width: 35px;
+    width: 45px;
     height: 45px;
     position: fixed;
-    right: 10px;
+    right: 0px;
     bottom: 20vh;
-    border-radius: 5px;
     background-color: $base_color;
+    color: white;
+    border-radius: 5px 0 0 5px;
+    font-size: 12px;
   }
   .up-arrow {
     cursor: pointer;
@@ -53,9 +58,10 @@ export default class UpArrow extends Vue {
     width: 50px;
     height: 50px;
     position: fixed;
-    right: calc(5vw - 30px);
+    // right: calc(5vw - 30px);
+    right: 0;
     bottom: 20vh;
-    border-radius: 50%;
+    border-radius: 5px 0 0 5px;
     background-color: $base_color;
     cursor: pointer;
     &:hover {
